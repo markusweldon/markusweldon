@@ -15,6 +15,7 @@
 <a href="https://www.figma.com/" target="_blank"><img title="Figma" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.python.org/" target="_blank"><img title="Python" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" style="padding: 10px;" /></a>
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"><img title="JavaScript" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" style="padding: 10px;" /></a>
+
 <a href="https://www.typescriptlang.org/" target="_blank"><img title="TypeScript" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" style="padding: 10px;" /></a>
 <a href="https://reactjs.org/" target="_blank"><img title="React" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" style="padding: 10px;" /></a>
 <a href="https://nextjs.org/" target="_blank"><img title="NextJS" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" style="padding: 10px;" /></a>
