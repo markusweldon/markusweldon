@@ -1,8 +1,14 @@
-
-## 👋👨‍💻 Hello World
-
-## Tools and Languages:
 <div align="center">
+<img src="images/divider.gif" height="30" width="100%">
+
+### 👋👨‍💻 Hello World
+
+I'm Markus, a Brit 🇬🇧 now living in Los Angeles, California 🌇 the United States 🇺🇸
+
+<img src="images/divider.gif" height="30" width="100%">
+
+### Tools and Languages:
+
 <a href="https://www.apple.com/" target="_blank"><img title="Mac" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.gnu.org/software/bash/" target="_blank"><img title="Bash Terminal" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" style="padding: 10px;" /></a>
 <a href="https://git-scm.com/" target="_blank"><img title="Git" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" style="padding: 10px;" /></a>
@@ -28,15 +34,13 @@
 <a href="https://www.mongodb.com/" target="_blank"><img title="MongoDB" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.mysql.com/" target="_blank"><img title="MySQL" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.postgresql.org/" target="_blank"><img title="PostgreSQL" width="36px" src="https://github.com/devicons/devicon/blob/develop/icons/postgresql/postgresql-plain.svg" style="padding: 10px;" /></a>
-</div>
 
+<img src="images/divider.gif" height="30" width="100%">
 
-## Github Stats:
-<div align="center">
-  <img align="center" src="https://github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=6&hide_title=true&theme=radical" width="400px" height="140px"/>
-  <img align="center" src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&theme=radical&rank_icon=github" width="400px" />
-</div>
+### Github Stats:
 
-<div align="left">
-<img src="images/animated-footer.svg">
+<img src="https://github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=6&hide_title=true&theme=radical" width="400px" height="140px"/>
+<img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&theme=radical&rank_icon=github" width="400px" />
+
+<img src="images/animated-footer.svg" width="100%">
 </div>
