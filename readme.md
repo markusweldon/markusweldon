@@ -14,12 +14,12 @@ I'm Markus, a Brit 🇬🇧 now living in Los Angeles, California 🌇 United St
 <a href="https://git-scm.com/" target="_blank"><img title="Git" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" style="padding: 10px;" /></a>
 <a href="https://github.com/" target="_blank"><img title="GitHub" width="36px" src="https://user-images.githubusercontent.com/3369400/139448065-39a229ba-4b06-434b-bc67-616e2ed80c8f.png" style="padding: 10px;" /></a>
 <a href="https://code.visualstudio.com/" target="_blank"><img title="Visual Studio Code" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" style="padding: 10px;" /></a>
-<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5" target="_blank"><img title="HTML5" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" style="padding: 10px;" /></a>
+<a href="https://www.figma.com/" target="_blank"><img title="Figma" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" style="padding: 10px;" /></a>
 
+<a href="https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5" target="_blank"><img title="HTML5" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" style="padding: 10px;" /></a>
 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank"><img title="CSS3" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" style="padding: 10px;" /></a>
 <a href="https://tailwindcss.com/" target="_blank"><img title="Tailwind CSS" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" style="padding: 10px;" /></a>
 <a href="https://sass-lang.com/" target="_blank"><img title="Sass" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg" style="padding: 10px;" /></a>
-<a href="https://www.figma.com/" target="_blank"><img title="Figma" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.python.org/" target="_blank"><img title="Python" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" style="padding: 10px;" /></a>
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"><img title="JavaScript" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" style="padding: 10px;" /></a>
 
