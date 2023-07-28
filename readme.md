@@ -23,22 +23,30 @@ I'm Markus, a Brit 🇬🇧 now living in Los Angeles, California 🌇 United St
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"><img title="JavaScript" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.typescriptlang.org/" target="_blank"><img title="TypeScript" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" style="padding: 10px;" /></a>
 <a href="https://reactjs.org/" target="_blank"><img title="React" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" style="padding: 10px;" /></a>
+<a href="https://svelte.dev" target="_blank"><img title="Svelte" width="36px" src="https://raw.githubusercontent.com/devicons/devicon/2151c729e62cfc90e673e439e5bd059d54f65aec/icons/svelte/svelte-original.svg" style="padding: 10px;" /></a>
+<a href="https://astro.build/" target="_blank"><img title="Astro" width="36px" src="https://github.com/devicons/devicon/blob/develop/icons/astro/astro-original.svg" style="padding: 10px;" /></a>
 <a href="https://nextjs.org/" target="_blank"><img title="NextJS" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" style="padding: 10px;" /></a>
 <a href="https://vercel.com/" target="_blank"><img title="Vercel" width="36px" src="https://github.com/devicons/devicon/blob/develop/icons/vercel/vercel-original-wordmark.svg" style="padding: 10px;" /></a>
-<a href="https://astro.build/" target="_blank"><img title="Astro" width="36px" src="https://github.com/devicons/devicon/blob/develop/icons/astro/astro-original.svg" style="padding: 10px;" /></a>
-<a href="https://www.postman.com/" target="_blank"><img title="Postman" width="36px" src="https://github.com/devicons/devicon/blob/develop/icons/postman/postman-original.svg" style="padding: 10px;" /></a>
+<a href="https://www.cloudflare.com" target="_blank"><img title="Cloudflare" width="36px" src="https://raw.githubusercontent.com/devicons/devicon/2151c729e62cfc90e673e439e5bd059d54f65aec/icons/cloudflare/cloudflare-original.svg" style="padding: 10px;" /></a>
+<a href="https://www.sanity.com" target="_blank"><img title="Sanity" width="36px" src="https://raw.githubusercontent.com/devicons/devicon/2151c729e62cfc90e673e439e5bd059d54f65aec/icons/sanity/sanity-original.svg" style="padding: 10px;" /></a>
+<a href="https://jamstack.org" target="_blank"><img title="Jamstack" width="36px" src="https://raw.githubusercontent.com/devicons/devicon/2151c729e62cfc90e673e439e5bd059d54f65aec/icons/jamstack/jamstack-original.svg" style="padding: 10px;" /></a>
 <a href="https://graphql.org/" target="_blank"><img title="GraphQL" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" style="padding: 10px;" /></a>
 <a href="https://nodejs.org/" target="_blank"><img title="Node.js" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.npmjs.com/" target="_blank"><img title="Node Package Manager" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg" style="padding: 10px;" /></a>
+<a href="https://pnpm.io/" target="_blank"><img title="Performant Node Package Manager" width="36px" src="https://raw.githubusercontent.com/devicons/devicon/2151c729e62cfc90e673e439e5bd059d54f65aec/icons/pnpm/pnpm-original.svg" style="padding: 10px;" /></a>
+<a href="https://www.docker.com/" target="_blank"><img title="Docker" width="36px" src="https://raw.githubusercontent.com/devicons/devicon/2151c729e62cfc90e673e439e5bd059d54f65aec/icons/docker/docker-plain.svg" style="padding: 10px;" /></a>
+<a href="https://kubernetes.io" target="_blank"><img title="Kubernetes" width="36px" src="https://raw.githubusercontent.com/devicons/devicon/2151c729e62cfc90e673e439e5bd059d54f65aec/icons/kubernetes/kubernetes-plain.svg" style="padding: 10px;" /></a>
+<a href="https://www.postman.com/" target="_blank"><img title="Postman" width="36px" src="https://github.com/devicons/devicon/blob/develop/icons/postman/postman-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.mongodb.com/" target="_blank"><img title="MongoDB" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.mysql.com/" target="_blank"><img title="MySQL" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.postgresql.org/" target="_blank"><img title="PostgreSQL" width="36px" src="https://github.com/devicons/devicon/blob/develop/icons/postgresql/postgresql-plain.svg" style="padding: 10px;" /></a>
 
 <img src="images/divider.gif" height="30" width="100%">
 
-### Github Stats:
-
+### Most Used Languages:
 <img src="https://github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=6&hide_title=true&theme=radical" width="400px" height="140px"/>
+
+### Github Contribution Stats:
 <img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&theme=radical&rank_icon=github" width="400px" />
 
 <img src="images/animated-footer.svg" width="100%">
