@@ -1,5 +1,5 @@
 <div align="center">
-<img src="images/synthwave-optimized.gif" width="600">
+<img src="images/synthwave-optimized.gif" width="500">
 
 ### 👋  Hello World  👨‍💻
 
