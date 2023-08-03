@@ -1,9 +1,9 @@
 <div align="center">
 <img src="images/divider.gif" height="30" width="100%">
 
-### 👋👨‍💻 Hello World
+### 👋  Hello World  👨‍💻
 
-I'm Markus, a Brit 🇬🇧 now living in Los Angeles, California 🌇 United States 🇺🇸
+I'm Markus, a Brit 🇬🇧 now living in Los Angeles, California ☀️🌴 United States 🇺🇸
 
 <img src="images/divider.gif" height="30" width="100%">
 
@@ -44,10 +44,10 @@ I'm Markus, a Brit 🇬🇧 now living in Los Angeles, California 🌇 United St
 <img src="images/divider.gif" height="30" width="100%">
 
 ### Most Used Languages:
-<img src="https://markus-weldon-github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=6&hide_title=true&theme=radical" width="400px" height="140px"/>
+<img src="https://markus-weldon-github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave" width="400px" height="180px"/>
 
 ### Github Contribution Stats:
-<img src="https://markus-weldon-github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&theme=radical&rank_icon=github&hide=stars" width="400px" />
+<img src="https://markus-weldon-github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&rank_icon=github&hide=stars" width="400px" />
 
 <img src="images/animated-footer.svg" width="100%">
 </div>
