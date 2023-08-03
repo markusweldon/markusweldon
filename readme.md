@@ -1,9 +1,9 @@
 <div align="center">
-<img src="images/divider.gif" height="30" width="100%">
+<img src="images/synthwave-optimized.gif" width="600">
 
 ### 👋  Hello World  👨‍💻
 
-I'm Markus, a Brit 🇬🇧 now living in Los Angeles, California ☀️🌴 United States 🇺🇸
+I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United States 🇺🇸
 
 <img src="images/divider.gif" height="30" width="100%">
 
