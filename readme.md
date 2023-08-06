@@ -44,10 +44,14 @@ I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United 
 <img src="images/divider.gif" height="30" width="100%">
 
 ### Most Used Languages:
-<img src="https://markus-weldon-github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave" width="400px" height="180px"/>
+<img src="https://markus-weldon-github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave&hide_border=true" width="500px"/>
 
 ### Github Contribution Stats:
-<img src="https://markus-weldon-github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&rank_icon=github&hide=stars" width="400px" />
+<img src="https://markus-weldon-github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&hide_border=true&rank_icon=github&hide=stars" width="500px" />
+
+### Github Contribution Activity:
+[![Ashutosh's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true)](https://github.com/ashutosh00710/github-readme-activity-graph)
+
 
 <img src="images/animated-footer.svg" width="100%">
 </div>
