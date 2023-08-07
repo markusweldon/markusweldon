@@ -1,11 +1,11 @@
 <div align="center">
 <img src="images/synthwave-optimized.gif" width="500">
 
-### 👋  Hello World  👨‍💻
+### < 👋 Hello World! 👨‍💻 />
 
 I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United States 🇺🇸
 
-<img src="images/divider.gif" height="30" width="100%">
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### Tools and Languages:
 
@@ -41,17 +41,20 @@ I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United 
 <a href="https://www.mysql.com/" target="_blank"><img title="MySQL" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.postgresql.org/" target="_blank"><img title="PostgreSQL" width="36px" src="https://github.com/devicons/devicon/blob/develop/icons/postgresql/postgresql-plain.svg" style="padding: 10px;" /></a>
 
-<img src="images/divider.gif" height="30" width="100%">
-
-### Most Used Languages:
-<img src="https://markus-weldon-github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave&hide_border=true" width="500px"/>
-
-### Github Contribution Stats:
-<img src="https://markus-weldon-github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&hide_border=true&rank_icon=github&hide=stars" width="500px" />
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### Github Contribution Activity:
 [![Ashutosh's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true)](https://github.com/ashutosh00710/github-readme-activity-graph)
 
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-<img src="images/animated-footer.svg" width="100%">
+### Most Used Languages:
+<img src="https://github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave&hide_border=true" width="500px"/>
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### Github Contribution Stats:
+<img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&hide_border=true&rank_icon=github&hide=stars" width="560px" />
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 </div>
