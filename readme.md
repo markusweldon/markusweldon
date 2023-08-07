@@ -44,7 +44,7 @@ I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### Github Contribution Activity:
-[![Ashutosh's github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true)](https://github.com/ashutosh00710/github-readme-activity-graph)
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B&area=false">
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
