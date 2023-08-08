@@ -49,12 +49,12 @@ I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### Most Used Languages:
-<img src="https://github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave&hide_border=true" width="500px"/>
+<img src="https://markus-weldon-github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave&hide_border=true" width="500px"/>
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### Github Contribution Stats:
-<img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&hide_border=true&rank_icon=github&hide=stars&line_height=32&icon_color=6DE2F1&ring_color=6DE2F1&text_bold=false" width="560px" />
+<img src="https://markus-weldon-github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&hide_border=true&rank_icon=github&hide=stars&line_height=32&icon_color=6DE2F1&ring_color=6DE2F1&text_bold=false" width="560px" />
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 </div>
