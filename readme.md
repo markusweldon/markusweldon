@@ -5,9 +5,15 @@
 
 I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United States 🇺🇸
 
+🚀 Principal Solutions Engineer | 💡 15+ Years in Tech | 🎓 Business and Computer Science at HBS, UoL, UoS  | 📍 Based in Southern California
+
+🌐 About Me:
+
+With over 15 years of industry experience, I’ve honed my skills in pre-sales solution engineering and implementing software solutions to address intricate business challenges. My passion lies in orchestrating architectures that not only solve immediate problems but also scale efficiently and economically with future demands.
+
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### Tools and Languages:
+### 🛠️ Tools and 🌎 Languages:
 
 <a href="https://www.apple.com/" target="_blank"><img title="Mac" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" style="padding: 10px;" /></a>
 <a href="https://www.gnu.org/software/bash/" target="_blank"><img title="Bash Terminal" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" style="padding: 10px;" /></a>
