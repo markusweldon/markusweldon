@@ -9,7 +9,9 @@ I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United 
 
 🌐 About Me:
 
-With over 15 years of industry experience, I’ve developed extensive expertise in B2B pre-sales solution engineering and implementing software solutions to address intricate business challenges. My passion and commitment center around orchestrating business solution architectures that not only solve immediate business challenges but also scale economically and efficiently with future demand providing clients a long-lasting return on investment.
+With over 15 years of industry experience, I’ve developed extensive expertise in B2B pre-sales solution engineering and implementing software solutions to address intricate business challenges.
+
+My passion and commitment center around orchestrating business solution architectures that not only solve immediate business challenges but also scale economically and efficiently with future demand providing clients a long-lasting return on investment.
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
