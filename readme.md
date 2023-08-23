@@ -5,11 +5,11 @@
 
 I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United States 🇺🇸
 
-🚀 Principal Solutions Engineer | 💡 15+ Years in Tech | 🎓 Business and Computer Science at HBS, UoL, UoS  | 📍 Based in Southern California
+🚀 Builder with a growth mindset | Principal Solutions Engineer | 💡 15+ Years in Tech | 🎓 Business and Computer Science across HBS, UoL, UoS  | 📍 Based in Southern California
 
 🌐 About Me:
 
-With over 15 years of industry experience, I’ve honed my skills in B2B pre-sales solution engineering and implementing software solutions to address intricate business challenges. My passion lies in orchestrating solution architectures that not only solve immediate business problems but also scale economically efficiently with future demands to provide lasting return on investment.
+With over 15 years of industry experience, I’ve developed extensive expertise in B2B pre-sales solution engineering and implementing software solutions to address intricate business challenges. My passion and commitment centers around orchestrating business solution architectures that not only solve immediate business challenges but also scale economically and efficiently with future demand providing clients a long-lasting return on investment.
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
