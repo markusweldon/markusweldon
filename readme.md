@@ -1,17 +1,21 @@
 <div align="center">
 <img src="images/synthwave-optimized.gif" width="500">
 
-### < 👋 Hello World! 👨‍💻 />
+### < 👋 Hello World! />
 
-I'm Markus, a Brit 🇬🇧 living in Los Angeles, California ☀️🌴 United States 🇺🇸
+I'm Markus, a 🇬🇧 Brit builder 📍 Based in Los Angeles, California ☀️🌴 United States 🇺🇸
 
-🚀 Builder with a growth mindset | Principal Solutions Engineer | 💡 15+ Years in Tech | 🎓 Business and Computer Science across HBS, UoL, UoS  | 📍 Based in Southern California
+👨‍💻 Co-Founder @ HyprWin.com | 💡 Principal Solutions Engineer | 🚀 16+ Years in Tech
 
-🌐 About Me:
+🧠 Growth Mindset | 🎓 Business & Computer Science
 
-With over 15 years of industry experience, I’ve developed extensive expertise in B2B pre-sales solution engineering and implementing software solutions to address intricate business challenges.
+(Harvard Business School | University of London | University of Sunderland)
 
-My passion and commitment center around orchestrating business solution architectures that not only solve immediate business challenges but also scale economically and efficiently with future demand providing clients a long-lasting return on investment.
+### About:
+
+With over 16+ years of industry experience, I’ve developed extensive expertise in enterprise technology business-to-business (B2B) technical pre-sales solution engineering and implementing value-driven software solutions to address intricate business challenges.
+
+My passion and commitment are focused on delivering business solution outcomes that not only solve immediate business challenges but developing long-lasting solutions that scale economically efficiently with future business growth, thus providing clients with improved return on investment.
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
