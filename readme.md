@@ -11,6 +11,8 @@ I'm Markus, a 🇬🇧 Brit builder 📍 Based in Los Angeles, California ☀️
 
 (Harvard Business School | University of London | University of Sunderland)
 
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
 ### About:
 
 With over 16+ years of industry experience, I’ve developed extensive expertise in enterprise technology business-to-business (B2B) technical pre-sales solution engineering and implementing value-driven software solutions to address intricate business challenges.
