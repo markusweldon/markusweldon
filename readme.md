@@ -17,7 +17,7 @@ I'm Markus, a 🇬🇧 Brit builder 📍 Based in Los Angeles, California ☀️
 
 With over 16 years in the tech industry, I possess deep expertise in B2B technical pre-sales and solution engineering. I excel in architecting and implementing value-driven software solutions that tackle complex business challenges and drive business growth.
 
-My primary objective and North Star is architecting enterprise solutions that address immediate business challenges while also ensuring they are sustainable and scale economically to support future growth. This approach ensures my clients realize a superior return on investment over the long term.
+My primary objective and North Star is architecting enterprise solutions that address immediate business challenges while also ensuring they are sustainable and scale economically to support future business growth. This approach ensures my clients realize a superior return on investment over the long term.
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
