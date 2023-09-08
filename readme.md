@@ -60,15 +60,21 @@ My primary objective and North Star is architecting enterprise solutions that ad
 ### Github Contribution Activity:
 <img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B">
 
+
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### Most Used Languages:
 <img src="https://github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave&hide_border=true" width="500px"/>
 
+
+<p><i>Note: These statistics are derived only from my public-facing open-source repositories. The majority of all my commits are made to private organizational repositories for security and privacy reasons.</i></p>
+
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### Github Contribution Stats:
 <img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&hide_border=true&rank_icon=github&hide=stars&line_height=32&icon_color=6DE2F1&ring_color=6DE2F1&text_bold=false" width="560px" />
+
+<p><i>Note: These statistics are derived only from my public-facing open-source repositories. The majority of all my commits are made to private organizational repositories for security and privacy reasons.</i></p>
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 </div>
