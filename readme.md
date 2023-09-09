@@ -112,4 +112,12 @@ My primary objective and North Star is architecting enterprise solutions that ad
 ### 🎧 Current Listenings:
 [![Apple Music](https://img.shields.io/badge/Apple%20Music-ff66c4?style=for-the-badge&logo=Apple%20Music&logoColor=white&labelColor=D33D9B)](https://music.apple.com/profile/markusweldon)
 
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### 💻 Workspace Setup:
+
+Current VS Code Theme: [SynthWave '84](https://marketplace.visualstudio.com/items?itemName=RobbOwen.synthwave-vscode)
+
+<img src="https://github.com/robb0wen/synthwave-vscode/raw/HEAD/banner.png" width="500">
+
 </div>
