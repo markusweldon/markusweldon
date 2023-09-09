@@ -1,11 +1,11 @@
 <div align="center">
 
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&repeat=false&width=500&lines=%3C%F0%9F%91%8BHello+World!%2F%3E+I'm+Markus+%F0%9F%91%A8%E2%80%8D%F0%9F%92%BB">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&repeat=false&width=500&lines=%3C%F0%9F%91%8BHello+World!%2F%3E+I'm+Markus">
 </div>
   
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&width=500&lines=Co-Founder+%26+Principal+Solutions+Engineer;Experienced+Builder+%26+UI%2FUX+Designer;%F0%9F%A7%A0+Growth+Mindset++%F0%9F%8E%93+Biz+%26+Comp+Sci;Always+Learning+New+Skills">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&width=500&lines=Principal+Solutions+Engineer+%26+Co-Founder;Experienced+Builder+%26+UI%2FUX+Designer;%F0%9F%A7%A0Growth+Mindset++%F0%9F%8E%93Biz+%26+CompSci;Always+Learning+New+Skills+%F0%9F%92%AA%F0%9F%A7%A0">
 </div>
 
 <img src="images/synthwave-optimized.gif" width="500">
@@ -118,6 +118,8 @@ My primary objective and North Star is architecting enterprise solutions that ad
 
 Current VS Code Theme: [SynthWave '84](https://marketplace.visualstudio.com/items?itemName=RobbOwen.synthwave-vscode)
 
-<img src="https://github.com/robb0wen/synthwave-vscode/raw/HEAD/banner.png" width="500">
+<div>
+<img src="https://github.com/robb0wen/synthwave-vscode/raw/HEAD/theme.jpg" width="500">
+</div>
 
 </div>
