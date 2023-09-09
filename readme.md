@@ -5,7 +5,7 @@
 </div>
   
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&width=500&lines=Co-Founder+%26+Principal+Solutions+Engineer;Experienced+Builder+%26+UI%2FUX+Designer;%F0%9F%A7%A0+Growth+Mindset++%F0%9F%8E%93+Biz+%26+Comp+Sci;Always+Learning+Something+New">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&width=500&lines=Co-Founder+%26+Principal+Solutions+Engineer;Experienced+Builder+%26+UI%2FUX+Designer;%F0%9F%A7%A0+Growth+Mindset++%F0%9F%8E%93+Biz+%26+Comp+Sci;Always+Learning+New+Skills">
 </div>
 
 <img src="images/synthwave-optimized.gif" width="500">
