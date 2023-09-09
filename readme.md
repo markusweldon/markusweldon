@@ -21,16 +21,6 @@ My primary objective and North Star is architecting enterprise solutions that ad
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### 📬 Get in Touch:
-
-💼 LinkedIn: [linkedin.com/in/markusweldon](https://linkedin.com/in/markusweldon)
-
-📧 Personal Email: [hello@markusweldon.com](mailto:hello@markusweldon.com)
-
-🖥️ ~~Personal Website: [markusweldon.com](https://markusweldon.com)~~</br>🚧 Site currently under maintenance 👷‍♂️</br>Updating with Vercel and Next.JS
-
-<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
-
 ### 🛠️ Tools and 🌎 Languages:
 
 <a href="https://www.apple.com/" target="_blank"><img title="Mac" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" style="padding: 10px;" /></a>
@@ -70,12 +60,19 @@ My primary objective and North Star is architecting enterprise solutions that ad
 ### Github Contribution Activity:
 <img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B">
 
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### Github Streaks:
+<img src="https://github-readme-streak-stats.herokuapp.com/?user=markusweldon&theme=synthwave">
+
+<div>
+<img src="https://github-profile-trophy.vercel.app/?username=markusweldon&theme=dracula&row=1&column=1&rank=S,AAA,AA,A,B">
+</div>
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### Most Used Languages:
 <img src="https://github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave&hide_border=true" width="500px"/>
-
 
 <p><i>Note: These statistics are derived only from my public-facing open-source repositories. The majority of all my commits are made to private organizational repositories for security and privacy reasons.</i></p>
 
@@ -87,4 +84,18 @@ My primary objective and North Star is architecting enterprise solutions that ad
 <p><i>Note: These statistics are derived only from my public-facing open-source repositories. The majority of all my commits are made to private organizational repositories for security and privacy reasons.</i></p>
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### 📬 Get in Touch:
+
+💼 LinkedIn: [linkedin.com/in/markusweldon](https://linkedin.com/in/markusweldon)
+
+📧 Personal Email: [hello@markusweldon.com](mailto:hello@markusweldon.com)
+
+🖥️ ~~Personal Website: [markusweldon.com](https://markusweldon.com)~~</br>🚧 Site currently under maintenance 👷‍♂️</br>Updating with Vercel and Next.JS
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### 🎧 Current Listenings:
+[![Apple Music](https://img.shields.io/badge/Apple%20Music-ff66c4?style=for-the-badge&logo=Apple%20Music&logoColor=white&labelColor=D33D9B)](https://music.apple.com/profile/markusweldon)
+
 </div>
