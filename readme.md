@@ -63,10 +63,15 @@ My primary objective and North Star is architecting enterprise solutions that ad
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### Github Streaks:
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=markusweldon&theme=synthwave">
+
+<img src="https://github-readme-streak-stats.herokuapp.com/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" width="500px">
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### Github Trophies:
 
 <div>
-<img src="https://github-profile-trophy.vercel.app/?username=markusweldon&theme=dracula&row=1&column=1&rank=S,AAA,AA,A,B">
+<img src="https://github-profile-trophy.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=1&rank=S,AAA,AA,A,B" width="180px">
 </div>
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
