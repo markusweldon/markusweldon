@@ -1,7 +1,7 @@
 <div align="center">
 
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&repeat=false&width=500&lines=%3C%F0%9F%91%8B+Hello+World!%2F%3E+I'm+Markus">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&repeat=false&width=500&lines=%3C%F0%9F%91%8B+Hello+World!+%2F%3E+I'm+Markus">
 </div>
   
 <div>
