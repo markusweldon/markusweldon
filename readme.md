@@ -1,7 +1,7 @@
 <div align="center">
 
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&repeat=false&width=500&lines=%3C%F0%9F%91%8B+Hello+World!+%2F%3E+I'm+Markus">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&repeat=false&width=500&lines=%3C+%F0%9F%91%8B+Hello+World!+%2F%3E+I'm+Markus">
 </div>
   
 <div>
@@ -90,11 +90,9 @@ My primary objective and North Star is architecting enterprise solutions that ad
 ### Most Used Languages:
 <img src="https://github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave&hide_border=true" width="500px"/>
 
-<p><i>Note: These statistics are derived only from my public-facing open-source repositories. The majority of all my commits are made to private organizational repositories for security and privacy reasons.</i></p>
-
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### Github Contribution Stats:
+### Open-source Contribution Stats:
 <img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&hide_border=true&rank_icon=github&hide=stars&line_height=32&icon_color=6DE2F1&ring_color=6DE2F1&text_bold=false" width="560px" />
 
 <p><i>Note: These statistics are derived only from my public-facing open-source repositories. The majority of all my commits are made to private organizational repositories for security and privacy reasons.</i></p>
