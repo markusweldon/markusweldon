@@ -20,8 +20,6 @@ I'm Markus, a 🇬🇧 Brit builder 📍 Based in Los Angeles, California ☀️
 
 Always learning new skills 💪🧠
 
-(Harvard Business School | University of London | University of Sunderland)
-
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### 👨‍💻 About:
