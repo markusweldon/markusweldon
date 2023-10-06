@@ -124,4 +124,6 @@ Current VS Code Theme: [SynthWave '84](https://marketplace.visualstudio.com/item
 <img src="https://github.com/robb0wen/synthwave-vscode/raw/HEAD/theme.jpg" width="">
 </div>
 
+Current CLI: Hyper + iTerm with Fig
+
 </div>
