@@ -124,6 +124,6 @@ Current VS Code Theme: [SynthWave '84](https://marketplace.visualstudio.com/item
 <img src="https://github.com/robb0wen/synthwave-vscode/raw/HEAD/theme.jpg" width="">
 </div>
 
-Current CLI: Hyper + Warp + iTerm2 with Fig, OhMyZsh, NeoFetch, and Brew
+Current CLI: iTerm2 (Backups Hyper + Warp) with Fig, OhMyZsh, NeoFetch, and Brew
 
 </div>
