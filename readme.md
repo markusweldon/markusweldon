@@ -113,6 +113,7 @@ My primary objective and North Star is architecting enterprise solutions to addr
 
 ### 🎧 Current Listenings:
 [![Apple Music](https://img.shields.io/badge/Apple%20Music-ff66c4?style=for-the-badge&logo=Apple%20Music&logoColor=white&labelColor=D33D9B)](https://music.apple.com/profile/markusweldon)
+Apple Music + Marvis Pro
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
