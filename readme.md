@@ -1,11 +1,11 @@
 <div align="center">
 
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&repeat=false&width=500&lines=%3C%F0%9F%91%8B+Hello+World!+%2F%3E+I'm+Markus">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=E734D7&center=true&vCenter=true&repeat=false&width=500&lines=%3C%F0%9F%91%8B+Hello+World!+%2F%3E+I'm+Markus">
 </div>
   
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&width=500&lines=Principal+Solutions+Engineer+%26+Co-Founder;Experienced+Builder+%26+UI%2FUX+Designer;%F0%9F%A7%A0+Growth+Mindset++%F0%9F%8E%93+Biz+%26+CompSci;Always+Learning+New+Skills+%F0%9F%92%AA%F0%9F%A7%A0">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=E734D7&center=true&vCenter=true&width=500&lines=Principal+Solutions+Engineer+%26+Co-Founder;Experienced+Builder+%26+UI%2FUX+Designer;%F0%9F%A7%A0+Growth+Mindset++%F0%9F%8E%93+Biz+%26+CompSci;Always+Learning+New+Skills+%F0%9F%92%AA%F0%9F%A7%A0">
 </div>
 
 <img src="images/synthwave-optimized.gif" width="500">
