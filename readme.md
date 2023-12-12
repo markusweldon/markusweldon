@@ -24,9 +24,9 @@ Always learning new skills 💪🧠
 
 ### 👨‍💻 About:
 
-With over 16 years in the tech industry, I possess deep expertise in B2B technical pre-sales and solution engineering. I excel in architecting and implementing value-driven software solutions that tackle complex business challenges and drive business growth.
+With over 16 years in the tech industry, I've developed deep domain expertise in B2B technical pre-sales and solution engineering. I excel in architecting and implementing value-driven software solutions that tackle complex business challenges and help drive sustainable business growth.
 
-My primary objective and North Star is architecting enterprise solutions to address impactful business challenges while also ensuring they are sustainable and scale economically to support future business growth. This approach ensures customers realize a greater return on investment over time.
+My personal North Star is focused on architecting scalable enterprise solutions that directly address impactful business challenges while ensuring they support future business growth. This ensures customers realize a greater return on investment.
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
