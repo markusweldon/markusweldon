@@ -82,7 +82,7 @@ My personal North Star is focused on architecting scalable enterprise solutions 
 ### Github Trophies:
 
 <div>
-<img src="https://github-profile-trophy.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=1&rank=S,AAA,AA,A,B" width="180px">
+<img src="https://github-profile-trophy.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=4&rank=S,AAA,AA,A,B" width="700px">
 </div>
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
