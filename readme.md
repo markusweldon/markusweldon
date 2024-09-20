@@ -8,7 +8,7 @@
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=E734D7&center=true&vCenter=true&width=500&lines=Principal+Solutions+Engineer+%26+Co-Founder;Experienced+Builder+%26+UI%2FUX+Designer;%F0%9F%A7%A0+Growth+Mindset++%F0%9F%8E%93+Biz+%26+CompSci;Always+Learning+New+Skills+%F0%9F%92%AA%F0%9F%A7%A0">
 </div>
 
-<img src="images/palm-optimized.gif" width="500">
+<img src="images/palm-tree-optimized.gif" width="400">
 
 ### < 👋 Hello World! />
 
