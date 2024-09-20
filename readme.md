@@ -33,7 +33,10 @@ My personal North Star is focused on architecting scalable enterprise solutions 
 ### 🛠️ Tools and 🌎 Languages:
 
 <a href="https://www.apple.com/" target="_blank"><img title="Mac" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" style="padding: 10px;" /></a>
-<a href="https://www.gnu.org/software/bash/" target="_blank"><img title="Bash Terminal" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" style="padding: 10px;" /></a>
+<a href="https://www.notion.so/" target="_blank"><img title="Notion" width="36px" src="https://raw.githubusercontent.com/devicons/devicon/ca28c779441053191ff11710fe24a9e6c23690d6/icons/notion/notion-plain.svg" style="padding: 10px;" /></a>
+<a href="https://www.gnu.org/software/bash/" target="_blank"><img title="Terminal Bash & Zsh" width="36px" src="https://www.svgrepo.com/show/361365/terminal-bash.svg" style="padding: 10px;" /></a>
+<a href="https://ohmyz.sh" target="_blank"><img title="Oh My Zsh" width="36px" src="https://raw.githubusercontent.com/devicons/devicon/ca28c779441053191ff11710fe24a9e6c23690d6/icons/ohmyzsh/ohmyzsh-plain.svg" style="padding: 10px;" /></a>
+<a href="https://www.warp.dev/" target="_blank"><img title="Warp Terminal" width="36px" src="https://avatars.githubusercontent.com/u/71840468?s=200&v=4" style="padding: 10px;" /></a>
 <a href="https://git-scm.com/" target="_blank"><img title="Git" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" style="padding: 10px;" /></a>
 <a href="https://github.com/" target="_blank"><img title="GitHub" width="36px" src="https://user-images.githubusercontent.com/3369400/139448065-39a229ba-4b06-434b-bc67-616e2ed80c8f.png" style="padding: 10px;" /></a>
 <a href="https://code.visualstudio.com/" target="_blank"><img title="Visual Studio Code" width="36px" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" style="padding: 10px;" /></a>
