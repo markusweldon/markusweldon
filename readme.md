@@ -124,13 +124,11 @@ Apple Music + Marvis Pro App
 ### 💻 Workspace Setup:
 
 Current VS Code Theme: [SynthWave '84](https://marketplace.visualstudio.com/items?itemName=RobbOwen.synthwave-vscode)
-
 <div>
-<img src="https://github.com/robb0wen/synthwave-vscode/raw/HEAD/theme.jpg" width="">
+<img src="images/vs-code.png" width="">
 </div>
 
 Current CLI: Warp + NeoFetch, OhMyZsh, Brew
-
 <div>
 <img src="images/terminal.png" width="">
 </div>
