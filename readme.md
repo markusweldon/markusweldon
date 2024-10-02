@@ -130,7 +130,7 @@ Apple Music + Marvis Pro App
 
 ### 💻 Workspace Setup:
 
-Current VS Code Theme: [SynthWave '84](https://marketplace.visualstudio.com/items?itemName=RobbOwen.synthwave-vscode)
+Current IDE: VS Code w Theme: [SynthWave '84](https://marketplace.visualstudio.com/items?itemName=RobbOwen.synthwave-vscode)
 <div>
 <img src="images/vs-code.png" width="">
 </div>
