@@ -85,7 +85,7 @@ My personal North Star is focused on architecting scalable enterprise solutions 
 
 ### Github Streaks:
 
-<img src="https://github-readme-streak-stats.herokuapp.com/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" width="500px">
+<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" width="500px">
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
