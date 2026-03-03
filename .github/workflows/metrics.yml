@@ -2,7 +2,7 @@ name: Metrics
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 0 * * *"   # Once daily at midnight UTC — preserves rate limits
   workflow_dispatch:
   push:
     branches: ["main", "master"]
@@ -29,7 +29,8 @@ jobs:
           base: activity, community, repositories, metadata
           config_timezone: America/Los_Angeles
           config_display: large
-          config_presets: "@darkness"
+          retries: 3
+          retries_delay: 300
           extras_css: |
             svg { background: #292138 !important; }
             text { fill: #ffffff !important; }
@@ -41,6 +42,7 @@ jobs:
 
       # ─────────────────────────────────────────────
       # 2. TOP LANGUAGES CARD (replaces github-readme-stats top-langs)
+      #    indepth removed — too API-heavy
       # ─────────────────────────────────────────────
       - name: Languages Card
         uses: lowlighter/metrics@latest
@@ -56,10 +58,9 @@ jobs:
           plugin_languages_sections: most-used
           plugin_languages_details: percentage, bytes-size
           plugin_languages_colors: github
-          plugin_languages_indepth: yes
-          plugin_languages_analysis_timeout: 15
           config_timezone: America/Los_Angeles
-          config_presets: "@darkness"
+          retries: 3
+          retries_delay: 300
           extras_css: |
             svg { background: #292138 !important; }
             text { fill: #ffffff !important; }
@@ -85,7 +86,8 @@ jobs:
           plugin_achievements_limit: 0
           plugin_achievements_secrets: yes
           config_timezone: America/Los_Angeles
-          config_presets: "@darkness"
+          retries: 3
+          retries_delay: 300
           extras_css: |
             svg { background: #292138 !important; }
             text { fill: #ffffff !important; }
@@ -109,7 +111,8 @@ jobs:
           plugin_notable_repositories: yes
           plugin_notable_types: commit, pull_request, issue
           config_timezone: America/Los_Angeles
-          config_presets: "@darkness"
+          retries: 3
+          retries_delay: 300
           extras_css: |
             svg { background: #292138 !important; }
             text { fill: #ffffff !important; }
@@ -131,7 +134,8 @@ jobs:
           plugin_isocalendar: yes
           plugin_isocalendar_duration: full-year
           config_timezone: America/Los_Angeles
-          config_presets: "@darkness"
+          retries: 3
+          retries_delay: 300
           extras_css: |
             svg { background: #292138 !important; }
             text { fill: #ffffff !important; }
@@ -155,7 +159,8 @@ jobs:
           plugin_activity_days: 14
           plugin_activity_filter: push, pr, issue, release, review
           config_timezone: America/Los_Angeles
-          config_presets: "@darkness"
+          retries: 3
+          retries_delay: 300
           extras_css: |
             svg { background: #292138 !important; }
             text { fill: #ffffff !important; }
@@ -178,7 +183,8 @@ jobs:
           plugin_topics_limit: 20
           plugin_topics_mode: icons
           config_timezone: America/Los_Angeles
-          config_presets: "@darkness"
+          retries: 3
+          retries_delay: 300
           extras_css: |
             svg { background: #292138 !important; }
             text { fill: #ffffff !important; }
@@ -186,7 +192,7 @@ jobs:
 
       # ─────────────────────────────────────────────
       # 8. SKYLINE — Animated 3D contribution city
-      #    Renders contributions as an animated 3D city
+      #    Uses public data only, no token needed
       # ─────────────────────────────────────────────
       - name: GitHub Skyline
         uses: lowlighter/metrics@latest
@@ -201,3 +207,5 @@ jobs:
           plugin_skyline_frames: 60
           plugin_skyline_quality: 1
           plugin_skyline_compatibility: yes
+          retries: 3
+          retries_delay: 300
