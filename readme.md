@@ -5,26 +5,40 @@
 </div>
   
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=E734D7&center=true&vCenter=true&width=500&lines=Principal+Solutions+Engineer+%26+Co-Founder;Experienced+Builder+%26+UI%2FUX+Designer;%F0%9F%A7%A0+Growth+Mindset++%F0%9F%8E%93+Biz+%26+CompSci;Always+Learning+New+Skills+%F0%9F%92%AA%F0%9F%A7%A0">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=E734D7&center=true&vCenter=true&width=500&lines=Principal+Solutions+Engineer;%F0%9F%94%90+Enterprise+AI+Security;%F0%9F%9B%A1%EF%B8%8F+Application%2C+Platform+%26+Cloud+Risk;%F0%9F%92%AA%F0%9F%A7%A0+Always+Learning+New+Skills">
 </div>
+
+
+
 
 <img src="images/palm-tree-optimized.gif" width="400">
 
 ### < 👋 Hello World! />
 
-I'm Markus, a 🇬🇧 Brit builder 📍 Based in Los Angeles, California ☀️🌴 United States 🇺🇸
+I'm Markus, a 🇬🇧 Brit builder 📍 Based in Lake Oswego, Oregon 🌲 United States 🇺🇸
 
-👨‍💻 Co-Founder @ HyprWin.com | 💡 Principal Solutions Engineer | 🚀 16+ Years in Tech
+👨‍💻 Principal Solutions Engineer | 🛡️ AI Security Specialist | 🚀 20+ Years in Tech
 
-🧠 Growth Mindset | 🎓 Business & Computer Science
+🧠 Growth Mindset | 🎓 Business & Computer Science | 🤖 MCP & Agentic Security Workflows
 
 Always learning new skills 💪🧠
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
+### 🎯 Current Focus:
+
+![Snyk](https://img.shields.io/badge/Snyk-Security%20Expert%20Advisor%20SE-4C4A73?style=for-the-badge&logo=snyk&logoColor=white)
+![AI Security](https://img.shields.io/badge/AI-Enterprise%20AI%20Security-8957E5?style=for-the-badge&logo=anthropic&logoColor=white)
+![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-D33D9B?style=for-the-badge&logo=anthropic&logoColor=white)
+![Agentic](https://img.shields.io/badge/Agentic-Secure%20AI%20Coding%20Workflows-6DE2F1?style=for-the-badge&logo=github&logoColor=black)
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
 ### 👨‍💻 About:
 
-With over 16 years in the tech industry, I've developed deep domain expertise in B2B technical pre-sales and solution engineering. I excel in architecting and implementing value-driven software solutions that tackle complex business challenges and help drive sustainable business growth.
+With over 20 years in the tech industry, I've developed deep domain expertise in B2B technical pre-sales and solution engineering. I excel in architecting and implementing value-driven software solutions that tackle complex business challenges and help drive sustainable business growth.
+
+Currently specializing in AI-powered application security, agentic coding workflows, and MCP (Model Context Protocol) security context at Snyk — helping enterprises secure their AI development pipelines.
 
 My personal North Star is focused on architecting scalable enterprise solutions that directly address impactful business challenges while ensuring they support future business growth. This ensures customers realize a greater return on investment.
 
@@ -83,13 +97,13 @@ My personal North Star is focused on architecting scalable enterprise solutions 
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### Github Streaks:
+### 🔥 Github Streaks:
 
 <img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" width="500px">
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### Github Trophies:
+### 🏆 Github Trophies:
 
 <div>
 <img src="https://github-profile-trophy.screw-hand.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=3&rank=SSS,SS,S,AAA,AA,A,B" width="500px">
@@ -97,17 +111,51 @@ My personal North Star is focused on architecting scalable enterprise solutions 
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### Most Used Languages:
-<img src="https://github-readme-stats.vercel.app/api/top-langs?username=markusweldon&layout=compact&langs_count=10&hide_title=true&theme=synthwave&hide_border=true" width="500px"/>
+### 📊 GitHub Stats:
 
-<p><i>Note: These statistics are derived only from my public-facing open-source repositories. The majority of all my commits are made to private organizational repositories for security and privacy.</i></p>
+<img src="metrics.stats.svg" width="100%">
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### Open-source Contribution Stats:
-<img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide_title=true&include_all_commits=true&count_private=true&theme=synthwave&hide_border=true&rank_icon=github&hide=stars&line_height=32&icon_color=6DE2F1&ring_color=6DE2F1&text_bold=false" width="560px" />
+### 💻 Most Used Languages:
 
-<p><i>Note: These statistics are derived only from my public-facing open-source repositories. The majority of all my commits are made to private organizational repositories for security and privacy.</i></p>
+<img src="metrics.languages.svg" width="100%">
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### 🏅 Achievements:
+
+<img src="metrics.achievements.svg" width="100%">
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### 🌟 Notable Contributions:
+
+<img src="metrics.notable.svg" width="100%">
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### 📅 Contribution Calendar:
+
+<img src="metrics.isocalendar.svg" width="100%">
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### ⚡ Recent Activity:
+
+<img src="metrics.activity.svg" width="100%">
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### 🔖 Starred Topics:
+
+<img src="metrics.topics.svg" width="100%">
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
+### 🏙️ GitHub Skyline 2025:
+
+<img src="metrics.skyline.svg" width="100%">
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
