@@ -150,9 +150,13 @@ My personal North Star is focused on architecting scalable enterprise solutions 
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### 🏙️ GitHub Skyline 2025:
+### 🕹️ Pac-Man Contribution Graph:
 
-[![GitHub Skyline](https://img.shields.io/badge/View%20My%202025%20Skyline-D33D9B?style=for-the-badge&logo=github&logoColor=white)](https://skyline.github.com/markusweldon/2025)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph.svg">
+  <img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph-dark.svg" width="100%">
+</picture>
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
