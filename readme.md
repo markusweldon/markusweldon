@@ -120,15 +120,17 @@ My personal North Star is focused on architecting scalable enterprise solutions 
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### 🏅 Achievements:
+### 📊 Detailed Stats:
 
-<img src="metrics.achievements.svg" width="100%">
+<img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&show=reviews,prs_merged,prs_merged_percentage&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1&ring_color=D33D9B&count_private=true" width="100%">
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### 🌟 Notable Contributions:
+### 📌 Pinned Repositories:
 
-<img src="metrics.notable.svg" width="100%">
+<a href="https://github.com/markusweldon/markusweldon">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=markusweldon&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" />
+</a>
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
@@ -138,15 +140,15 @@ My personal North Star is focused on architecting scalable enterprise solutions 
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### ⚡ Recent Activity:
+### ⚡ Coding Activity:
 
-<img src="metrics.activity.svg" width="100%">
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=markusweldon&theme=dracula&utcOffset=-8" width="49%"> <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=markusweldon&theme=dracula" width="49%">
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
-### 🔖 Starred Topics:
+### 🗂️ Language Breakdown:
 
-<img src="metrics.topics.svg" width="100%">
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=markusweldon&theme=dracula" width="49%"> <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=markusweldon&theme=dracula" width="49%">
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
