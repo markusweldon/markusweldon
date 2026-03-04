@@ -189,23 +189,3 @@ jobs:
             svg { background: #292138 !important; }
             text { fill: #ffffff !important; }
             .bold { fill: #D33D9B !important; }
-
-      # ─────────────────────────────────────────────
-      # 8. SKYLINE — Animated 3D contribution city
-      #    Uses public data only, no token needed
-      # ─────────────────────────────────────────────
-      - name: GitHub Skyline
-        uses: lowlighter/metrics@latest
-        with:
-          filename: metrics.skyline.svg
-          token: NOT_NEEDED
-          user: markusweldon
-          template: classic
-          base: ""
-          plugin_skyline: yes
-          plugin_skyline_year: 2025
-          plugin_skyline_frames: 60
-          plugin_skyline_quality: 1
-          plugin_skyline_compatibility: yes
-          retries: 3
-          retries_delay: 300
