@@ -8,9 +8,6 @@
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=E734D7&center=true&vCenter=true&width=500&lines=Principal+Solutions+Engineer;%F0%9F%94%90+Enterprise+AI+Security;%F0%9F%9B%A1%EF%B8%8F+Application%2C+Platform+%26+Cloud+Risk;%F0%9F%92%AA%F0%9F%A7%A0+Always+Learning+New+Skills">
 </div>
 
-
-
-
 <img src="images/palm-tree-optimized.gif" width="400">
 
 ### < 👋 Hello World! />
@@ -155,7 +152,7 @@ My personal North Star is focused on architecting scalable enterprise solutions 
 
 ### 🏙️ GitHub Skyline 2025:
 
-<img src="metrics.skyline.svg" width="100%">
+[![GitHub Skyline](https://img.shields.io/badge/View%20My%202025%20Skyline-D33D9B?style=for-the-badge&logo=github&logoColor=white)](https://skyline.github.com/markusweldon/2025)
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
