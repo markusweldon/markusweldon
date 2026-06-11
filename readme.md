@@ -66,6 +66,12 @@ What I care about: discovery that finds the real problem, demos that prove value
 
 </div>
 
+<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-D33D9B?style=for-the-badge"></a>
+<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge"></a>
+<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-292138?style=for-the-badge"></a>
+
+<img src="images/synthwave-divider.svg" width="100%">
+
 ### 🎯 Current Focus
 
 ![AI Security](https://img.shields.io/badge/AI-Enterprise%20AI%20Security-8957E5?style=for-the-badge&logo=anthropic&logoColor=white)
@@ -136,6 +142,8 @@ What I care about: discovery that finds the real problem, demos that prove value
 <img src="https://github-profile-trophy.screw-hand.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=3&rank=SSS,SS,S,AAA,AA,A,B" width="500px">
 </div>
 
+<img src="images/synthwave-divider.svg" width="100%">
+
 ### 🕹️ Pac-Man Contribution Graph
 
 <picture>
@@ -143,13 +151,5 @@ What I care about: discovery that finds the real problem, demos that prove value
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph.svg">
   <img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph-dark.svg" width="100%">
 </picture>
-
-<img src="images/synthwave-divider.svg" width="100%">
-
-### 📬 Get in Touch
-
-<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-D33D9B?style=for-the-badge"></a>
-<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge"></a>
-<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-292138?style=for-the-badge"></a>
 
 </div>
