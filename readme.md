@@ -24,16 +24,21 @@
 <a href="https://github.com/markusweldon/claude-snyk-security-expert">
   <img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=claude-snyk-security-expert&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" />
 </a>
+<a href="https://github.com/markusweldon/snyk-ai-secure-pipeline">
+  <img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=snyk-ai-secure-pipeline&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" />
+</a>
 
 <div align="left">
 
-**[claude-owasp-security-skills](https://github.com/markusweldon/claude-owasp-security-skills)** — Five Claude Code skills that bring current OWASP standards (Top 10:2025, API, Mobile, LLM/Agentic, CI/CD) into agentic coding workflows, with secure/unsafe patterns across 10+ languages and verification checklists.
+**[claude-owasp-security-skills](https://github.com/markusweldon/claude-owasp-security-skills)**: Five Claude Code skills that bring current OWASP standards (Top 10:2025, API, Mobile, LLM/Agentic, CI/CD) into agentic coding workflows, with secure/unsafe patterns across 10+ languages and verification checklists.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/install.sh | bash
 ```
 
-**[claude-snyk-security-expert](https://github.com/markusweldon/claude-snyk-security-expert)** — A Snyk-powered security subagent for Claude Code: SAST-driven vulnerability assessment, remediation guidance, and threat modeling (STRIDE/PASTA) wired into the dev loop via MCP.
+**[claude-snyk-security-expert](https://github.com/markusweldon/claude-snyk-security-expert)**: A Snyk-powered security subagent for Claude Code. SAST-driven vulnerability assessment, remediation guidance, and threat modeling (STRIDE/PASTA) wired into the dev loop via MCP.
+
+**[snyk-ai-secure-pipeline](https://github.com/markusweldon/snyk-ai-secure-pipeline)**: What happens when AI writes your code and Snyk watches every line. An end-to-end DevSecOps demo covering Snyk Code, OSS, Container, and IaC, plus an MCP server for Claude Code.
 
 </div>
 
@@ -45,7 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
 
 I've spent 20+ years in B2B technical pre-sales and solutions engineering. Today I'm a Principal Solutions Engineer at Snyk, where I help enterprise security and platform teams adopt AI-assisted development without losing control of their risk posture.
 
-My work sits at the intersection of application security and agentic AI: securing Claude Code and MCP workflows, building security tooling for AI coding agents, and designing the guardrails that let organizations ship *faster* with AI — not slower because of it.
+My work sits at the intersection of application security and agentic AI: securing Claude Code and MCP workflows, building security tooling for AI coding agents, and designing the guardrails that let organizations ship *faster* with AI, not slower because of it.
 
 What I care about: discovery that finds the real problem, demos that prove value in the customer's own context, and architectures that survive contact with production.
 
@@ -69,6 +74,12 @@ What I care about: discovery that finds the real problem, demos that prove value
 **Web & Runtime** · React · Next.js · Svelte · Astro · Node.js · GraphQL
 
 **Cloud & Infra** · AWS · GCP · Vercel · Cloudflare · Docker · Kubernetes
+
+### 💻 Workspace
+
+**IDE** · VS Code with SynthWave '84 theme (naturally)
+
+**CLI** · Warp · Oh My Zsh · Neofetch · Homebrew
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
