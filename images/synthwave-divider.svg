@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="10" viewBox="0 0 1200 10" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="flow" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="0" spreadMethod="repeat">
+      <stop offset="0" stop-color="#D33D9B"/>
+      <stop offset="0.25" stop-color="#8957E5"/>
+      <stop offset="0.5" stop-color="#6DE2F1"/>
+      <stop offset="0.75" stop-color="#8957E5"/>
+      <stop offset="1" stop-color="#D33D9B"/>
+      <animateTransform attributeName="gradientTransform" type="translate" from="0 0" to="1200 0" dur="8s" repeatCount="indefinite"/>
+    </linearGradient>
+    <filter id="glow" x="-5%" y="-400%" width="110%" height="900%">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </defs>
+  <rect x="0" y="3" width="1200" height="4" fill="url(#flow)" filter="url(#glow)" opacity="0.75"/>
+  <rect x="0" y="4" width="1200" height="2" fill="url(#flow)"/>
+</svg>

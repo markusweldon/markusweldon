@@ -14,7 +14,7 @@
 
 🇬🇧 Brit builder · 📍 Lake Oswego, Oregon 🌲
 
-<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+<img src="images/synthwave-divider.svg" width="100%">
 
 ### 🛠️ Featured Work
 
@@ -52,7 +52,7 @@ What happens when AI writes your code and Snyk watches every line. An end-to-end
 
 </div>
 
-<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+<img src="images/synthwave-divider.svg" width="100%">
 
 ### 👨‍💻 About
 
@@ -73,7 +73,7 @@ What I care about: discovery that finds the real problem, demos that prove value
 ![Agentic](https://img.shields.io/badge/Agentic-Secure%20AI%20Coding%20Workflows-6DE2F1?style=for-the-badge&logo=github&logoColor=black)
 ![Snyk](https://img.shields.io/badge/Snyk-Security%20Expert%20Advisor%20SE-4C4A73?style=for-the-badge&logo=snyk&logoColor=white)
 
-<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+<img src="images/synthwave-divider.svg" width="100%">
 
 ### 🧰 Stack
 
@@ -108,6 +108,8 @@ What I care about: discovery that finds the real problem, demos that prove value
 <img src="https://img.shields.io/badge/Docker-292138?style=for-the-badge&logo=docker&logoColor=6DE2F1">
 <img src="https://img.shields.io/badge/Kubernetes-292138?style=for-the-badge&logo=kubernetes&logoColor=D33D9B">
 
+<img src="images/synthwave-divider.svg" width="100%">
+
 ### 💻 Workspace
 
 <img src="https://img.shields.io/badge/VS_Code-SynthWave_'84-D33D9B?style=for-the-badge&labelColor=292138">
@@ -118,13 +120,13 @@ What I care about: discovery that finds the real problem, demos that prove value
 
 <img src="images/vs-code.png" width="49%" alt="VS Code with SynthWave '84 theme"> <img src="images/terminal.png" width="49%" alt="Warp terminal with neofetch">
 
-<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+<img src="images/synthwave-divider.svg" width="100%">
 
 ### ⚡ Activity
 
 <img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B">
 
-<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+<img src="images/synthwave-divider.svg" width="100%">
 
 ### 🔥 Streaks & 🏆 Trophies
 
@@ -142,7 +144,7 @@ What I care about: discovery that finds the real problem, demos that prove value
   <img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph-dark.svg" width="100%">
 </picture>
 
-<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+<img src="images/synthwave-divider.svg" width="100%">
 
 ### 📬 Get in Touch
 
