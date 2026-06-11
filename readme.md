@@ -78,6 +78,24 @@ What I care about: discovery that finds the real problem, demos that prove value
 
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
+### 🔥 Streaks & 🏆 Trophies
+
+<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" width="500px">
+
+<div>
+<img src="https://github-profile-trophy.screw-hand.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=3&rank=SSS,SS,S,AAA,AA,A,B" width="500px">
+</div>
+
+### 🕹️ Pac-Man Contribution Graph
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph.svg">
+  <img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph-dark.svg" width="100%">
+</picture>
+
+<img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
+
 ### 📬 Get in Touch
 
 💼 [linkedin.com/in/markusweldon](https://linkedin.com/in/markusweldon) · 📧 [hello@markusweldon.com](mailto:hello@markusweldon.com)

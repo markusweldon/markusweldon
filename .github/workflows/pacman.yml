@@ -1,0 +1,29 @@
+name: Pac-Man Contribution Graph
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # Daily at midnight UTC
+  workflow_dispatch:
+  push:
+    branches: ["main", "master"]
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Generate Pac-Man contribution graph
+        uses: abozanona/pacman-contribution-graph@main
+        with:
+          github_user_name: markusweldon
+          github_token: ${{ secrets.METRICS_TOKEN }}
+
+      - name: Push to output branch
+        uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.METRICS_TOKEN }}
