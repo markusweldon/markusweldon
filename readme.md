@@ -116,6 +116,8 @@ What I care about: discovery that finds the real problem, demos that prove value
 <img src="https://img.shields.io/badge/Neofetch-292138?style=for-the-badge&logo=gnometerminal&logoColor=6DE2F1">
 <img src="https://img.shields.io/badge/Homebrew-292138?style=for-the-badge&logo=homebrew&logoColor=D33D9B">
 
+<img src="images/vs-code.png" width="49%" alt="VS Code with SynthWave '84 theme"> <img src="images/terminal.png" width="49%" alt="Warp terminal with neofetch">
+
 <img src="images/synthwave-divider-optimized.gif" height="2" width="100%">
 
 ### ⚡ Activity
