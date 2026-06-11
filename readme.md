@@ -109,6 +109,6 @@ What I care about: discovery that finds the real problem, demos that prove value
 
 ### 📬 Get in Touch
 
-💼 [linkedin.com/in/markusweldon](https://linkedin.com/in/markusweldon) · 📧 [hello@markusweldon.com](mailto:hello@markusweldon.com)
+🌐 [markusweldon.com](https://markusweldon.com) · 💼 [linkedin.com/in/markusweldon](https://linkedin.com/in/markusweldon) · 📧 [hello@markusweldon.com](mailto:hello@markusweldon.com)
 
 </div>
