@@ -101,7 +101,7 @@ What I care about: discovery that finds the real problem, demos that prove value
 
 **Cloud & Infra**
 
-<img src="https://img.shields.io/badge/AWS-292138?style=for-the-badge&logo=amazonwebservices&logoColor=6DE2F1">
+<img src="https://img.shields.io/badge/☁️_AWS-292138?style=for-the-badge">
 <img src="https://img.shields.io/badge/GCP-292138?style=for-the-badge&logo=googlecloud&logoColor=D33D9B">
 <img src="https://img.shields.io/badge/Vercel-292138?style=for-the-badge&logo=vercel&logoColor=6DE2F1">
 <img src="https://img.shields.io/badge/Cloudflare-292138?style=for-the-badge&logo=cloudflare&logoColor=D33D9B">
