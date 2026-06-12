@@ -4,15 +4,24 @@
 <img src="images/typing-greeting.svg" width="500" alt="< 👋 Hello World! /> I'm Markus">
 </div>
 
-<img src="images/title-banner.svg" width="100%" alt="Principal Solutions Engineer: helping enterprises adopt AI-assisted development securely">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/title-banner.svg">
+  <img src="images/title-banner-light.svg" width="100%" alt="Principal Solutions Engineer: helping enterprises adopt AI-assisted development securely">
+</picture>
 
 <div>
-<img src="images/typing-focus.svg" width="500" alt="Securing Agentic AI Development · MCP + Claude Code + AppSec · Ship Faster With AI, Securely">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/typing-focus.svg">
+  <img src="images/typing-focus-light.svg" width="500" alt="Securing Agentic AI Development · MCP + Claude Code + AppSec · Ship Faster With AI, Securely">
+</picture>
 </div>
 
 🇬🇧 Brit builder · 📍 Lake Oswego, Oregon 🌲
 
-<img src="images/synthwave-divider.svg" width="100%">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
 
 ### 🛠️ Featured Work
 
@@ -50,7 +59,10 @@ What happens when AI writes your code and Snyk watches every line. An end-to-end
 
 </div>
 
-<img src="images/synthwave-divider.svg" width="100%">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
 
 ### 👨‍💻 About
 
@@ -68,7 +80,10 @@ Two decades in B2B solutions engineering taught me what I still optimize for: di
 <a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge"></a>
 <a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-292138?style=for-the-badge"></a>
 
-<img src="images/synthwave-divider.svg" width="100%">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
 
 ### 🎯 Current Focus
 
@@ -79,7 +94,10 @@ Two decades in B2B solutions engineering taught me what I still optimize for: di
 ![AppSec for AI Code](https://img.shields.io/badge/AppSec_for_AI_Code-6DE2F1?style=for-the-badge&logo=owasp&logoColor=black)
 ![Snyk AI Trust Platform](https://img.shields.io/badge/Snyk_AI_Trust_Platform-4C4A73?style=for-the-badge&logo=snyk&logoColor=white)
 
-<img src="images/synthwave-divider.svg" width="100%">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
 
 ### 🧰 Stack
 
@@ -114,7 +132,10 @@ Two decades in B2B solutions engineering taught me what I still optimize for: di
 <img src="https://img.shields.io/badge/Docker-292138?style=for-the-badge&logo=docker&logoColor=6DE2F1">
 <img src="https://img.shields.io/badge/Kubernetes-292138?style=for-the-badge&logo=kubernetes&logoColor=D33D9B">
 
-<img src="images/synthwave-divider.svg" width="100%">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
 
 ### 💻 Workspace
 
@@ -126,13 +147,19 @@ Two decades in B2B solutions engineering taught me what I still optimize for: di
 
 <img src="images/vs-code.png" width="49%" alt="VS Code with SynthWave '84 theme"> <img src="images/terminal.png" width="49%" alt="Warp terminal with neofetch">
 
-<img src="images/synthwave-divider.svg" width="100%">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
 
 ### ⚡ Activity
 
 <img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B">
 
-<img src="images/synthwave-divider.svg" width="100%">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
 
 ### 🔥 Streaks & 🏆 Trophies
 
@@ -142,7 +169,10 @@ Two decades in B2B solutions engineering taught me what I still optimize for: di
 <img src="https://github-profile-trophy.screw-hand.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=3&rank=SSS,SS,S,AAA,AA,A,B" width="500px">
 </div>
 
-<img src="images/synthwave-divider.svg" width="100%">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
 
 ### 🕹️ Pac-Man Contribution Graph
 
