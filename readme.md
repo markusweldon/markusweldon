@@ -74,10 +74,10 @@ Two decades in B2B solutions engineering taught me what I still optimize for: di
 
 ### 🎯 Current Focus
 
-![AI Security](https://img.shields.io/badge/AI-Enterprise%20AI%20Security-8957E5?style=for-the-badge&logo=anthropic&logoColor=white)
-![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-D33D9B?style=for-the-badge&logo=anthropic&logoColor=white)
-![Agentic](https://img.shields.io/badge/Agentic-Secure%20AI%20Coding%20Workflows-6DE2F1?style=for-the-badge&logo=github&logoColor=black)
-![Snyk](https://img.shields.io/badge/Snyk-Security%20Expert%20Advisor%20SE-4C4A73?style=for-the-badge&logo=snyk&logoColor=white)
+![Agentic AI](https://img.shields.io/badge/Agentic_AI-Securing_Claude_Code_Workflows-8957E5?style=for-the-badge&logo=claude&logoColor=white)
+![MCP Security](https://img.shields.io/badge/MCP-Model_Context_Protocol_Security-D33D9B?style=for-the-badge&logo=modelcontextprotocol&logoColor=white)
+![AI AppSec](https://img.shields.io/badge/AppSec-Securing_AI--Generated_Code-6DE2F1?style=for-the-badge&logo=owasp&logoColor=black)
+![Snyk](https://img.shields.io/badge/Snyk-AI_Trust_Platform-4C4A73?style=for-the-badge&logo=snyk&logoColor=white)
 
 <img src="images/synthwave-divider.svg" width="100%">
 
