@@ -58,11 +58,11 @@ What happens when AI writes your code and Snyk watches every line. An end-to-end
 
 <div align="left">
 
-I've spent 20+ years in B2B technical pre-sales and solutions engineering. Today I'm a Principal Solutions Engineer at Snyk, where I help enterprise security and platform teams adopt AI-assisted development without losing control of their risk posture.
+I build security tooling for the agentic AI era: OWASP standards as Claude Code skills, a Snyk-powered security subagent, and end-to-end pipelines that show what "AI writes the code, security watches every line" looks like in practice.
 
-My work sits at the intersection of application security and agentic AI: securing Claude Code and MCP workflows, building security tooling for AI coding agents, and designing the guardrails that let organizations ship *faster* with AI, not slower because of it.
+As a Principal Solutions Engineer at Snyk, I help enterprise security and platform teams adopt AI-assisted development without losing control of their risk posture. That means securing Claude Code and MCP workflows, and designing the guardrails that let organizations ship *faster* with AI, not slower because of it.
 
-What I care about: discovery that finds the real problem, demos that prove value in the customer's own context, and architectures that survive contact with production.
+Two decades in B2B solutions engineering taught me what I still optimize for: discovery that finds the real problem, demos that prove value in the customer's own context, and architectures that survive contact with production.
 
 </div>
 
