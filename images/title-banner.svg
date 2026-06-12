@@ -1,5 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="130" viewBox="0 0 1000 130">
   <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FF4FC3"/>
+      <stop offset="0.5" stop-color="#A06BFF"/>
+      <stop offset="1" stop-color="#7EEDFB"/>
+    </linearGradient>
     <filter id="halo" x="-10%" y="-60%" width="120%" height="220%">
       <feGaussianBlur stdDeviation="4"/>
     </filter>
@@ -8,9 +13,9 @@
     </filter>
   </defs>
   <g font-family="Segoe UI, Helvetica, Arial, sans-serif" text-anchor="middle">
-    <text x="500" y="62" font-size="50" font-weight="900" letter-spacing="2" fill="#FF2EB9" filter="url(#halo2)">PRINCIPAL SOLUTIONS ENGINEER<animate attributeName="opacity" values="1;0.55;1" dur="4s" repeatCount="indefinite"/></text>
-    <text x="500" y="62" font-size="50" font-weight="900" letter-spacing="2" fill="#FF2EB9" filter="url(#halo)" opacity="0.9">PRINCIPAL SOLUTIONS ENGINEER</text>
-    <text x="500" y="62" font-size="50" font-weight="900" letter-spacing="2" fill="#FFE9F8">PRINCIPAL SOLUTIONS ENGINEER</text>
+    <text x="500" y="62" font-size="50" font-weight="900" letter-spacing="2" fill="url(#g)" filter="url(#halo2)">PRINCIPAL SOLUTIONS ENGINEER<animate attributeName="opacity" values="1;0.5;1" dur="4s" repeatCount="indefinite"/></text>
+    <text x="500" y="62" font-size="50" font-weight="900" letter-spacing="2" fill="url(#g)" filter="url(#halo)" opacity="0.9">PRINCIPAL SOLUTIONS ENGINEER</text>
+    <text x="500" y="62" font-size="50" font-weight="900" letter-spacing="2" fill="url(#g)">PRINCIPAL SOLUTIONS ENGINEER</text>
     <text x="500" y="110" font-size="27" font-weight="600" letter-spacing="1" fill="#6DE2F1">Helping enterprises adopt AI-assisted development securely</text>
   </g>
 </svg>
