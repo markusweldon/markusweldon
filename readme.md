@@ -74,10 +74,12 @@ Two decades in B2B solutions engineering taught me what I still optimize for: di
 
 ### 🎯 Current Focus
 
-![Agentic AI](https://img.shields.io/badge/Agentic_AI-Securing_Claude_Code_Workflows-8957E5?style=for-the-badge&logo=claude&logoColor=white)
-![MCP Security](https://img.shields.io/badge/MCP-Model_Context_Protocol_Security-D33D9B?style=for-the-badge&logo=modelcontextprotocol&logoColor=white)
-![AI AppSec](https://img.shields.io/badge/AppSec-Securing_AI--Generated_Code-6DE2F1?style=for-the-badge&logo=owasp&logoColor=black)
-![Snyk](https://img.shields.io/badge/Snyk-AI_Trust_Platform-4C4A73?style=for-the-badge&logo=snyk&logoColor=white)
+**Securing agentic AI development end to end: the agent workflows, the MCP layer, and the code they ship.**
+
+![Claude Code Security](https://img.shields.io/badge/Claude_Code_Security-8957E5?style=for-the-badge&logo=claude&logoColor=white)
+![MCP Security](https://img.shields.io/badge/MCP_Security-D33D9B?style=for-the-badge&logo=modelcontextprotocol&logoColor=white)
+![AppSec for AI Code](https://img.shields.io/badge/AppSec_for_AI_Code-6DE2F1?style=for-the-badge&logo=owasp&logoColor=black)
+![Snyk AI Trust Platform](https://img.shields.io/badge/Snyk_AI_Trust_Platform-4C4A73?style=for-the-badge&logo=snyk&logoColor=white)
 
 <img src="images/synthwave-divider.svg" width="100%">
 
