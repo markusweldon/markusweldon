@@ -1,13 +1,13 @@
 <div align="center">
 
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=E734D7&center=true&vCenter=true&repeat=false&width=500&lines=%3C%F0%9F%91%8B+Hello+World!+%2F%3E+I'm+Markus">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=D33D9B&center=true&vCenter=true&repeat=false&width=500&lines=%3C%F0%9F%91%8B+Hello+World!+%2F%3E+I'm+Markus+%E2%96%8C">
 </div>
 
 <img src="images/title-banner.svg" width="100%" alt="Principal Solutions Engineer: helping enterprises adopt AI-assisted development securely">
 
 <div>
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=E734D7&center=true&vCenter=true&width=500&lines=Securing+Agentic+AI+Development;MCP+%2B+Claude+Code+%2B+AppSec">
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&pause=1000&color=6DE2F1&center=true&vCenter=true&width=500&lines=Securing+Agentic+AI+Development+%E2%96%8C;MCP+%2B+Claude+Code+%2B+AppSec+%E2%96%8C;Ship+Faster+With+AI%2C+Securely+%E2%96%8C">
 </div>
 
 🇬🇧 Brit builder · 📍 Lake Oswego, Oregon 🌲
