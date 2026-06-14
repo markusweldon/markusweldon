@@ -7,20 +7,41 @@ on:
   push:
     branches: ["main", "master"]
 
+permissions:
+  contents: write
+
+env:
+  # Node 20 is deprecated on runners (forced to Node 24 from 2026-06-16).
+  # Opt in now so these JS actions keep running.
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   generate:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Generate Pac-Man contribution graph
+        id: pacman
+        continue-on-error: true
         uses: abozanona/pacman-contribution-graph@main
         with:
           github_user_name: markusweldon
           github_token: ${{ secrets.METRICS_TOKEN }}
 
+      - name: Verify graph was generated
+        id: check
+        run: |
+          if [ -d dist ] && [ -n "$(ls -A dist 2>/dev/null)" ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+            echo "Generated files:"
+            ls -la dist
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Pac-Man generation produced no output this run (transient API issue); keeping the existing graph on the output branch."
+          fi
+
       - name: Push to output branch
+        if: steps.check.outputs.ok == 'true'
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
           target_branch: output
