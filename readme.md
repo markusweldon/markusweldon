@@ -138,7 +138,7 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 
 ### ⚡ Activity
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B">
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -150,7 +150,7 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 <img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" width="500px">
 
 <div>
-<img src="https://github-profile-trophy.screw-hand.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=3&rank=SSS,SS,S,AAA,AA,A,B" width="500px">
+<img src="https://github-profile-trophy.screw-hand.vercel.app/?username=markusweldon&theme=radical&no-frame=true&row=1&column=3&rank=SSS,SS,S,AAA,AA,A,B" width="500px">
 </div>
 
 <picture>
