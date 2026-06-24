@@ -150,7 +150,7 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 <img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" width="500px">
 
 <div>
-<img src="https://github-profile-trophy.screw-hand.vercel.app/?username=markusweldon&theme=radical&no-frame=true&row=1&column=3&rank=SSS,SS,S,AAA,AA,A,B" width="500px">
+<img src="https://github-profile-trophy.screw-hand.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=3&rank=SSS,SS,S,AAA,AA,A,B" width="500px">
 </div>
 
 <picture>
@@ -160,6 +160,6 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 
 ### 🕹️ Pac-Man Contribution Graph
 
-<img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph.svg" width="100%">
+<img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph-dark.svg" width="100%">
 
 </div>
