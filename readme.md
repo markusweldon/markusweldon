@@ -54,9 +54,9 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
 
 <div align="left">
 
-**Principal Solutions Engineer** working where AI meets security. I help enterprises adopt AI-assisted development without losing control of their risk posture, and I build the tooling that makes it real: OWASP standards shipped as Claude Code skills, a Snyk-powered security subagent, and end-to-end pipelines that show what *"AI writes the code, security watches every line"* looks like in practice.
+**Principal Solutions Engineer** working where Agentic AI meets Security. I help enterprises adopt AI-assisted development without losing control of their risk posture, and I build the tooling that makes it real: security scanners for MCP servers and AI agents, OWASP standards shipped as Claude Code skills, a Snyk-powered security subagent, and end-to-end pipelines that show what *"AI writes the code, security watches every line"* looks like in practice.
 
-My focus is agentic AI in production: securing Claude Code and MCP workflows, and designing the guardrails that let teams ship *faster* with AI, not slower. Two decades in B2B solutions engineering taught me to optimize for the things that actually move enterprises: discovery that finds the real problem, demos that prove value in the customer's own context, and architecture that survives contact with production.
+My focus is agentic AI in production: securing Claude Code and MCP workflows, and designing the guardrails that let teams ship *faster* with AI, not slower. Two decades in B2B solutions engineering taught me to optimize for the things that actually move enterprises: discovery that finds the real problem, demos that prove value in the customer's own context, and architecture that survives production.
 
 </div>
 
