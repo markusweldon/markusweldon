@@ -60,9 +60,9 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 
 </div>
 
-<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-D33D9B?style=for-the-badge"></a>
-<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge"></a>
-<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-292138?style=for-the-badge"></a>
+<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-8957E5?style=for-the-badge&logoColor=white"></a>
+<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge&logoColor=black"></a>
+<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-D33D9B?style=for-the-badge&logoColor=white"></a>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
