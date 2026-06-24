@@ -35,9 +35,9 @@
 
 🚧 **Currently building** → [agentinel](https://github.com/markusweldon/agentinel): an OSS scanner that red-teams MCP servers & AI agents against the OWASP Agentic Top 10 (2026).
 
-<div align="left">
+<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="https://img.shields.io/badge/▶_Try_the_OWASP_Skills_for_Claude_Code-8957E5?style=for-the-badge&logo=claude&logoColor=white"></a>
 
-**▶ Try the OWASP security skills**
+<div align="left">
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/install.sh | bash
