@@ -40,12 +40,13 @@ jobs:
           # (Verify + tune against the first CI-rendered SVG.)
           extras_css: |
             svg { background: #292138; color: #d9d7ee; }
-            h1, h2, .title { color: #D33D9B !important; }
+            h1, h2, h3, .title { color: #D33D9B !important; }
             a, .key, .value { color: #6DE2F1 !important; }
-            :root {
-              --color-calendar-graph-day-bg: #3a2f54;
-              --color-calendar-graph-day-L1-bg: #6DE2F1;
-              --color-calendar-graph-day-L2-bg: #36c5e0;
-              --color-calendar-graph-day-L3-bg: #D33D9B;
-              --color-calendar-graph-day-L4-bg: #8957E5;
-            }
+            /* Recolor the isometric contribution calendar to a synthwave ramp.
+               The cells are inline fill attributes (specificity 0), so plain
+               attribute selectors override them. Low -> high activity. */
+            [fill="#ebedf0"] { fill: #2a2143 !important; }
+            [fill="#9be9a8"] { fill: #4c3f72 !important; }
+            [fill="#40c463"] { fill: #8957E5 !important; }
+            [fill="#30a14e"] { fill: #D33D9B !important; }
+            [fill="#216e39"] { fill: #6DE2F1 !important; }
