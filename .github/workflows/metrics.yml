@@ -22,7 +22,7 @@ jobs:
           filename: github-metrics.svg
           user: markusweldon
           template: classic
-          base: header, repositories
+          base: ""
           config_timezone: America/Los_Angeles
           config_animations: "yes"
 
@@ -40,7 +40,7 @@ jobs:
           # (Verify + tune against the first CI-rendered SVG.)
           extras_css: |
             svg { background: #292138; color: #d9d7ee; }
-            h2, .title { color: #D33D9B !important; }
+            h1, h2, .title { color: #D33D9B !important; }
             a, .key, .value { color: #6DE2F1 !important; }
             :root {
               --color-calendar-graph-day-bg: #3a2f54;
