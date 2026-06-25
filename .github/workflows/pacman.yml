@@ -40,22 +40,6 @@ jobs:
             echo "::warning::Pac-Man generation produced no output this run (transient API issue); keeping the existing graph on the output branch."
           fi
 
-      - name: Recolor for dark mode
-        if: steps.check.outputs.ok == 'true'
-        run: |
-          for f in dist/*.svg; do
-            # The action emits a light-themed SVG with a white background and
-            # black maze walls — invisible/jarring on a dark-first profile.
-            # Recolor in place for a transparent, dark-friendly graph.
-            sed -i \
-              -e 's|<rect width="100%" height="100%" fill="#ffffff"/>||g' \
-              -e 's|#ebedf0|#161b22|g' \
-              -e 's|#000000|#6e7681|g' \
-              -e 's|#57606a|#8b949e|g' \
-              "$f"
-          done
-          echo "Recolored $(ls dist/*.svg | wc -l) SVG(s) for dark mode."
-
       - name: Push to output branch
         if: steps.check.outputs.ok == 'true'
         uses: crazy-max/ghaction-github-pages@v3.1.0

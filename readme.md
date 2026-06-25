@@ -25,37 +25,23 @@
 
 ### 🛠️ Featured Work
 
-<a href="https://github.com/markusweldon/claude-owasp-security-skills">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=claude-owasp-security-skills&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" />
-</a>
+**🛡️ Security tooling for the agentic-AI era**
+
+<a href="https://github.com/markusweldon/agentinel"><img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=agentinel&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" /></a>
+<a href="https://github.com/markusweldon/snyk-ai-secure-pipeline"><img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=snyk-ai-secure-pipeline&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" /></a>
+
+<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=claude-owasp-security-skills&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" /></a>
+<a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=claude-snyk-security-expert&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" /></a>
+
+🚧 **Currently building** → [agentinel](https://github.com/markusweldon/agentinel): an OSS scanner that red-teams MCP servers & AI agents against the OWASP Agentic Top 10 (2026).
+
+<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="https://img.shields.io/badge/▶_Try_the_OWASP_Skills_for_Claude_Code-8957E5?style=for-the-badge&logo=claude&logoColor=white"></a>
 
 <div align="left">
-
-Five Claude Code skills that bring current OWASP standards (Top 10:2025, API, Mobile, LLM/Agentic, CI/CD) into agentic coding workflows, with secure/unsafe patterns across 10+ languages and verification checklists.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/install.sh | bash
 ```
-
-</div>
-
-<a href="https://github.com/markusweldon/claude-snyk-security-expert">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=claude-snyk-security-expert&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" />
-</a>
-
-<div align="left">
-
-A Snyk-powered security subagent for Claude Code. SAST-driven vulnerability assessment, remediation guidance, and threat modeling (STRIDE/PASTA) wired into the dev loop via MCP.
-
-</div>
-
-<a href="https://github.com/markusweldon/snyk-ai-secure-pipeline">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=snyk-ai-secure-pipeline&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" />
-</a>
-
-<div align="left">
-
-What happens when AI writes your code and Snyk watches every line. An end-to-end DevSecOps demo covering Snyk Code, OSS, Container, and IaC, plus an MCP server for Claude Code.
 
 </div>
 
@@ -68,17 +54,15 @@ What happens when AI writes your code and Snyk watches every line. An end-to-end
 
 <div align="left">
 
-I build security tooling for the agentic AI era: OWASP standards as Claude Code skills, a Snyk-powered security subagent, and end-to-end pipelines that show what "AI writes the code, security watches every line" looks like in practice.
+**Principal Solutions Engineer** working where AI meets Security. I help enterprises adopt Agentic AI-assisted software development without losing control of their risk posture, and I help build the tooling that makes it real: security scanners for MCP servers and AI agents, OWASP standards shipped as Claude Code skills, and end-to-end CI/CD pipelines that show what *"AI writes the code, security checks every line"* looks like in practice.
 
-As a Principal Solutions Engineer at Snyk, I help enterprise security and platform teams adopt AI-assisted development without losing control of their risk posture. That means securing Claude Code and MCP workflows, and designing the guardrails that let organizations ship *faster* with AI, not slower because of it.
-
-Two decades in B2B solutions engineering taught me what I still optimize for: discovery that finds the real problem, demos that prove value in the customer's own context, and architectures that survive contact with production.
+My focus is agentic AI in production: securing agent and MCP workflows, and designing the guardrails and safety directives that let teams ship *faster* with AI, not slower. Two decades in B2B solutions engineering taught me to optimize for the things that actually move enterprises: discovery that uncovers the real business problem, solutions that prove value in the customer's own context, and architecture that survives production.
 
 </div>
 
-<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-D33D9B?style=for-the-badge"></a>
-<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge"></a>
-<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-292138?style=for-the-badge"></a>
+<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-8957E5?style=for-the-badge&logoColor=white"></a>
+<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge&logoColor=black"></a>
+<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-D33D9B?style=for-the-badge&logoColor=white"></a>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -154,20 +138,18 @@ Two decades in B2B solutions engineering taught me what I still optimize for: di
 
 ### ⚡ Activity
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B">
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 🔥 Streaks & 🏆 Trophies
+### 🔥 Streaks & 📊 Stats
 
-<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" width="500px">
+<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" width="49%"> <img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide=stars&include_all_commits=true&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1&ring_color=D33D9B" width="49%">
 
-<div>
-<img src="https://github-profile-trophy.screw-hand.vercel.app/?username=markusweldon&theme=dracula&no-frame=true&row=1&column=3&rank=SSS,SS,S,AAA,AA,A,B" width="500px">
-</div>
+<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -176,6 +158,6 @@ Two decades in B2B solutions engineering taught me what I still optimize for: di
 
 ### 🕹️ Pac-Man Contribution Graph
 
-<img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph.svg" width="100%">
+<img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph-dark.svg" width="100%">
 
 </div>
