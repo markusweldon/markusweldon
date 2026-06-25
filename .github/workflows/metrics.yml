@@ -23,6 +23,8 @@ jobs:
           user: markusweldon
           template: classic
           base: ""
+          config_display: columns
+          config_order: languages, habits, isocalendar
           config_timezone: America/Los_Angeles
           config_animations: "yes"
 
@@ -35,6 +37,13 @@ jobs:
           plugin_languages_indepth: "yes"
           plugin_languages_details: percentage
           plugin_languages_limit: 6
+
+          # New widget: coding-habits panel (most active hours/days + recent langs)
+          plugin_habits: "yes"
+          plugin_habits_from: 200
+          plugin_habits_days: 14
+          plugin_habits_facts: "yes"
+          plugin_habits_charts: "yes"
 
           # Synthwave theming. metrics has no dark toggle, so override its CSS.
           # (Verify + tune against the first CI-rendered SVG.)
