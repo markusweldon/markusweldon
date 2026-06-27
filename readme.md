@@ -147,7 +147,7 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 
 ### 🔥 Streaks & 📊 Stats
 
-<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" height="160"> <img src="https://github-readme-stats.vercel.app/api?username=markusweldon&show_icons=true&hide=stars&include_all_commits=true&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1&ring_color=D33D9B" height="160">
+<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" height="185"> <img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=markusweldon&theme=synthwave&utcOffset=-8" height="185">
 
 <img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg" width="100%">
 
