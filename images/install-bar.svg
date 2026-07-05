@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="52" viewBox="0 0 800 52">
-  <rect x="1" y="1" width="798" height="50" rx="10" fill="#292138" stroke="#3a3350" stroke-width="1.2"/>
-  <text x="22" y="32" font-family="Fira Code, Courier New, monospace" font-size="11" font-weight="700" fill="#D33D9B">$</text>
-  <text x="40" y="32" font-family="Fira Code, Courier New, monospace" font-size="11" font-weight="500" fill="#E6EDF3">curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/<tspan fill="#6DE2F1">install.sh</tspan> | bash<tspan fill="#6DE2F1">▌<animate attributeName="opacity" calcMode="discrete" values="1;0" keyTimes="0;0.5" dur="1.06s" repeatCount="indefinite"/></tspan></text>
-</svg>
