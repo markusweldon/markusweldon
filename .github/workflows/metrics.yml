@@ -51,3 +51,7 @@ jobs:
             [fill="#40c463"] { fill: #8957E5 !important; }
             [fill="#30a14e"] { fill: #D33D9B !important; }
             [fill="#216e39"] { fill: #6DE2F1 !important; }
+            /* Languages bar: kill the white track and near-white segments */
+            [fill="white"]   { fill: #1c1626 !important; }
+            [fill="#ededed"] { fill: #4C4A73 !important; }
+            [fill="#d1d5da"] { fill: #4C4A73 !important; }

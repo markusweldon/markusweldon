@@ -12,7 +12,7 @@
 <div>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/typing-focus.svg">
-  <img src="images/typing-focus-light.svg" width="500" alt="Securing Agentic AI Development · MCP + Claude Code + AppSec · Ship Faster With AI, Securely">
+  <img src="images/typing-focus-light.svg" width="640" alt="Securing Agentic AI Development · MCP + Claude Code + AppSec · Ship Faster With AI, Securely">
 </picture>
 </div>
 
@@ -33,15 +33,7 @@
 <a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/card-claude-owasp-security-skills.svg" width="400" alt="claude-owasp-security-skills: OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards as Claude Code skills"></a>
 <a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="images/card-claude-snyk-security-expert.svg" width="400" alt="claude-snyk-security-expert: Snyk-powered security subagent for Claude Code"></a>
 
-<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="https://img.shields.io/badge/▶_Try_the_OWASP_Skills_for_Claude_Code-8957E5?style=for-the-badge&logo=claude&logoColor=white"></a>
-
-<div align="left">
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/install.sh | bash
-```
-
-</div>
+<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/install-bar.svg" width="800" alt="curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/install.sh | bash"></a>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -145,7 +137,7 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 
 ### 🔥 Streaks & 📊 Stats
 
-<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" height="185">
+<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B&card_width=830" width="100%">
 
 <img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg" width="100%">
 
