@@ -27,13 +27,11 @@
 
 **🛡️ Security tooling for the agentic-AI era**
 
-<a href="https://github.com/markusweldon/agentinel"><img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=agentinel&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" /></a>
-<a href="https://github.com/markusweldon/snyk-ai-secure-pipeline"><img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=snyk-ai-secure-pipeline&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" /></a>
+<a href="https://github.com/markusweldon/agentinel"><img src="images/card-agentinel.svg" width="424" alt="agentinel: red-teams and statically audits MCP servers and AI agents against the OWASP Agentic Top 10 (2026)"></a>
+<a href="https://github.com/markusweldon/snyk-ai-secure-pipeline"><img src="images/card-snyk-ai-secure-pipeline.svg" width="424" alt="snyk-ai-secure-pipeline: end-to-end DevSecOps demo with Snyk Code, OSS, Container, IaC and an MCP server for Claude Code"></a>
 
-<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=claude-owasp-security-skills&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" /></a>
-<a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="https://github-readme-stats.vercel.app/api/pin/?username=markusweldon&repo=claude-snyk-security-expert&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1" /></a>
-
-🚧 **Currently building** → [agentinel](https://github.com/markusweldon/agentinel): an OSS scanner that red-teams MCP servers & AI agents against the OWASP Agentic Top 10 (2026).
+<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/card-claude-owasp-security-skills.svg" width="424" alt="claude-owasp-security-skills: OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards as Claude Code skills"></a>
+<a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="images/card-claude-snyk-security-expert.svg" width="424" alt="claude-snyk-security-expert: Snyk-powered security subagent for Claude Code"></a>
 
 <a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="https://img.shields.io/badge/▶_Try_the_OWASP_Skills_for_Claude_Code-8957E5?style=for-the-badge&logo=claude&logoColor=white"></a>
 
@@ -147,7 +145,7 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 
 ### 🔥 Streaks & 📊 Stats
 
-<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" height="185"> <img src="https://github-readme-stats.vercel.app/api?username=markusweldon&hide=stars,issues&show_icons=true&include_all_commits=true&rank_icon=percentile&hide_border=true&bg_color=292138&title_color=D33D9B&text_color=ffffff&icon_color=6DE2F1&hide_title=true" height="185">
+<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B" height="185">
 
 <img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg" width="100%">
 
