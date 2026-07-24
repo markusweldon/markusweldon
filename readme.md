@@ -44,6 +44,15 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
+### 📊 Stats
+
+<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg" width="100%">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
+
 ### 👨‍💻 About
 
 <div align="left">
@@ -71,6 +80,15 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 ![MCP Security](https://img.shields.io/badge/MCP_Security-D33D9B?style=for-the-badge&logo=modelcontextprotocol&logoColor=white)
 ![AppSec for AI Code](https://img.shields.io/badge/AppSec_for_AI_Code-6DE2F1?style=for-the-badge&logo=owasp&logoColor=black)
 ![Snyk AI Trust Platform](https://img.shields.io/badge/Snyk_AI_Trust_Platform-4C4A73?style=for-the-badge&logo=snyk&logoColor=white)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
+
+### ⚡ Activity
+
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -115,30 +133,6 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 💻 Workspace
-
-<img src="https://img.shields.io/badge/VS_Code-SynthWave_'84-D33D9B?style=for-the-badge&labelColor=292138">
-<img src="https://img.shields.io/badge/Warp-292138?style=for-the-badge&logo=warp&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/Oh_My_Zsh-292138?style=for-the-badge&logo=zsh&logoColor=D33D9B">
-<img src="https://img.shields.io/badge/Neofetch-292138?style=for-the-badge&logo=gnometerminal&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/Homebrew-292138?style=for-the-badge&logo=homebrew&logoColor=D33D9B">
-
-<img src="images/vs-code.png" width="49%" alt="VS Code with SynthWave '84 theme"> <img src="images/terminal.png" width="49%" alt="Warp terminal with neofetch">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
-  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
-</picture>
-
-### ⚡ Activity
-
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B" width="100%">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
-  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
-</picture>
-
 ### 🔥 Streaks
 
 <img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B&card_width=830" width="100%">
@@ -148,9 +142,15 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 📊 Stats
+### 💻 Workspace
 
-<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg" width="100%">
+<img src="https://img.shields.io/badge/VS_Code-SynthWave_'84-D33D9B?style=for-the-badge&labelColor=292138">
+<img src="https://img.shields.io/badge/Warp-292138?style=for-the-badge&logo=warp&logoColor=6DE2F1">
+<img src="https://img.shields.io/badge/Oh_My_Zsh-292138?style=for-the-badge&logo=zsh&logoColor=D33D9B">
+<img src="https://img.shields.io/badge/Neofetch-292138?style=for-the-badge&logo=gnometerminal&logoColor=6DE2F1">
+<img src="https://img.shields.io/badge/Homebrew-292138?style=for-the-badge&logo=homebrew&logoColor=D33D9B">
+
+<img src="images/vs-code.png" width="49%" alt="VS Code with SynthWave '84 theme"> <img src="images/terminal.png" width="49%" alt="Warp terminal with neofetch">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
