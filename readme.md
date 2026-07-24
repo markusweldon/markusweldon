@@ -23,6 +23,25 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
+### 👨‍💻 About
+
+<div align="left">
+
+**Principal Solutions Engineer** working where AI meets Security. I help enterprises adopt Agentic AI-assisted software development without losing control of their risk posture, and I help build the tooling that makes it real: security scanners for MCP servers and AI agents, OWASP standards shipped as Claude Code skills, and end-to-end CI/CD pipelines that show what *"AI writes the code, security checks every line"* looks like in practice.
+
+My focus is agentic AI in production: securing agent and MCP workflows, and designing the guardrails and safety directives that let teams ship *faster* with AI, not slower. Two decades in B2B solutions engineering taught me to optimize for the things that actually move enterprises: discovery that uncovers the real business problem, solutions that prove value in the customer's own context, and architecture that survives production.
+
+</div>
+
+<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-8957E5?style=for-the-badge&logoColor=white"></a>
+<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge&logoColor=black"></a>
+<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-D33D9B?style=for-the-badge&logoColor=white"></a>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
+
 ### 🛠️ Featured Work
 
 **🛡️ Security tooling for the agentic-AI era**
@@ -44,19 +63,27 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 👨‍💻 About
+### ⚡ Activity
 
-<div align="left">
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B" width="100%">
 
-**Principal Solutions Engineer** working where AI meets Security. I help enterprises adopt Agentic AI-assisted software development without losing control of their risk posture, and I help build the tooling that makes it real: security scanners for MCP servers and AI agents, OWASP standards shipped as Claude Code skills, and end-to-end CI/CD pipelines that show what *"AI writes the code, security checks every line"* looks like in practice.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
 
-My focus is agentic AI in production: securing agent and MCP workflows, and designing the guardrails and safety directives that let teams ship *faster* with AI, not slower. Two decades in B2B solutions engineering taught me to optimize for the things that actually move enterprises: discovery that uncovers the real business problem, solutions that prove value in the customer's own context, and architecture that survives production.
+### 🔥 Streaks
 
-</div>
+<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B&card_width=830" width="100%">
 
-<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-8957E5?style=for-the-badge&logoColor=white"></a>
-<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge&logoColor=black"></a>
-<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-D33D9B?style=for-the-badge&logoColor=white"></a>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
+
+### 📊 Stats
+
+<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -124,33 +151,6 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 <img src="https://img.shields.io/badge/Homebrew-292138?style=for-the-badge&logo=homebrew&logoColor=D33D9B">
 
 <img src="images/vs-code.png" width="49%" alt="VS Code with SynthWave '84 theme"> <img src="images/terminal.png" width="49%" alt="Warp terminal with neofetch">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
-  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
-</picture>
-
-### ⚡ Activity
-
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B" width="100%">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
-  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
-</picture>
-
-### 🔥 Streaks
-
-<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B&card_width=830" width="100%">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
-  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
-</picture>
-
-### 📊 Stats
-
-<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
