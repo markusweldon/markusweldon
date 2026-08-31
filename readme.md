@@ -65,7 +65,7 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
 
 ### ⚡ Activity
 
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=markusweldon&theme=synthwave-84&hide_title=true&line=D33D9B" width="100%">
+<img src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/activity-graph.svg" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
