@@ -23,7 +23,7 @@ jobs:
       - name: Generate Pac-Man contribution graph
         id: pacman
         continue-on-error: true
-        uses: abozanona/pacman-contribution-graph@main
+        uses: abozanona/pacman-contribution-graph@v5.3.2
         with:
           github_user_name: markusweldon
           github_token: ${{ secrets.METRICS_TOKEN }}
