@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: "15 0 * * *"   # Daily, staggered from metrics.yml and pacman.yml
   workflow_dispatch:
+  push:
+    branches: ["fix/activity-graph-action"]   # TEMP: for testing on this branch; switch to main/master before merge
 
 permissions:
   contents: write
