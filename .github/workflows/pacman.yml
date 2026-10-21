@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: pacman-graph-publish
+  cancel-in-progress: false
+
 env:
   # Node 20 is deprecated on runners (forced to Node 24 from 2026-06-16).
   # Opt in now so these JS actions keep running.
@@ -31,20 +35,29 @@ jobs:
       - name: Verify graph was generated
         id: check
         run: |
-          if [ -d dist ] && [ -n "$(ls -A dist 2>/dev/null)" ]; then
+          if [ -s dist/pacman-contribution-graph.svg ] && [ -s dist/pacman-contribution-graph-dark.svg ]; then
+            python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          for filename in ("dist/pacman-contribution-graph.svg", "dist/pacman-contribution-graph-dark.svg"):
+              root = ET.parse(filename).getroot()
+              assert root.tag == "{http://www.w3.org/2000/svg}svg", f"Expected an SVG document: {filename}"
+          PY
             echo "ok=true" >> "$GITHUB_OUTPUT"
             echo "Generated files:"
             ls -la dist
           else
             echo "ok=false" >> "$GITHUB_OUTPUT"
-            echo "::warning::Pac-Man generation produced no output this run (transient API issue); keeping the existing graph on the output branch."
+            echo "::error::Pac-Man generation did not produce both graphs; keeping the existing files on the output branch."
+            exit 1
           fi
 
       - name: Push to output branch
         if: steps.check.outputs.ok == 'true'
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+        uses: crazy-max/ghaction-github-pages@c0d7ff0487ee0415efb7f32dab10ea880330b1dd # v3.1.0
         with:
           target_branch: output
           build_dir: dist
+          keep_history: true
+          allow_empty_commit: false
         env:
           GITHUB_TOKEN: ${{ secrets.METRICS_TOKEN }}

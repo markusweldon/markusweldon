@@ -2,7 +2,7 @@ name: Activity Graph
 
 on:
   schedule:
-    - cron: "15 0 * * *"   # Daily, staggered from metrics.yml and pacman.yml
+    - cron: "15 0 * * *"   # Daily; each graph publishes to its own branch
   workflow_dispatch:
   push:
     branches: ["main", "master"]
@@ -10,34 +10,38 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: activity-graph-publish
+  cancel-in-progress: false
+
 jobs:
   generate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout existing output branch content
-        uses: actions/checkout@v4
-        with:
-          ref: output
-          path: existing-output
-
-      - name: Assemble dist directory
-        run: |
-          mkdir -p dist
-          rsync -a --exclude='.git' existing-output/ dist/
-
       - name: Generate activity graph
-        uses: maurodesouza/github-readme-activity-graph-action@v1
+        uses: maurodesouza/github-readme-activity-graph-action@6411849745757299611a795fef822a31ca8d1d02 # v1
         with:
           username: markusweldon
           options: theme=synthwave-84&hide_title=true&line=D33D9B
           output_path: dist/activity-graph.svg
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push to output branch
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+      - name: Verify activity graph was generated
+        run: |
+          test -s dist/activity-graph.svg
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse("dist/activity-graph.svg").getroot()
+          assert root.tag == "{http://www.w3.org/2000/svg}svg", "Expected an SVG document"
+          PY
+
+      - name: Publish to dedicated activity branch
+        uses: crazy-max/ghaction-github-pages@c0d7ff0487ee0415efb7f32dab10ea880330b1dd # v3.1.0
         with:
-          target_branch: output
+          target_branch: activity
           build_dir: dist
+          keep_history: true
+          allow_empty_commit: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

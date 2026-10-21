@@ -65,7 +65,7 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
 
 ### ⚡ Activity
 
-<img src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/activity-graph.svg" width="100%">
+<img alt="Recent GitHub contribution activity" src="https://raw.githubusercontent.com/markusweldon/markusweldon/activity/activity-graph.svg" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
