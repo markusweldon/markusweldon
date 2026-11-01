@@ -52,7 +52,7 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 <a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/card-claude-owasp-security-skills.svg" width="400" alt="claude-owasp-security-skills: OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards as Claude Code skills"></a>
 <a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="images/card-claude-snyk-security-expert.svg" width="400" alt="claude-snyk-security-expert: Snyk-powered security subagent for Claude Code"></a>
 
-<a href="https://github.com/markusweldon/cverdict"><img src="images/card-cverdict.svg" width="400" alt="CVErdict: cuts through the CVE surge, reducing noise to actionable signal backed by evidence"></a>
+<a href="https://github.com/markusweldon/cverdict"><img src="images/card-cverdict.svg" width="400" alt="CVErdict: Cuts through the CVE program surge to show which new vulnerabilities need attention and why."></a>
 <a href="https://github.com/markusweldon/openfix"><img src="images/card-openfix.svg" width="400" alt="OpenFix: vendor-agnostic ingestion of SARIF and JSON scanner findings, with agents remediating under policy controls and human-in-the-loop review"></a>
 
 <a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="https://img.shields.io/badge/▶_Try_the_OWASP_Skills_for_Claude_Code-8957E5?style=for-the-badge&logo=claude&logoColor=white"></a>
