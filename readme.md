@@ -33,9 +33,9 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 
 </div>
 
-<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-8957E5?style=for-the-badge&logoColor=white"></a>
-<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge&logoColor=black"></a>
-<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-D33D9B?style=for-the-badge&logoColor=white"></a>
+<a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-8957E5?style=for-the-badge&logoColor=white" alt="Website: markusweldon.com"></a>
+<a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge&logoColor=black" alt="LinkedIn"></a>
+<a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-D33D9B?style=for-the-badge&logoColor=white" alt="Email: hello@markusweldon.com"></a>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -55,7 +55,7 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 <a href="https://github.com/markusweldon/snyk-ai-secure-pipeline"><img src="images/card-snyk-ai-secure-pipeline.svg" width="400" alt="snyk-ai-secure-pipeline: end-to-end DevSecOps demo with Snyk Code, OSS, Container, IaC and an MCP server for Claude Code"></a>
 <a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="images/card-claude-snyk-security-expert.svg" width="400" alt="claude-snyk-security-expert: Snyk-powered security subagent for Claude Code"></a>
 
-<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="https://img.shields.io/badge/▶_Try_the_OWASP_Skills_for_Claude_Code-8957E5?style=for-the-badge&logo=claude&logoColor=white"></a>
+<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="https://img.shields.io/badge/▶_Try_the_OWASP_Skills_for_Claude_Code-8957E5?style=for-the-badge&logo=claude&logoColor=white" alt="Try the OWASP Skills for Claude Code"></a>
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/install.sh | bash
@@ -77,7 +77,7 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
 
 ### 🔥 Streaks
 
-<img src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B&card_width=830" width="100%">
+<img alt="GitHub contribution streak stats" src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=6DE2F1&ring=D33D9B&background=292138&stroke=D33D9B&currStreakNum=D33D9B&sideNums=D33D9B&currStreakLabel=6DE2F1&sideLabels=6DE2F1&dates=D33D9B&card_width=830" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -111,34 +111,34 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
 
 **AI & Security**
 
-<img src="https://img.shields.io/badge/Claude_Code-292138?style=for-the-badge&logo=claude&logoColor=D33D9B">
-<img src="https://img.shields.io/badge/MCP-292138?style=for-the-badge&logo=modelcontextprotocol&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/Snyk-292138?style=for-the-badge&logo=snyk&logoColor=D33D9B">
-<img src="https://img.shields.io/badge/OWASP-292138?style=for-the-badge&logo=owasp&logoColor=6DE2F1">
+<img src="https://img.shields.io/badge/Claude_Code-292138?style=for-the-badge&logo=claude&logoColor=D33D9B" alt="Claude Code">
+<img src="https://img.shields.io/badge/MCP-292138?style=for-the-badge&logo=modelcontextprotocol&logoColor=6DE2F1" alt="MCP">
+<img src="https://img.shields.io/badge/Snyk-292138?style=for-the-badge&logo=snyk&logoColor=D33D9B" alt="Snyk">
+<img src="https://img.shields.io/badge/OWASP-292138?style=for-the-badge&logo=owasp&logoColor=6DE2F1" alt="OWASP">
 
 **Languages**
 
-<img src="https://img.shields.io/badge/Python-292138?style=for-the-badge&logo=python&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/TypeScript-292138?style=for-the-badge&logo=typescript&logoColor=D33D9B">
-<img src="https://img.shields.io/badge/JavaScript-292138?style=for-the-badge&logo=javascript&logoColor=6DE2F1">
+<img src="https://img.shields.io/badge/Python-292138?style=for-the-badge&logo=python&logoColor=6DE2F1" alt="Python">
+<img src="https://img.shields.io/badge/TypeScript-292138?style=for-the-badge&logo=typescript&logoColor=D33D9B" alt="TypeScript">
+<img src="https://img.shields.io/badge/JavaScript-292138?style=for-the-badge&logo=javascript&logoColor=6DE2F1" alt="JavaScript">
 
 **Web & Runtime**
 
-<img src="https://img.shields.io/badge/React-292138?style=for-the-badge&logo=react&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/Next.js-292138?style=for-the-badge&logo=nextdotjs&logoColor=D33D9B">
-<img src="https://img.shields.io/badge/Svelte-292138?style=for-the-badge&logo=svelte&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/Astro-292138?style=for-the-badge&logo=astro&logoColor=D33D9B">
-<img src="https://img.shields.io/badge/Node.js-292138?style=for-the-badge&logo=nodedotjs&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/GraphQL-292138?style=for-the-badge&logo=graphql&logoColor=D33D9B">
+<img src="https://img.shields.io/badge/React-292138?style=for-the-badge&logo=react&logoColor=6DE2F1" alt="React">
+<img src="https://img.shields.io/badge/Next.js-292138?style=for-the-badge&logo=nextdotjs&logoColor=D33D9B" alt="Next.js">
+<img src="https://img.shields.io/badge/Svelte-292138?style=for-the-badge&logo=svelte&logoColor=6DE2F1" alt="Svelte">
+<img src="https://img.shields.io/badge/Astro-292138?style=for-the-badge&logo=astro&logoColor=D33D9B" alt="Astro">
+<img src="https://img.shields.io/badge/Node.js-292138?style=for-the-badge&logo=nodedotjs&logoColor=6DE2F1" alt="Node.js">
+<img src="https://img.shields.io/badge/GraphQL-292138?style=for-the-badge&logo=graphql&logoColor=D33D9B" alt="GraphQL">
 
 **Cloud & Infra**
 
-<img src="https://img.shields.io/badge/AWS-292138?style=for-the-badge">
-<img src="https://img.shields.io/badge/GCP-292138?style=for-the-badge&logo=googlecloud&logoColor=D33D9B">
-<img src="https://img.shields.io/badge/Vercel-292138?style=for-the-badge&logo=vercel&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/Cloudflare-292138?style=for-the-badge&logo=cloudflare&logoColor=D33D9B">
-<img src="https://img.shields.io/badge/Docker-292138?style=for-the-badge&logo=docker&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/Kubernetes-292138?style=for-the-badge&logo=kubernetes&logoColor=D33D9B">
+<img src="https://img.shields.io/badge/AWS-292138?style=for-the-badge" alt="AWS">
+<img src="https://img.shields.io/badge/GCP-292138?style=for-the-badge&logo=googlecloud&logoColor=D33D9B" alt="GCP">
+<img src="https://img.shields.io/badge/Vercel-292138?style=for-the-badge&logo=vercel&logoColor=6DE2F1" alt="Vercel">
+<img src="https://img.shields.io/badge/Cloudflare-292138?style=for-the-badge&logo=cloudflare&logoColor=D33D9B" alt="Cloudflare">
+<img src="https://img.shields.io/badge/Docker-292138?style=for-the-badge&logo=docker&logoColor=6DE2F1" alt="Docker">
+<img src="https://img.shields.io/badge/Kubernetes-292138?style=for-the-badge&logo=kubernetes&logoColor=D33D9B" alt="Kubernetes">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -147,11 +147,11 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
 
 ### 💻 Workspace
 
-<img src="https://img.shields.io/badge/VS_Code-SynthWave_'84-D33D9B?style=for-the-badge&labelColor=292138">
-<img src="https://img.shields.io/badge/Warp-292138?style=for-the-badge&logo=warp&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/Oh_My_Zsh-292138?style=for-the-badge&logo=zsh&logoColor=D33D9B">
-<img src="https://img.shields.io/badge/Neofetch-292138?style=for-the-badge&logo=gnometerminal&logoColor=6DE2F1">
-<img src="https://img.shields.io/badge/Homebrew-292138?style=for-the-badge&logo=homebrew&logoColor=D33D9B">
+<img src="https://img.shields.io/badge/VS_Code-SynthWave_'84-D33D9B?style=for-the-badge&labelColor=292138" alt="VS Code: SynthWave ’84 theme">
+<img src="https://img.shields.io/badge/Warp-292138?style=for-the-badge&logo=warp&logoColor=6DE2F1" alt="Warp">
+<img src="https://img.shields.io/badge/Oh_My_Zsh-292138?style=for-the-badge&logo=zsh&logoColor=D33D9B" alt="Oh My Zsh">
+<img src="https://img.shields.io/badge/Neofetch-292138?style=for-the-badge&logo=gnometerminal&logoColor=6DE2F1" alt="Neofetch">
+<img src="https://img.shields.io/badge/Homebrew-292138?style=for-the-badge&logo=homebrew&logoColor=D33D9B" alt="Homebrew">
 
 <img src="images/vs-code.png" width="49%" alt="VS Code with SynthWave '84 theme"> <img src="images/terminal.png" width="49%" alt="Warp terminal with neofetch">
 
