@@ -36,6 +36,7 @@ My focus is agentic AI in production: securing agent and MCP workflows, and desi
 <a href="https://markusweldon.com"><img src="https://img.shields.io/badge/🌐_markusweldon.com-8957E5?style=for-the-badge&logoColor=white" alt="Website: markusweldon.com"></a>
 <a href="https://linkedin.com/in/markusweldon"><img src="https://img.shields.io/badge/💼_LinkedIn-6DE2F1?style=for-the-badge&logoColor=black" alt="LinkedIn"></a>
 <a href="mailto:hello@markusweldon.com"><img src="https://img.shields.io/badge/📧_hello@markusweldon.com-D33D9B?style=for-the-badge&logoColor=white" alt="Email: hello@markusweldon.com"></a>
+<a href="https://github.com/markusweldon"><img src="https://img.shields.io/badge/Follow_on_GitHub-292138?style=for-the-badge&logo=github&logoColor=6DE2F1" alt="Follow @markusweldon on GitHub"></a>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
