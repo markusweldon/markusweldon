@@ -2,9 +2,8 @@
 
 github-readme-activity-graph scales the chart to the busiest day, so one very
 busy day squashes the rest of the month into a flat line. This redraws the
-chart with CAP at the top of the axis: busier days are drawn at the top with
-their real count written above them, and the axis labels are rewritten to
-match. The curve is redrawn with the same monotone cubic smoothing the
+chart with CAP at the top of the axis: busier days are drawn at the top, and
+the axis labels are rewritten to match. The curve is redrawn with the same monotone cubic smoothing the
 chart library (Chartist) uses.
 
 Usage: cap_activity.py <in.svg> <out.svg> [cap]
@@ -89,15 +88,6 @@ def cap_svg(svg, cap):
 
     out = YLABEL.sub(fix_label, out)
 
-    # Write the real count above each day that goes past the cap.
-    notes = "".join(
-        f'<text x="{r3(x)}" y="{r3(top - 10)}" text-anchor="middle" class="ct-label">{v}</text>'
-        for x, v in points if v > cap
-    )
-    anchor = '</g><text class="ct-axis-title'
-    if notes and anchor not in out:
-        return svg, "could not place the over-cap labels"
-    out = out.replace(anchor, notes + anchor, 1)
     return out, f"axis capped at {cap} (busiest day {busiest}, {sum(v > cap for _, v in points)} day(s) over)"
 
 
