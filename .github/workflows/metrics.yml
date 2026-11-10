@@ -62,7 +62,7 @@ jobs:
             [fill="#d1d5da"] { fill: #4C4A73 !important; }
 
       # One very busy day flattens every other tower in the isocalendar, because the
-      # plugin scales each day to the busiest one. Cap it: 40 contributions is full height.
+      # plugin scales each day to the busiest one. Cap it: 30 contributions is full height.
       - name: Checkout the cap script
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -70,7 +70,7 @@ jobs:
           persist-credentials: false
 
       - name: Cap the isocalendar towers
-        run: python3 -I .github/scripts/cap_isocalendar.py /metrics_renders/github-metrics.svg "$RUNNER_TEMP/github-metrics.svg" 40
+        run: python3 -I .github/scripts/cap_isocalendar.py /metrics_renders/github-metrics.svg "$RUNNER_TEMP/github-metrics.svg" 30
 
       - name: Publish to the metrics branch
         env:

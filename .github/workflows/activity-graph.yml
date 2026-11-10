@@ -43,10 +43,10 @@ jobs:
           PY
 
       # One very busy day squashes the rest of the month flat, because the chart scales to
-      # the busiest day. Cap the axis at 40; busier days sit at the top.
+      # the busiest day. Cap the axis at 30; busier days sit at the top.
       - name: Cap the y axis
         run: |
-          python3 -I .github/scripts/cap_activity.py dist/activity-graph.svg "$RUNNER_TEMP/activity-graph.svg" 40
+          python3 -I .github/scripts/cap_activity.py dist/activity-graph.svg "$RUNNER_TEMP/activity-graph.svg" 30
           mv "$RUNNER_TEMP/activity-graph.svg" dist/activity-graph.svg
 
       - name: Publish to dedicated activity branch

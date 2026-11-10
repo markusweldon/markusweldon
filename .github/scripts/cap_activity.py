@@ -3,7 +3,7 @@
 github-readme-activity-graph scales the chart to the busiest day, so one very
 busy day squashes the rest of the month into a flat line. This redraws the
 chart with CAP at the top of the axis: busier days are drawn at the top, and
-the axis labels are rewritten to match. The curve is redrawn with the same monotone cubic smoothing the
+the axis labels are rewritten to match, with grid lines at round steps. The curve is redrawn with the same monotone cubic smoothing the
 chart library (Chartist) uses.
 
 Usage: cap_activity.py <in.svg> <out.svg> [cap]
@@ -78,15 +78,27 @@ def cap_svg(svg, cap):
     out = POINT.sub(fix_point, svg)
     out = LINE.sub(f'<path d="{monotone_cubic(xs, ys)}" class="ct-line"></path>', out, count=1)
 
-    # Axis labels run bottom to top; spread 0..cap over the same grid lines.
-    steps = len(labels) - 1
-    ordered = sorted(YLABEL.finditer(out), key=lambda m: -float(m.group(2)))
-    values = {m.start(): cap * i / steps for i, m in enumerate(ordered)}
-
-    def fix_label(m):
-        return m.group(1) + f"{values[m.start()]:g}" + m.group(5)
-
-    out = YLABEL.sub(fix_label, out)
+    # Redraw the horizontal grid lines and axis labels at a round step (0, 5, 10 ... cap).
+    step = next(st for st in (1, 2, 5, 10, 20, 25, 50, 100) if cap / st <= 8)
+    count = -(-cap // step)  # intervals
+    gx1, gx2 = HGRID.search(out).group(3), HGRID.search(out).group(4)
+    lx = labels[0].group(3)
+    gap = (bottom - top) / count
+    grid_lines = "".join(
+        f'<line y1="{r3(bottom - i * gap)}" y2="{r3(bottom - i * gap)}" x1="{gx1}" x2="{gx2}" class="ct-grid ct-vertical"></line>'
+        for i in range(count + 1)
+    )
+    label_text = "".join(
+        f'<text y="{r3(bottom - i * gap + 4.5)}" x="{lx}" height="{r3(gap if i < count else 30)}" width="60" '
+        f'class="ct-label ct-vertical ct-start">{min(i * step, cap)}</text>'
+        for i in range(count + 1)
+    )
+    first_grid = HGRID.search(out).start()
+    out = HGRID.sub("", out)
+    out = out[:first_grid] + grid_lines + out[first_grid:]
+    first_label = YLABEL.search(out).start()
+    out = YLABEL.sub("", out)
+    out = out[:first_label] + label_text + out[first_label:]
 
     return out, f"axis capped at {cap} (busiest day {busiest}, {sum(v > cap for _, v in points)} day(s) over)"
 
