@@ -22,9 +22,8 @@ jobs:
         uses: lowlighter/metrics@65836723097537a54cd8eb90f61839426b4266b6
         with:
           token: ${{ secrets.METRICS_TOKEN }}
-          # Commit the rendered SVG to a dedicated branch so it stays off main
-          committer_token: ${{ secrets.METRICS_TOKEN }}
-          committer_branch: metrics
+          # Render only: the steps below cap the calendar, then commit to the metrics branch
+          output_action: none
           filename: github-metrics.svg
           user: markusweldon
           template: classic
@@ -61,3 +60,28 @@ jobs:
             [fill="white"]   { fill: #1c1626 !important; }
             [fill="#ededed"] { fill: #4C4A73 !important; }
             [fill="#d1d5da"] { fill: #4C4A73 !important; }
+
+      # One very busy day flattens every other tower in the isocalendar, because the
+      # plugin scales each day to the busiest one. Cap it: 40 contributions is full height.
+      - name: Checkout the cap script
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+
+      - name: Cap the isocalendar towers
+        run: python3 -I .github/scripts/cap_isocalendar.py /metrics_renders/github-metrics.svg "$RUNNER_TEMP/github-metrics.svg" 40
+
+      - name: Publish to the metrics branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/metrics-branch"
+          git clone --quiet --depth 1 --branch metrics "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$dir"
+          cp "$RUNNER_TEMP/github-metrics.svg" "$dir/github-metrics.svg"
+          cd "$dir"
+          if git diff --quiet; then echo "No change"; exit 0; fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit --quiet -am "Update github-metrics.svg"
+          git push --quiet origin metrics

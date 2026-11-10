@@ -19,6 +19,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout the cap script
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+
       - name: Generate activity graph
         uses: maurodesouza/github-readme-activity-graph-action@6411849745757299611a795fef822a31ca8d1d02 # v1
         with:
@@ -35,6 +41,13 @@ jobs:
           root = ET.parse("dist/activity-graph.svg").getroot()
           assert root.tag == "{http://www.w3.org/2000/svg}svg", "Expected an SVG document"
           PY
+
+      # One very busy day squashes the rest of the month flat, because the chart scales to
+      # the busiest day. Cap the axis at 40; busier days sit at the top with their count.
+      - name: Cap the y axis
+        run: |
+          python3 -I .github/scripts/cap_activity.py dist/activity-graph.svg "$RUNNER_TEMP/activity-graph.svg" 40
+          mv "$RUNNER_TEMP/activity-graph.svg" dist/activity-graph.svg
 
       - name: Publish to dedicated activity branch
         uses: crazy-max/ghaction-github-pages@c0d7ff0487ee0415efb7f32dab10ea880330b1dd # v3.1.0
