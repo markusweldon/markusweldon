@@ -51,7 +51,7 @@ jobs:
 
       - name: Frame the graph like the README's project cards
         run: |
-          python3 -I .github/scripts/frame_card.py dist/activity-graph.svg "$RUNNER_TEMP/activity-graph.svg"
+          python3 -I .github/scripts/frame_card.py dist/activity-graph.svg "$RUNNER_TEMP/activity-graph.svg" --chart
           mv "$RUNNER_TEMP/activity-graph.svg" dist/activity-graph.svg
 
       - name: Publish to dedicated activity branch

@@ -53,7 +53,7 @@
 
 ### ⚡ Activity
 
-<img alt="Recent GitHub contribution activity" src="https://raw.githubusercontent.com/markusweldon/markusweldon/activity/activity-graph.svg" width="100%">
+<img alt="Recent GitHub contribution activity" src="https://raw.githubusercontent.com/markusweldon/markusweldon/activity/activity-graph.svg?v=2" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
