@@ -16,9 +16,13 @@
 
 <div align="left">
 
-**Principal Solutions Engineer** working where AI meets Security. I help enterprises adopt Agentic AI-assisted software development without losing control of their risk posture, and I help build the tooling that makes it real: security scanners for MCP servers and AI agents, OWASP standards shipped as Claude Code skills, and end-to-end CI/CD pipelines that show what *"AI writes the code, security checks every line"* looks like in practice.
+**Principal Solutions Engineer** working where AI meets security. I help enterprises adopt agentic AI-assisted development without losing control of their risk posture.
 
-My focus is agentic AI in production: securing agent and MCP workflows, and designing the guardrails and safety directives that let teams ship *faster* with AI, not slower. Two decades in B2B solutions engineering taught me to optimize for the things that actually move enterprises: discovery that uncovers the real business problem, solutions that prove value in the customer's own context, and architecture that survives production.
+- **Securing agentic AI in production:** agent and MCP workflows, plus the guardrails and safety directives that let teams ship *faster* with AI, not slower.
+- **Building the tooling that makes it real:** security scanners for MCP servers and AI agents, OWASP standards shipped as Claude Code skills, and end-to-end secure CI/CD pipelines.
+- **Two decades of B2B solutions engineering:** discovery that finds the real business problem, value proven in the customer's own context, and architecture that survives production.
+
+> *AI writes the code, security checks every line.*
 
 </div>
 

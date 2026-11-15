@@ -411,7 +411,17 @@ def pill(f: Fonts, x: float, y: float, text: str, dot: str | None = None) -> tup
 
 
 def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: str) -> str:
-    out = [f'<rect x="0.5" y="0.5" width="{CW - 1}" height="{CH - 1}" rx="16" fill="{SURFACE}" '
+    # globals.css .section-grid: faint cyan rows and purple columns.
+    out = [f'<defs><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse" x="{PAD}" y="0">'
+           f'<rect y="29" width="30" height="1" fill="{CYAN}" fill-opacity="0.09"/>'
+           f'<rect x="29" width="1" height="30" fill="{PURPLE}" fill-opacity="0.1"/></pattern>'
+           f'<radialGradient id="glow" cx="1" cy="0" r="0.9"><stop offset="0" stop-color="{PINK}" stop-opacity="0.12"/>'
+           f'<stop offset="1" stop-color="{PINK}" stop-opacity="0"/></radialGradient>'
+           f'<clipPath id="c"><rect width="{CW}" height="{CH}" rx="16"/></clipPath></defs>',
+           f'<rect width="{CW}" height="{CH}" rx="16" fill="{SURFACE}"/>',
+           f'<g clip-path="url(#c)"><rect width="{CW}" height="{CH}" fill="url(#grid)"/>'
+           f'<rect width="{CW}" height="{CH}" fill="url(#glow)"/></g>',
+           f'<rect x="0.5" y="0.5" width="{CW - 1}" height="{CH - 1}" rx="15.5" fill="none" '
            f'stroke="{PINK}" stroke-opacity="0.3"/>',
            f'<path transform="translate({PAD} {PAD})" d="{OCTOCAT}" fill="{TEXT_2}"/>']
     d, _ = f.mono_semibold.path(title, 15, PAD + 26, PAD + 13)
@@ -432,13 +442,16 @@ def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: st
 
 # ══ Pill buttons ═══════════════════════════════════════════════════════════
 
-# (file, label, icon, icon side, style)
+# (file, label, icon, icon side, style, fixed width)
+# The four contact buttons share one width so they line up in a row on
+# desktop and wrap into an even 2x2 on a phone.
+ROW_W = 150
 BUTTONS = [
-    ("btn-website", "markusweldon.com", "globe", "left", "purple"),
-    ("btn-github", "GitHub", "github", "left", "cyan"),
-    ("btn-linkedin", "LinkedIn", "linkedin", "left", "pink"),
-    ("btn-contact", "Get in Touch", "arrow-right", "right", "primary"),
-    ("btn-owasp-skills", "Try the OWASP Skills for Claude Code", "play", "left", "primary"),
+    ("btn-website", "Website", "globe", "left", "purple", ROW_W),
+    ("btn-github", "GitHub", "github", "left", "cyan", ROW_W),
+    ("btn-linkedin", "LinkedIn", "linkedin", "left", "pink", ROW_W),
+    ("btn-contact", "Get in Touch", "arrow-right", "right", "primary", ROW_W),
+    ("btn-owasp-skills", "Try the OWASP Skills for Claude Code", "play", "left", "primary", None),
 ]
 
 BTN_STYLES = {  # globals.css .btn-ghost-* / .btn-primary
@@ -448,22 +461,27 @@ BTN_STYLES = {  # globals.css .btn-ghost-* / .btn-primary
 }
 
 
-def button(f: Fonts, label: str, icon_name: str, side: str, style: str) -> str:
-    m, h, size, gap, isz = 12, 44, 14, 8, 15  # m: margin for the glow
+def button(f: Fonts, label: str, icon_name: str, side: str, style: str,
+           fixed: float | None) -> str:
+    m, h, size, gap, isz = 8, 40, 14, 8, 15  # m: margin for the glow
     primary = style == "primary"
     font = f.sans_semibold if primary else f.sans_medium
     text_w = font.width(label, size)
-    width = 24 + isz + gap + text_w + 24
+    content = isz + gap + text_w
+    width = fixed or content + 48
+    if content + 32 > width:
+        sys.exit(f"Button label too long for {width}px: {label}")
     W, H = width + 2 * m, h + 2 * m
     colour = "#ffffff" if primary else BTN_STYLES[style]["text"]
-    tx = m + 24 + (isz + gap if side == "left" else 0)
-    ix = m + 24 if side == "left" else tx + text_w + gap
+    start = m + (width - content) / 2
+    tx = start + (isz + gap if side == "left" else 0)
+    ix = start if side == "left" else tx + text_w + gap
     d, _ = font.path(label, size, tx, m + h / 2 + 5)
     out = []
     if primary:
         out.append(f'<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
                    f'<stop offset="0" stop-color="{PINK}"/><stop offset="1" stop-color="{VIOLET}"/></linearGradient>'
-                   f'<filter id="glow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="7"/></filter></defs>')
+                   f'<filter id="glow" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="5"/></filter></defs>')
         out.append(f'<rect x="{m}" y="{m}" width="{fmt(width)}" height="{h}" rx="{h / 2}" fill="url(#g)" '
                    f'opacity="0.55" filter="url(#glow)"/>')
         out.append(f'<rect x="{m}" y="{m}" width="{fmt(width)}" height="{h}" rx="{h / 2}" fill="url(#g)"/>')
