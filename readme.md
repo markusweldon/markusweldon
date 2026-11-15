@@ -46,13 +46,6 @@
 
 <a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/btn-owasp-skills.svg" alt="Try the OWASP Skills for Claude Code"></a>
 
-```bash
-# Download the installer, read it, then run it
-curl -fsSLO https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/install.sh
-less install.sh
-bash install.sh
-```
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
