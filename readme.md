@@ -78,14 +78,11 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 🎯 Current Focus
+### 🎯 Focus Areas
 
-**Securing agentic AI development end to end: the agent workflows, the MCP layer, and the code they ship.**
-
-![Claude Code Security](https://img.shields.io/badge/Claude_Code_Security-7b2fff?style=for-the-badge&logo=claude&logoColor=white)
-![MCP Security](https://img.shields.io/badge/MCP_Security-f92aad?style=for-the-badge&logo=modelcontextprotocol&logoColor=white)
-![AppSec for AI Code](https://img.shields.io/badge/AppSec_for_AI_Code-36f9f6?style=for-the-badge&logo=owasp&logoColor=black)
-![Snyk AI Trust Platform](https://img.shields.io/badge/Snyk_AI_Trust_Platform-6e4f8e?style=for-the-badge&logo=snyk&logoColor=white)
+<img src="images/focus-agentic-ai-security.svg" width="270" alt="Agentic AI Security: security for AI agents, MCP servers and AI-native apps, from runtime orchestration to evaluation loops.">
+<img src="images/focus-secure-ai-development.svg" width="270" alt="Securing AI-Driven Development: secure-at-inception guardrails in AI coding assistants, IDEs and CI/CD, so AI-written code ships secure.">
+<img src="images/focus-enterprise-ai-strategy.svg" width="270" alt="Enterprise AI Security Strategy: partnering with CISOs and platform leaders on AI security programs, from asset visibility to agentic defense.">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -94,36 +91,11 @@
 
 ### 🧰 Stack
 
-**AI & Security**
+<img src="images/stack-ai-security.svg" width="400" alt="AI and Security: Claude Code, MCP, Snyk, OWASP">
+<img src="images/stack-languages.svg" width="400" alt="Languages: Python, TypeScript, JavaScript">
 
-<img src="https://img.shields.io/badge/Claude_Code-130022?style=for-the-badge&logo=claude&logoColor=f92aad" alt="Claude Code">
-<img src="https://img.shields.io/badge/MCP-130022?style=for-the-badge&logo=modelcontextprotocol&logoColor=36f9f6" alt="MCP">
-<img src="https://img.shields.io/badge/Snyk-130022?style=for-the-badge&logo=snyk&logoColor=f92aad" alt="Snyk">
-<img src="https://img.shields.io/badge/OWASP-130022?style=for-the-badge&logo=owasp&logoColor=36f9f6" alt="OWASP">
-
-**Languages**
-
-<img src="https://img.shields.io/badge/Python-130022?style=for-the-badge&logo=python&logoColor=36f9f6" alt="Python">
-<img src="https://img.shields.io/badge/TypeScript-130022?style=for-the-badge&logo=typescript&logoColor=f92aad" alt="TypeScript">
-<img src="https://img.shields.io/badge/JavaScript-130022?style=for-the-badge&logo=javascript&logoColor=36f9f6" alt="JavaScript">
-
-**Web & Runtime**
-
-<img src="https://img.shields.io/badge/React-130022?style=for-the-badge&logo=react&logoColor=36f9f6" alt="React">
-<img src="https://img.shields.io/badge/Next.js-130022?style=for-the-badge&logo=nextdotjs&logoColor=f92aad" alt="Next.js">
-<img src="https://img.shields.io/badge/Svelte-130022?style=for-the-badge&logo=svelte&logoColor=36f9f6" alt="Svelte">
-<img src="https://img.shields.io/badge/Astro-130022?style=for-the-badge&logo=astro&logoColor=f92aad" alt="Astro">
-<img src="https://img.shields.io/badge/Node.js-130022?style=for-the-badge&logo=nodedotjs&logoColor=36f9f6" alt="Node.js">
-<img src="https://img.shields.io/badge/GraphQL-130022?style=for-the-badge&logo=graphql&logoColor=f92aad" alt="GraphQL">
-
-**Cloud & Infra**
-
-<img src="https://img.shields.io/badge/AWS-130022?style=for-the-badge" alt="AWS">
-<img src="https://img.shields.io/badge/GCP-130022?style=for-the-badge&logo=googlecloud&logoColor=f92aad" alt="GCP">
-<img src="https://img.shields.io/badge/Vercel-130022?style=for-the-badge&logo=vercel&logoColor=36f9f6" alt="Vercel">
-<img src="https://img.shields.io/badge/Cloudflare-130022?style=for-the-badge&logo=cloudflare&logoColor=f92aad" alt="Cloudflare">
-<img src="https://img.shields.io/badge/Docker-130022?style=for-the-badge&logo=docker&logoColor=36f9f6" alt="Docker">
-<img src="https://img.shields.io/badge/Kubernetes-130022?style=for-the-badge&logo=kubernetes&logoColor=f92aad" alt="Kubernetes">
+<img src="images/stack-web-runtime.svg" width="400" alt="Web and Runtime: React, Next.js, Svelte, Astro, Node.js, GraphQL">
+<img src="images/stack-cloud-infra.svg" width="400" alt="Cloud and Infra: AWS, GCP, Vercel, Cloudflare, Docker, Kubernetes">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -131,12 +103,6 @@
 </picture>
 
 ### 💻 Workspace
-
-<img src="https://img.shields.io/badge/VS_Code-SynthWave_'84-f92aad?style=for-the-badge&labelColor=130022" alt="VS Code: SynthWave ’84 theme">
-<img src="https://img.shields.io/badge/Warp-130022?style=for-the-badge&logo=warp&logoColor=36f9f6" alt="Warp">
-<img src="https://img.shields.io/badge/Oh_My_Zsh-130022?style=for-the-badge&logo=zsh&logoColor=f92aad" alt="Oh My Zsh">
-<img src="https://img.shields.io/badge/Neofetch-130022?style=for-the-badge&logo=gnometerminal&logoColor=36f9f6" alt="Neofetch">
-<img src="https://img.shields.io/badge/Homebrew-130022?style=for-the-badge&logo=homebrew&logoColor=f92aad" alt="Homebrew">
 
 <img src="images/workspace-vscode.png" width="49%" alt="VS Code with SynthWave '84 syntax colours in the markusweldon.com palette, open on routes/index.js from Snyk's nodejs-goof demo app with Snyk findings underlined"> <img src="images/workspace-warp.png" width="49%" alt="Warp terminal running neofetch on an M2 Pro MacBook Pro, over a synthwave starfield, treeline and neon grid">
 

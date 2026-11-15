@@ -183,6 +183,8 @@ body{{padding:44px;font-family:GeistMono,monospace;color:#d8c8f0}}
   border:1px solid rgba(249,42,173,.45);box-shadow:0 0 0 1px rgba(54,249,246,.06),0 0 34px rgba(249,42,173,.32),0 0 90px rgba(123,47,255,.22)}}
 .title{{height:36px;display:flex;align-items:center;padding:0 14px;background:#0a0011;border-bottom:1px solid #2a0f4d;gap:8px}}
 .tl{{width:12px;height:12px;border-radius:50%}}
+.app{{position:absolute;right:16px;font-size:12px;color:#a78bca}} .app i,.app2 i{{color:#f92aad;font-style:normal}}
+.title{{position:relative}}
 .cc{{margin:0 auto;width:330px;height:22px;border-radius:6px;border:1px solid #3a1a5e;background:#130022;color:#a78bca;font-size:12px;
   display:flex;align-items:center;justify-content:center;gap:6px}}
 .main{{flex:1;display:flex;min-height:0}}
@@ -226,7 +228,7 @@ body{{padding:44px;font-family:GeistMono,monospace;color:#d8c8f0}}
 .status .r{{margin-left:auto;display:flex;gap:16px}}
 </style></head><body><div class="win">
 <div class="title"><span class="tl" style="background:#ff5f57"></span><span class="tl" style="background:#febc2e"></span>
-<span class="tl" style="background:#28c840"></span><div class="cc">⌕ nodejs-goof</div></div>
+<span class="tl" style="background:#28c840"></span><div class="cc">⌕ nodejs-goof</div><div class="app">VS Code <i>·</i> SynthWave '84</div></div>
 <div class="main"><div class="act">{icons}</div>
 <div class="side"><h4>EXPLORER</h4>{"".join(tree)}</div>
 <div class="ed"><div class="tabs"><div class="tab"><span class="js">JS</span>index.js <span class="cnt">9+</span> ×</div></div>
@@ -295,7 +297,7 @@ body{{padding:44px;font-family:GeistMono,monospace;color:#e8dcff}}
 .tabx{{margin-left:120px;width:240px;height:42px;display:flex;align-items:center;justify-content:center;font-size:13px;
   border-bottom:2px solid #f92aad;color:#fff;text-shadow:0 0 8px rgba(249,42,173,.7)}}
 .plus{{margin-left:18px;color:#a78bca;font-size:18px}}
-.ico{{margin-left:auto;display:flex;gap:16px;color:#a78bca}}
+.ico{{margin-left:auto;display:flex;gap:16px;align-items:center;color:#a78bca}} .app2{{font-size:12px;margin-right:6px}}
 .block{{padding:16px 26px 0;flex:1}}
 .meta{{font-size:12.5px;color:#a78bca;margin-bottom:6px}} .meta b{{color:#36f9f6;font-weight:400}}
 .nf{{display:flex;gap:34px;font-size:14px;line-height:19.5px}}
@@ -311,7 +313,7 @@ pre{{font-family:inherit;font-weight:700;text-shadow:0 0 6px rgba(249,42,173,.35
 </style></head><body><div class="win">
 <div class="bar"><span class="tl" style="background:#ff5f57"></span><span class="tl" style="background:#febc2e"></span>
 <span class="tl" style="background:#28c840"></span><div class="tabx">~</div><div class="plus">+</div>
-<div class="ico">{svg_icon("search", 17, 1.8)}{svg_icon("sparkles", 17, 1.8)}{svg_icon("settings", 17, 1.8)}</div></div>
+<div class="ico"><span class="app2">Warp <i>·</i> zsh</span>{svg_icon("search", 17, 1.8)}{svg_icon("sparkles", 17, 1.8)}{svg_icon("settings", 17, 1.8)}</div></div>
 <div class="block"><div class="meta">~ <b>(0.348s)</b></div><div class="nf"><pre>{logo}</pre>
 <div class="info">{"".join(f"<div>{x}</div>" for x in info)}<div class="sw">{sw}</div><div class="sw" style="margin-top:0">{sw2}</div></div></div></div>
 <div class="prompt"><div class="p">~</div><div class="input"><span class="cur"></span>Try typing natural language instead of a command</div></div>

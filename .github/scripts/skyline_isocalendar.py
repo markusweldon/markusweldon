@@ -8,6 +8,9 @@ peaks, and sets the calendar on a cyan isometric grid floor with a pink glow
 underneath, like the header's horizon. Towers rise into place once when the
 image loads; visitors who prefer reduced motion see them already standing.
 
+It also swaps the languages section's "estimation from 3.74mb of code in
+1327 edited files across 204 commits" line for a generic caption.
+
 Usage: skyline_isocalendar.py <in.svg> <out.svg>
 If the calendar can't be found, the input is copied unchanged and a warning
 is printed, so the card still publishes.
@@ -146,10 +149,16 @@ def restyle(svg):
         f"restyled {len(cells)} days over {weeks} weeks, {peaks} peaks in cyan")
 
 
+ESTIMATE = re.compile(r"<small>estimation from [^<]*</small>")
+CAPTION = "<small>Based on recently edited code</small>"
+
+
 def main():
     src, dst = sys.argv[1], sys.argv[2]
     svg = open(src, encoding="utf-8").read()
     out, note = restyle(svg)
+    out, swapped = ESTIMATE.subn(CAPTION, out)
+    note += "; languages caption replaced" if swapped else "; no languages estimate line found"
     ET.fromstring(out.encode("utf-8"))  # refuse to publish a broken SVG
     open(dst, "w", encoding="utf-8").write(out)
     print(("" if out is not svg else "::warning::") + "skyline: " + note)
