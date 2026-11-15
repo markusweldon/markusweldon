@@ -8,6 +8,10 @@ peaks, and sets the calendar on a cyan isometric grid floor with a pink glow
 underneath, like the header's horizon. Towers rise into place once when the
 image loads; visitors who prefer reduced motion see them already standing.
 
+Each tower is drawn as a lit building: its sides fade from its colour to deep
+violet at the base, its top face and front edge glow, taller towers get rows
+of lit cyan and pink windows, and the peak days carry a glowing beacon.
+
 It also swaps the languages section's "estimation from 3.74mb of code in
 1327 edited files across 204 commits" line for a generic caption.
 
@@ -15,6 +19,7 @@ Usage: skyline_isocalendar.py <in.svg> <out.svg>
 If the calendar can't be found, the input is copied unchanged and a warning
 is printed, so the card still publishes.
 """
+import random
 import re
 import sys
 import xml.etree.ElementTree as ET
@@ -58,6 +63,62 @@ def fmt(x):
     return f"{x:.3f}".rstrip("0").rstrip(".")
 
 
+GRADS = {}  # (colour, side) -> (gradient id, top colour)
+WINDOWS = ["#36f9f6", "#ffd6f5", "#ff6ec7", "#8afcfa"]
+WINDOWS_FROM = 2.2  # tower height (of 6) that gets lit windows
+
+
+def shade(hexcol, k):
+    r, g, b = (int(hexcol[i:i + 2], 16) for i in (1, 3, 5))
+    return "#" + "".join(f"{max(0, min(255, round(v * k))):02x}" for v in (r, g, b))
+
+
+def side(col, face):
+    """Id of a gradient that fades a side face from its colour to deep violet."""
+    key = (col, face)
+    if key not in GRADS:
+        GRADS[key] = (f"mws-g{len(GRADS)}", shade(col, 0.82 if face == "l" else 0.5))
+    return GRADS[key][0]
+
+
+def side_defs():
+    return "".join(
+        f'<linearGradient id="{gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{top}"/>'
+        f'<stop offset="1" stop-color="{"#1d0838" if face == "l" else "#12041f"}"/></linearGradient>'
+        for (_, face), (gid, top) in GRADS.items())
+
+
+def tower(col, h, peak, seed):
+    """One day as a lit building. Coordinates follow the plugin's cube paths."""
+    if h <= 0:
+        return f'<path fill="{col}" d="M1.7,2 0,1 1.7,0 3.4,1 z" stroke="#36f9f6" stroke-opacity="0.12" stroke-width="0.05"/>'
+    top, edge = mix(col, "#ffffff", 0.1), mix(col, "#ffffff", 0.45)
+    b2, b1 = fmt(2 + h), fmt(1 + h)
+    parts = [
+        f'<path fill="url(#{side(col, "l")})" d="M0,1 1.7,2 1.7,{b2} 0,{b1} z"/>',
+        f'<path fill="url(#{side(col, "r")})" d="M1.7,2 3.4,1 3.4,{b1} 1.7,{b2} z"/>',
+        f'<path fill="{top}" d="M1.7,2 0,1 1.7,0 3.4,1 z" stroke="{edge}" stroke-width="0.07" stroke-linejoin="round"/>',
+        f'<path d="M1.7,2 1.7,{b2}" stroke="{edge}" stroke-opacity="0.55" stroke-width="0.06"/>',
+    ]
+    if h >= WINDOWS_FROM:
+        rng = random.Random(seed)  # the same windows for the same spot
+        for face in ("l", "r"):
+            for u in (0.32, 0.68):
+                x = 1.7 * u if face == "l" else 1.7 + 1.7 * u
+                y0 = (1 + u) if face == "l" else (2 - u)
+                dy = 0.165 if face == "l" else -0.165
+                y = y0 + 0.55
+                while y < y0 + h - 0.35:
+                    if rng.random() < 0.62:
+                        parts.append(f'<path fill="{rng.choice(WINDOWS)}" fill-opacity="{0.9 if face == "l" else 0.55}" '
+                                     f'd="M{x - 0.14:.2f},{y:.2f} l0.28,{dy:.3f} l0,0.24 l-0.28,{-dy:.3f} z"/>')
+                    y += 0.62
+    if peak:
+        parts.append('<path d="M1.7,1 1.7,-0.4" stroke="#8afcfa" stroke-width="0.06"/>'
+                     '<circle cx="1.7" cy="-0.6" r="0.22" fill="#36f9f6" filter="url(#mws-peak)"/>')
+    return "".join(parts)
+
+
 def restyle(svg):
     start = svg.find(ANCHOR)
     if start < 0:
@@ -96,10 +157,10 @@ def restyle(svg):
         peaks += peak
         glow = ' filter="url(#mws-peak)"' if peak else ""
         out.append(block[pos:c.start()])
+        d = round(-float(c.group(1)) / 1.7)
         out.append(
             f'<g transform="translate({c.group(1)}, {c.group(2)})"{glow}>{c.group(3)}'
-            f'<g class="mws-rise" style="animation-delay:{w * 14}ms">'
-            f'{c.group(4)}{col}{c.group(6)}{col}{c.group(7)}{col}{c.group(9)}</g>'
+            f'<g class="mws-rise" style="animation-delay:{w * 14}ms">{tower(col, h, peak, w * 7 + d)}</g>'
         )
         pos = c.end()
     out.append(block[pos:])
@@ -126,6 +187,7 @@ def restyle(svg):
 @media (prefers-reduced-motion: reduce){{.mws-rise{{animation:none}}}}
 </style>
 <defs>
+{side_defs()}
   <filter id="mws-peak" x="-100%" y="-60%" width="300%" height="220%">
     <feGaussianBlur stdDeviation="0.9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
