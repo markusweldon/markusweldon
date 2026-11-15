@@ -62,7 +62,7 @@
 
 ### 🔥 Streaks
 
-<img alt="GitHub contribution streak stats" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/streak-stats.svg" width="100%">
+<img alt="GitHub contribution streak stats" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/streak-stats.svg?v=2" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -71,7 +71,7 @@
 
 ### 📊 Stats
 
-<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg?v=3" width="100%">
+<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg?v=4" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
