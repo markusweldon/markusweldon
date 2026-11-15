@@ -48,6 +48,11 @@ jobs:
             svg { background: #130022; color: #a78bca; }
             h1, h2, h3, .title { color: #f92aad !important; }
             a, .key, .value { color: #36f9f6 !important; }
+            /* GitHub-grey defaults the overrides above miss: field icons and the
+               language percentages. */
+            .field svg { fill: #a78bca !important; }
+            h2 svg, h3 svg { fill: #f92aad !important; }
+            .field.language.details small { color: #a78bca !important; opacity: 0.75; }
             /* Recolor the isometric contribution calendar to a synthwave ramp.
                The cells are inline fill attributes (specificity 0), so plain
                attribute selectors override them. Low -> high activity. */
@@ -86,7 +91,7 @@ jobs:
         continue-on-error: true
         run: |
           set -euo pipefail
-          url="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&border_radius=0&background=00000000&fire=36f9f6&ring=f92aad&stroke=f92aad&currStreakNum=f92aad&sideNums=f92aad&currStreakLabel=36f9f6&sideLabels=36f9f6&dates=a78bca&card_width=830"
+          url="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&border_radius=0&background=00000000&fire=36f9f6&ring=f92aad&stroke=f92aad59&currStreakNum=f92aad&sideNums=f92aad&currStreakLabel=36f9f6&sideLabels=36f9f6&dates=a78bca&card_width=830"
           curl -fsS --retry 3 --max-time 30 -o "$RUNNER_TEMP/streak-raw.svg" "$url"
           python3 -I - "$RUNNER_TEMP/streak-raw.svg" <<'PY'
           import sys

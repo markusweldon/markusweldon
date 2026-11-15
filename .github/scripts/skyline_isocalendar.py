@@ -107,7 +107,9 @@ def side_defs():
 # Optional effects; set either to False to switch it off.
 REFLECTION = False  # buildings mirrored into the grid floor, like a wet street
 HORIZON = True      # a pink-to-cyan line and glow behind the far end of the city
-HORIZON_LENGTH = 48  # stops short of the streak figures on the right
+HORIZON_GAP = 1.6    # clear space between the horizon and the tallest tower under it
+TEXT_COLUMN = 455    # card x where the streak figures start; the horizon stops before it
+CALENDAR_DROP = 30   # px the calendar moves down into the card's empty lower edge
 
 RGRADS = {}  # (colour, side) -> reflection gradient id
 
@@ -240,14 +242,24 @@ def restyle(svg):
             refl.append(f'<path fill="url(#{gl})" d="M{x0},{f1} {x1},{f2} {x1},{d2} {x0},{d1} z"/>'
                         f'<path fill="url(#{gr})" d="M{x1},{f2} {x2},{f1} {x2},{d1} {x1},{d2} z"/>')
         reflection_svg = "".join(refl)
+    # Centre the city: the plugin offsets it by a fixed 12 units, which leaves
+    # it hugging the card's left edge.
+    xmin = min(ax for ax, ay in absolute)
+    xmax = max(ax for ax, ay in absolute) + 3.4
+    tx = 60 - (xmin + xmax) / 2
+    block = block.replace(ANCHOR, f'<g transform="scale(4) translate({fmt(tx)}, 0)">', 1)
     horizon_svg = ""
     if HORIZON:
-        # On the floor behind the far end, so the first towers stand in front of it.
-        hy = min(ay + h for (c, w, h), (ax, ay) in zip(cells, absolute) if w < 4) - 1.2
+        # Behind the far end of the city and above every tower it spans, so no
+        # tower crosses it. The calendar is 920px wide for 480 units, scaled 4x.
+        x0 = xmin - 8
+        x1 = (TEXT_COLUMN - 20) / (920 / 480 * 4) - tx
+        hy = min(top for (ax, ay), (w, top) in zip(absolute, tops) if ax < x1) - HORIZON_GAP
+        mid, half = (x0 + x1) / 2, (x1 - x0) / 2
         horizon_svg = (
-            f'<ellipse cx="14" cy="{fmt(hy)}" rx="34" ry="9" fill="url(#mws-aura)" filter="url(#mws-blur)"/>'
-            f'<rect x="-12" y="{fmt(hy - 0.4)}" width="{HORIZON_LENGTH}" height="0.8" fill="url(#mws-hz)" filter="url(#mws-hzglow)"/>'
-            f'<rect x="-12" y="{fmt(hy - 0.13)}" width="{HORIZON_LENGTH}" height="0.26" fill="url(#mws-hz)"/>')
+            f'<ellipse cx="{fmt(mid - 4)}" cy="{fmt(hy)}" rx="{fmt(half + 6)}" ry="9" fill="url(#mws-aura)" filter="url(#mws-blur)"/>'
+            f'<rect x="{fmt(x0)}" y="{fmt(hy - 0.4)}" width="{fmt(x1 - x0)}" height="0.8" fill="url(#mws-hz)" filter="url(#mws-hzglow)"/>'
+            f'<rect x="{fmt(x0)}" y="{fmt(hy - 0.13)}" width="{fmt(x1 - x0)}" height="0.26" fill="url(#mws-hz)"/>')
     floor = f"""<style>
 @keyframes mws-rise{{from{{transform:scaleY(0)}}to{{transform:scaleY(1)}}}}
 .mws-rise{{transform-box:fill-box;transform-origin:50% 100%;animation:mws-rise .9s cubic-bezier(.2,.8,.2,1) both}}
@@ -276,7 +288,7 @@ def restyle(svg):
     <stop offset="1" stop-color="#b01fff" stop-opacity="0"/>
   </radialGradient>
 </defs>
-<g transform="scale(4) translate(12, 0)">
+<g transform="scale(4) translate({fmt(tx)}, 0)">
 {horizon_svg}
   <rect x="-200" y="-200" width="600" height="400" fill="url(#mws-pool)"/>
   <g mask="url(#mws-mask)" stroke="#36f9f6" stroke-opacity="0.35" stroke-width="0.07">{''.join(lines)}</g>
@@ -287,7 +299,8 @@ def restyle(svg):
         head = svg[:start]
         k = head.rfind('style="margin-top: -130px;"')
         if k >= 0:
-            head = head[:k] + 'style="margin-top: -130px; overflow: visible;"' + head[k + len('style="margin-top: -130px;"'):]
+            head = (head[:k] + f'style="margin-top: {-130 + CALENDAR_DROP}px; overflow: visible;"'
+                    + head[k + len('style="margin-top: -130px;"'):])
         svg = head + svg[start:]
         start = len(head)
         end = svg.find("</svg>", start)
