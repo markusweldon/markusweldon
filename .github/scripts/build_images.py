@@ -290,7 +290,8 @@ def location(f: Fonts, baseline: float) -> str:
     return "\n".join(out)
 
 
-def header(f: Fonts) -> str:
+def header(f: Fonts, text: bool = True) -> str:
+    """The README hero. With text=False, just the scene (used as a backdrop)."""
     name_size = 94
     tracking = -0.025 * name_size  # Tailwind tracking-tight
     # Put the top of the capitals as far from the panel's top edge as the
@@ -313,6 +314,8 @@ def header(f: Fonts) -> str:
     cx, cy = LEFT + box_w / 2, top + box_h / 2
     g = (cx - half * .7071, cy - half * .7071, cx + half * .7071, cy + half * .7071)
 
+    words = (f'<path d="{line1} {line2}" fill="url(#nameFill)"/>\n{terminal(f, 255)}\n'
+             f'<path d="{tagline}" fill="{TEXT_2}"/>\n{location(f, 381)}') if text else ""
     body = f"""<style>
 @keyframes twinkle{{0%,100%{{opacity:1;transform:scale(1)}}50%{{opacity:.08;transform:scale(.4)}}}}
 .star{{fill:#fff;transform-box:fill-box;transform-origin:center;animation:twinkle 4s ease-in-out infinite}}
@@ -368,10 +371,7 @@ def header(f: Fonts) -> str:
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)"/>
 </g>
-<path d="{line1} {line2}" fill="url(#nameFill)"/>
-{terminal(f, 255)}
-<path d="{tagline}" fill="{TEXT_2}"/>
-{location(f, 381)}
+{words}
 </g>
 <rect x="0.5" y="0.5" width="{HW - 1}" height="{HH - 1}" rx="15.5" fill="none" stroke="url(#border)" stroke-opacity="0.45"/>"""
     return svg(HW, HH, body, "Markus Weldon · Principal Solutions Engineer")

@@ -138,6 +138,6 @@
 <img src="https://img.shields.io/badge/Neofetch-130022?style=for-the-badge&logo=gnometerminal&logoColor=36f9f6" alt="Neofetch">
 <img src="https://img.shields.io/badge/Homebrew-130022?style=for-the-badge&logo=homebrew&logoColor=f92aad" alt="Homebrew">
 
-<img src="images/vs-code.png" width="49%" alt="VS Code with SynthWave '84 theme"> <img src="images/terminal.png" width="49%" alt="Warp terminal with neofetch">
+<img src="images/workspace-vscode.png" width="49%" alt="VS Code with SynthWave '84 syntax colours in the markusweldon.com palette, open on routes/index.js from Snyk's nodejs-goof demo app with Snyk findings underlined"> <img src="images/workspace-warp.png" width="49%" alt="Warp terminal running neofetch on an M2 Pro MacBook Pro, over a synthwave starfield, treeline and neon grid">
 
 </div>
