@@ -1,12 +1,8 @@
 <div align="center">
 
-<div>
-<img src="images/typing-greeting.svg" width="500" alt="< 👋 Hello World! /> I'm Markus">
-</div>
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/title-banner.svg">
-  <img src="images/title-banner-light.svg" width="100%" alt="Principal Solutions Engineer: helping enterprises adopt AI-assisted development securely">
+  <img src="images/title-banner-light.svg" width="100%" alt="Markus Weldon · Principal Solutions Engineer · Helping enterprises adopt AI-assisted development securely">
 </picture>
 
 <div>
@@ -155,14 +151,5 @@ curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-
 <img src="https://img.shields.io/badge/Homebrew-292138?style=for-the-badge&logo=homebrew&logoColor=D33D9B" alt="Homebrew">
 
 <img src="images/vs-code.png" width="49%" alt="VS Code with SynthWave '84 theme"> <img src="images/terminal.png" width="49%" alt="Warp terminal with neofetch">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
-  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
-</picture>
-
-### 🕹️ Pac-Man Contribution Graph
-
-<img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/markusweldon/markusweldon/output/pacman-contribution-graph-dark.svg" width="100%">
 
 </div>

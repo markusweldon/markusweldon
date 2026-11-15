@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="130" viewBox="0 0 1000 130">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="170" viewBox="0 0 1000 170">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#FF4FC3"/>
@@ -7,7 +7,8 @@
     </linearGradient>
   </defs>
   <g font-family="Segoe UI, Helvetica, Arial, sans-serif" text-anchor="middle">
-    <text x="500" y="62" font-size="50" font-weight="900" letter-spacing="2" fill="url(#g)">PRINCIPAL SOLUTIONS ENGINEER</text>
-    <text x="500" y="110" font-size="27" font-weight="600" letter-spacing="1" fill="#6DE2F1">Helping enterprises adopt AI-assisted development securely</text>
+    <text x="500" y="66" font-size="62" font-weight="900" letter-spacing="4" fill="url(#g)">MARKUS WELDON</text>
+    <text x="500" y="110" font-size="24" font-weight="700" letter-spacing="6" fill="#FF4FC3">PRINCIPAL SOLUTIONS ENGINEER</text>
+    <text x="500" y="152" font-size="26" font-weight="600" letter-spacing="1" fill="#6DE2F1">Helping enterprises adopt AI-assisted development securely</text>
   </g>
 </svg>

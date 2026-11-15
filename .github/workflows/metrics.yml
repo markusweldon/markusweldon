@@ -2,7 +2,7 @@ name: Metrics
 
 on:
   schedule:
-    - cron: "30 0 * * *"   # daily, 30 min after the Pac-Man job
+    - cron: "30 0 * * *"   # daily at 00:30 UTC
   workflow_dispatch:
 
 permissions:
