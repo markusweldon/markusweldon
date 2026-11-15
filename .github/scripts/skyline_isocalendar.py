@@ -12,6 +12,10 @@ Each tower is drawn as a lit building: its sides fade from its colour to deep
 violet at the base, its top face and front edge glow, taller towers get rows
 of lit cyan and pink windows, and the peak days carry a glowing beacon.
 
+The calendar sits on a cyan isometric grid floor; the buildings are
+mirrored into it like a wet street, and a pink-to-cyan horizon line with a
+soft glow runs behind the far end of the city.
+
 It also swaps the languages section's "estimation from 3.74mb of code in
 1327 edited files across 204 commits" line for a generic caption.
 
@@ -88,6 +92,28 @@ def side_defs():
         for (_, face), (gid, top) in GRADS.items())
 
 
+# Optional effects; set either to False to switch it off.
+REFLECTION = True  # buildings mirrored into the grid floor, like a wet street
+HORIZON = True     # a pink-to-cyan line and glow behind the far end of the city
+
+RGRADS = {}  # (colour, side) -> reflection gradient id
+
+
+def rgrad(col, face):
+    """Id of a gradient that fades a reflected side face out downwards."""
+    key = (col, face)
+    if key not in RGRADS:
+        RGRADS[key] = f"mws-r{len(RGRADS)}"
+    return RGRADS[key]
+
+
+def rgrad_defs():
+    return "".join(
+        f'<linearGradient id="{gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{shade(col, 0.8 if face == "l" else 0.5)}" stop-opacity="0.9"/>'
+        f'<stop offset="0.95" stop-color="{col}" stop-opacity="0"/></linearGradient>'
+        for (col, face), gid in RGRADS.items())
+
+
 def tower(col, h, peak, seed):
     """One day as a lit building. Coordinates follow the plugin's cube paths."""
     if h <= 0:
@@ -127,6 +153,7 @@ def restyle(svg):
     block = svg[start:end]
 
     cells, week, weeks, bases = [], None, 0, []
+    absolute = []
 
     def visit(m):
         nonlocal week, weeks
@@ -143,6 +170,7 @@ def restyle(svg):
         w, d = round(week[1]), round(-x / 1.7)
         bases.append(week[1] + y + h - w - d)
         cells.append((c, w, h))
+        absolute.append((week[0] + x, week[1] + y))
 
     for m in GROUP.finditer(block):
         visit(m)
@@ -181,13 +209,42 @@ def restyle(svg):
         (x1, y1), (x2, y2) = corner(-4, b), corner(cols + 4, b)
         lines.append(f'<line x1="{fmt(x1)}" y1="{fmt(y1)}" x2="{fmt(x2)}" y2="{fmt(y2)}"/>')
     cx, cy = corner(cols / 2, rows / 2)
+    reflection_svg = ""
+    if REFLECTION:
+        refl = []
+        for (c, w, h), (ax, ay) in zip(cells, absolute):
+            if h <= 0.3:
+                continue
+            t = max(0.0, min(1.0, h / SIZE))
+            col = colour(t)
+            gl, gr = rgrad(col, "l"), rgrad(col, "r")
+            f1, f2, d1, d2 = fmt(ay + 1 + h), fmt(ay + 2 + h), fmt(ay + 1 + 2 * h), fmt(ay + 2 + 2 * h)
+            x0, x1, x2 = fmt(ax), fmt(ax + 1.7), fmt(ax + 3.4)
+            refl.append(f'<path fill="url(#{gl})" d="M{x0},{f1} {x1},{f2} {x1},{d2} {x0},{d1} z"/>'
+                        f'<path fill="url(#{gr})" d="M{x1},{f2} {x2},{f1} {x2},{d1} {x1},{d2} z"/>')
+        reflection_svg = "".join(refl)
+    horizon_svg = ""
+    if HORIZON:
+        tops = [ay for (c, w, h), (ax, ay) in zip(cells, absolute) if w < 8]  # the far end
+        hy = min(tops) - 3.2
+        horizon_svg = (
+            f'<ellipse cx="14" cy="{fmt(hy)}" rx="34" ry="9" fill="url(#mws-aura)" filter="url(#mws-blur)"/>'
+            f'<rect x="-12" y="{fmt(hy - 0.4)}" width="78" height="0.8" fill="url(#mws-hz)" filter="url(#mws-hzglow)"/>'
+            f'<rect x="-12" y="{fmt(hy - 0.13)}" width="78" height="0.26" fill="url(#mws-hz)"/>')
     floor = f"""<style>
 @keyframes mws-rise{{from{{transform:scaleY(0)}}to{{transform:scaleY(1)}}}}
 .mws-rise{{transform-box:fill-box;transform-origin:50% 100%;animation:mws-rise .9s cubic-bezier(.2,.8,.2,1) both}}
 @media (prefers-reduced-motion: reduce){{.mws-rise{{animation:none}}}}
 </style>
 <defs>
-{side_defs()}
+{side_defs()}{rgrad_defs()}
+  <radialGradient id="mws-aura" cx="0.5" cy="0.85" r="0.6"><stop offset="0" stop-color="#f92aad" stop-opacity="0.45"/>
+    <stop offset="0.4" stop-color="#b01fff" stop-opacity="0.22"/><stop offset="0.75" stop-color="#36f9f6" stop-opacity="0"/></radialGradient>
+  <filter id="mws-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+  <filter id="mws-hzglow" x="-5%" y="-400%" width="110%" height="900%"><feGaussianBlur stdDeviation="0.8"/></filter>
+  <linearGradient id="mws-hz" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f92aad" stop-opacity="0"/>
+    <stop offset="0.15" stop-color="#f92aad" stop-opacity="0.95"/><stop offset="0.55" stop-color="#36f9f6" stop-opacity="0.75"/>
+    <stop offset="1" stop-color="#f92aad" stop-opacity="0"/></linearGradient>
   <filter id="mws-peak" x="-100%" y="-60%" width="300%" height="220%">
     <feGaussianBlur stdDeviation="0.9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
@@ -203,10 +260,20 @@ def restyle(svg):
   </radialGradient>
 </defs>
 <g transform="scale(4) translate(12, 0)">
+{horizon_svg}
   <rect x="-200" y="-200" width="600" height="400" fill="url(#mws-pool)"/>
   <g mask="url(#mws-mask)" stroke="#36f9f6" stroke-opacity="0.35" stroke-width="0.07">{''.join(lines)}</g>
+  <g mask="url(#mws-mask)">{reflection_svg}</g>
 </g>
 """
+    if HORIZON:  # let the line and glow reach above the calendar's own box
+        head = svg[:start]
+        k = head.rfind('style="margin-top: -130px;"')
+        if k >= 0:
+            head = head[:k] + 'style="margin-top: -130px; overflow: visible;"' + head[k + len('style="margin-top: -130px;"'):]
+        svg = head + svg[start:]
+        start = len(head)
+        end = svg.find("</svg>", start)
     return svg[:start] + floor + block + svg[end:], (
         f"restyled {len(cells)} days over {weeks} weeks, {peaks} peaks in cyan")
 
