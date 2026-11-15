@@ -29,7 +29,7 @@ jobs:
         uses: maurodesouza/github-readme-activity-graph-action@6411849745757299611a795fef822a31ca8d1d02 # v1
         with:
           username: markusweldon
-          options: theme=synthwave-84&hide_title=true&line=D33D9B
+          options: theme=synthwave-84&hide_title=true&bg_color=130022&color=a78bca&line=f92aad&point=36f9f6&area=true&area_color=b01fff
           output_path: dist/activity-graph.svg
           token: ${{ secrets.GITHUB_TOKEN }}
 

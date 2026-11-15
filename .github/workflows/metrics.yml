@@ -2,7 +2,7 @@ name: Metrics
 
 on:
   schedule:
-    - cron: "30 0 * * *"   # daily, 30 min after the Pac-Man job
+    - cron: "30 0 * * *"   # daily at 00:30 UTC
   workflow_dispatch:
 
 permissions:
@@ -42,24 +42,24 @@ jobs:
           plugin_languages_details: percentage
           plugin_languages_limit: 6
 
-          # Synthwave theming. metrics has no dark toggle, so override its CSS.
+          # markusweldon.com theming. metrics has no dark toggle, so override its CSS.
           # (Verify + tune against the first CI-rendered SVG.)
           extras_css: |
-            svg { background: #292138; color: #d9d7ee; }
-            h1, h2, h3, .title { color: #D33D9B !important; }
-            a, .key, .value { color: #6DE2F1 !important; }
+            svg { background: #130022; color: #a78bca; }
+            h1, h2, h3, .title { color: #f92aad !important; }
+            a, .key, .value { color: #36f9f6 !important; }
             /* Recolor the isometric contribution calendar to a synthwave ramp.
                The cells are inline fill attributes (specificity 0), so plain
                attribute selectors override them. Low -> high activity. */
-            [fill="#ebedf0"] { fill: #2a2143 !important; }
-            [fill="#9be9a8"] { fill: #4c3f72 !important; }
-            [fill="#40c463"] { fill: #8957E5 !important; }
-            [fill="#30a14e"] { fill: #D33D9B !important; }
-            [fill="#216e39"] { fill: #6DE2F1 !important; }
+            [fill="#ebedf0"] { fill: #1c0033 !important; }
+            [fill="#9be9a8"] { fill: #6e4f8e !important; }
+            [fill="#40c463"] { fill: #b01fff !important; }
+            [fill="#30a14e"] { fill: #f92aad !important; }
+            [fill="#216e39"] { fill: #36f9f6 !important; }
             /* Languages bar: kill the white track and near-white segments */
-            [fill="white"]   { fill: #1c1626 !important; }
-            [fill="#ededed"] { fill: #4C4A73 !important; }
-            [fill="#d1d5da"] { fill: #4C4A73 !important; }
+            [fill="white"]   { fill: #0d0015 !important; }
+            [fill="#ededed"] { fill: #6e4f8e !important; }
+            [fill="#d1d5da"] { fill: #6e4f8e !important; }
 
       # One very busy day flattens every other tower in the isocalendar, because the
       # plugin scales each day to the busiest one. Cap it: 30 contributions is full height.
