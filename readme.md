@@ -80,9 +80,9 @@
 
 ### 🎯 Focus Areas
 
-<img src="images/focus-agentic-ai-security.svg" width="270" alt="Agentic AI Security: security for AI agents, MCP servers and AI-native apps, from runtime orchestration to evaluation loops.">
-<img src="images/focus-secure-ai-development.svg" width="270" alt="Securing AI-Driven Development: secure-at-inception guardrails in AI coding assistants, IDEs and CI/CD, so AI-written code ships secure.">
-<img src="images/focus-enterprise-ai-strategy.svg" width="270" alt="Enterprise AI Security Strategy: partnering with CISOs and platform leaders on AI security programs, from asset visibility to agentic defense.">
+<picture><source media="(max-width: 640px)" srcset="images/focus-agentic-ai-security-wide.svg"><img src="images/focus-agentic-ai-security.svg" alt="Agentic AI Security: security for AI agents, MCP servers and AI-native apps, from runtime orchestration to evaluation loops."></picture>
+<picture><source media="(max-width: 640px)" srcset="images/focus-secure-ai-development-wide.svg"><img src="images/focus-secure-ai-development.svg" alt="Securing AI-Driven Development: secure-at-inception guardrails in AI coding assistants, IDEs and CI/CD, so AI-written code ships secure."></picture>
+<picture><source media="(max-width: 640px)" srcset="images/focus-enterprise-ai-strategy-wide.svg"><img src="images/focus-enterprise-ai-strategy.svg" alt="Enterprise AI Security Strategy: partnering with CISOs and platform leaders on AI security programs, from asset visibility to agentic defense."></picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">

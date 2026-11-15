@@ -491,34 +491,44 @@ FOCUS = [
 FW, FPAD = 270, 22
 
 
-def focus_cards(f: Fonts) -> dict[str, str]:
-    """Three cards that sit three across, like the site's Focus Areas."""
-    wrapped = [f.sans.wrap(desc, 13.5, FW - 2 * FPAD) for *_, desc in FOCUS]
-    titles = [f.sans_semibold.wrap(title, 16, FW - 2 * FPAD) for _, _, title, _ in FOCUS]
-    title_y = FPAD + 44 + 30
+def focus_cards(f: Fonts, wide: bool = False) -> dict[str, str]:
+    """Cards like the site's Focus Areas. The 270px set sits three across on
+    desktop; the wide set (400px, icon beside the title) is what phones get,
+    so the cards match the width of every other card on the page."""
+    w = CW if wide else FW
+    pad = PAD if wide else FPAD
+    text_x = pad + 44 + 16 if wide else pad
+    wrapped = [f.sans.wrap(desc, 13.5, w - 2 * pad) for *_, desc in FOCUS]
+    titles = [f.sans_semibold.wrap(title, 16, w - text_x - pad) for _, _, title, _ in FOCUS]
     title_lines = max(len(t) for t in titles)  # every card leaves room for the longest title
-    desc_y = title_y + (title_lines - 1) * 21 + 26
-    h = desc_y + (max(len(w) for w in wrapped) - 1) * 21 + FPAD + 2
+    if wide:
+        title_y = pad + 22 + 6 - (title_lines - 1) * 10.5  # centred on the icon tile
+        desc_y = pad + 44 + 30
+    else:
+        title_y = pad + 44 + 30
+        desc_y = title_y + (title_lines - 1) * 21 + 26
+    h = desc_y + (max(len(w) for w in wrapped) - 1) * 21 + pad + 2
     cards = {}
     for (slug, icon_name, title, _), lines, tlines in zip(FOCUS, wrapped, titles):
-        out = panel(FW, h, wash=True, top_line=True)
+        out = panel(w, h, wash=True, top_line=True)
         out.insert(0, f'<defs><linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">'
                       f'<stop offset="0" stop-color="{PINK}" stop-opacity="0.15"/>'
                       f'<stop offset="1" stop-color="{VIOLET}" stop-opacity="0.15"/></linearGradient>'
                       f'<filter id="tileGlow" x="-50%" y="-50%" width="200%" height="200%">'
                       f'<feGaussianBlur stdDeviation="8"/></filter></defs>')
-        out.append(f'<rect x="{FPAD}" y="{FPAD}" width="44" height="44" rx="12" fill="{PINK}" fill-opacity="0.12" '
+        out.append(f'<rect x="{pad}" y="{pad}" width="44" height="44" rx="12" fill="{PINK}" fill-opacity="0.12" '
                    f'filter="url(#tileGlow)"/>')
-        out.append(f'<rect x="{FPAD + .5}" y="{FPAD + .5}" width="43" height="43" rx="11.5" fill="url(#tile)" '
+        out.append(f'<rect x="{pad + .5}" y="{pad + .5}" width="43" height="43" rx="11.5" fill="url(#tile)" '
                    f'stroke="{PINK}" stroke-opacity="0.35"/>')
-        out.append(icon(icon_name, FPAD + 12, FPAD + 12, 20, PINK))
+        out.append(icon(icon_name, pad + 12, pad + 12, 20, PINK))
         for i, tline in enumerate(tlines):
-            d, _ = f.sans_semibold.path(tline, 16, FPAD, title_y + i * 21)
+            d, _ = f.sans_semibold.path(tline, 16, text_x, title_y + i * 21)
             out.append(f'<path d="{d}" fill="{TEXT}"/>')
         for i, line in enumerate(lines):
-            d, _ = f.sans.path(line, 13.5, FPAD, desc_y + i * 21)
+            d, _ = f.sans.path(line, 13.5, pad, desc_y + i * 21)
             out.append(f'<path d="{d}" fill="{TEXT_2}"/>')
-        cards[f"focus-{slug}.svg"] = svg(FW, h, "\n".join(out), title)
+        name = f"focus-{slug}-wide.svg" if wide else f"focus-{slug}.svg"
+        cards[name] = svg(w, h, "\n".join(out), title)
     return cards
 
 
@@ -642,6 +652,7 @@ def main(font_dir: Path) -> None:
     for repo, *details in CARDS:
         outputs[f"card-{repo}.svg"] = card(f, *details)
     outputs.update(focus_cards(f))
+    outputs.update(focus_cards(f, wide=True))
     outputs.update(stack_cards(f))
     for name, *details in BUTTONS:
         outputs[f"{name}.svg"] = button(f, *details)
