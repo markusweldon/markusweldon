@@ -69,7 +69,19 @@ def fmt(x):
 
 GRADS = {}  # (colour, side) -> (gradient id, top colour)
 WINDOWS = ["#36f9f6", "#ffd6f5", "#ff6ec7", "#8afcfa"]
-WINDOWS_FROM = 2.2  # tower height (of 6) that gets lit windows
+WINDOWS_FROM = 0.37  # share of the cap (about 11 of 30 contributions) that gets lit windows
+
+# Tower heights: a gentle power curve spreads quiet days apart while
+# the busiest stay tallest, and MAX_HEIGHT makes the city half as tall again
+# as the plugin's cubes (SIZE).
+MAX_HEIGHT = 9.0
+
+
+HEIGHT_CURVE = 0.7  # 1 is linear; lower lifts quiet days more
+
+
+def height(t):
+    return MAX_HEIGHT * t ** HEIGHT_CURVE
 
 
 def shade(hexcol, k):
@@ -93,8 +105,9 @@ def side_defs():
 
 
 # Optional effects; set either to False to switch it off.
-REFLECTION = True  # buildings mirrored into the grid floor, like a wet street
-HORIZON = True     # a pink-to-cyan line and glow behind the far end of the city
+REFLECTION = False  # buildings mirrored into the grid floor, like a wet street
+HORIZON = True      # a pink-to-cyan line and glow behind the far end of the city
+HORIZON_LENGTH = 48  # stops short of the streak figures on the right
 
 RGRADS = {}  # (colour, side) -> reflection gradient id
 
@@ -114,7 +127,7 @@ def rgrad_defs():
         for (col, face), gid in RGRADS.items())
 
 
-def tower(col, h, peak, seed):
+def tower(col, h, peak, seed, windows):
     """One day as a lit building. Coordinates follow the plugin's cube paths."""
     if h <= 0:
         return f'<path fill="{col}" d="M1.7,2 0,1 1.7,0 3.4,1 z" stroke="#36f9f6" stroke-opacity="0.12" stroke-width="0.05"/>'
@@ -126,7 +139,7 @@ def tower(col, h, peak, seed):
         f'<path fill="{top}" d="M1.7,2 0,1 1.7,0 3.4,1 z" stroke="{edge}" stroke-width="0.07" stroke-linejoin="round"/>',
         f'<path d="M1.7,2 1.7,{b2}" stroke="{edge}" stroke-opacity="0.55" stroke-width="0.06"/>',
     ]
-    if h >= WINDOWS_FROM:
+    if windows:
         rng = random.Random(seed)  # the same windows for the same spot
         for face in ("l", "r"):
             for u in (0.32, 0.68):
@@ -177,7 +190,7 @@ def restyle(svg):
     if len(cells) < 300:  # a full year is about 365 days
         return svg, f"found only {len(cells)} day cells, left unchanged"
 
-    out, pos, peaks = [], 0, 0
+    out, pos, peaks, tops = [], 0, 0, []
     for c, w, h in cells:
         t = max(0.0, min(1.0, h / SIZE))
         col = colour(t)
@@ -186,9 +199,13 @@ def restyle(svg):
         glow = ' filter="url(#mws-peak)"' if peak else ""
         out.append(block[pos:c.start()])
         d = round(-float(c.group(1)) / 1.7)
+        tall = height(t)
+        top = float(c.group(2)) + h - tall  # same base, new height
+        tops.append((w, absolute[len(tops)][1] + h - tall))
         out.append(
-            f'<g transform="translate({c.group(1)}, {c.group(2)})"{glow}>{c.group(3)}'
-            f'<g class="mws-rise" style="animation-delay:{w * 14}ms">{tower(col, h, peak, w * 7 + d)}</g>'
+            f'<g transform="translate({c.group(1)}, {fmt(top)})"{glow}>{c.group(3)}'
+            f'<g class="mws-rise" style="animation-delay:{w * 14}ms">'
+            f'{tower(col, tall, peak, w * 7 + d, t >= WINDOWS_FROM)}</g>'
         )
         pos = c.end()
     out.append(block[pos:])
@@ -225,12 +242,12 @@ def restyle(svg):
         reflection_svg = "".join(refl)
     horizon_svg = ""
     if HORIZON:
-        tops = [ay for (c, w, h), (ax, ay) in zip(cells, absolute) if w < 8]  # the far end
-        hy = min(tops) - 3.2
+        # On the floor behind the far end, so the first towers stand in front of it.
+        hy = min(ay + h for (c, w, h), (ax, ay) in zip(cells, absolute) if w < 4) - 1.2
         horizon_svg = (
             f'<ellipse cx="14" cy="{fmt(hy)}" rx="34" ry="9" fill="url(#mws-aura)" filter="url(#mws-blur)"/>'
-            f'<rect x="-12" y="{fmt(hy - 0.4)}" width="78" height="0.8" fill="url(#mws-hz)" filter="url(#mws-hzglow)"/>'
-            f'<rect x="-12" y="{fmt(hy - 0.13)}" width="78" height="0.26" fill="url(#mws-hz)"/>')
+            f'<rect x="-12" y="{fmt(hy - 0.4)}" width="{HORIZON_LENGTH}" height="0.8" fill="url(#mws-hz)" filter="url(#mws-hzglow)"/>'
+            f'<rect x="-12" y="{fmt(hy - 0.13)}" width="{HORIZON_LENGTH}" height="0.26" fill="url(#mws-hz)"/>')
     floor = f"""<style>
 @keyframes mws-rise{{from{{transform:scaleY(0)}}to{{transform:scaleY(1)}}}}
 .mws-rise{{transform-box:fill-box;transform-origin:50% 100%;animation:mws-rise .9s cubic-bezier(.2,.8,.2,1) both}}
@@ -266,7 +283,7 @@ def restyle(svg):
   <g mask="url(#mws-mask)">{reflection_svg}</g>
 </g>
 """
-    if HORIZON:  # let the line and glow reach above the calendar's own box
+    if True:  # let tall towers, the horizon and its glow reach past the calendar's own box
         head = svg[:start]
         k = head.rfind('style="margin-top: -130px;"')
         if k >= 0:
