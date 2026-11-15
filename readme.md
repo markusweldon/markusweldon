@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="images/header.svg" width="100%" alt="Markus Weldon · Principal Solutions Engineer · Helping enterprises adopt AI-assisted development securely. A synthwave sunset over a neon grid, with a terminal typing: Securing Agentic AI Development · MCP + Claude Code + AppSec · Ship Faster With AI, Securely">
+<img src="images/header.svg" width="100%" alt="Markus Weldon. A terminal types: Principal Solutions Engineer · Securing Agentic AI Development · AppSec · Cloud · Cybersecurity · Enterprise GTM · Technical Pre-Sales · Ship Faster With AI, Securely. Helping enterprises adopt AI-assisted development securely.">
 
 🇬🇧 Brit builder · 📍 Lake Oswego, Oregon 🌲
 
