@@ -392,8 +392,8 @@ CARDS = [
      "Red-teams and statically audits MCP servers and AI agents against the OWASP Agentic "
      "Top 10 (2026).", "Python", "#3572A5", "MCP & Agent Security"),
     ("claude-owasp-security-skills", "claude-owasp-security-skills",
-     "OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, packaged as "
-     "skills for Claude Code and other AI coding agents.", "Shell", "#89e051", "Agent Skills"),
+     "OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, shipped as Claude "
+     "Code skills.", "Shell", "#89e051", "Claude Code Skills"),
     ("snyk-ai-secure-pipeline", "snyk-ai-secure-pipeline",
      "End-to-end DevSecOps demo: Snyk Code, OSS, Container and IaC, plus an MCP server for "
      "Claude Code.", "JavaScript", "#f1e05a", "DevSecOps"),
@@ -433,11 +433,12 @@ def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: st
            f'<rect x="0.5" y="0.5" width="{CW - 1}" height="{CH - 1}" rx="15.5" fill="none" '
            f'stroke="{PINK}" stroke-opacity="0.3"/>',
            f'<path transform="translate({PAD} {PAD})" d="{OCTOCAT}" fill="{PINK}"/>']
-    d, w = f.mono_semibold.path(title, 16, PAD + 26, PAD + 13)
-    # The header name's white-pink-cyan gradient, stretched over the title.
-    out.append(f'<linearGradient id="title" gradientUnits="userSpaceOnUse" x1="{PAD + 26}" y1="0" '
-               f'x2="{fmt(PAD + 26 + max(w, 140))}" y2="0"><stop offset="0" stop-color="#ff9de2"/>'
-               f'<stop offset="0.45" stop-color="{PINK}"/><stop offset="1" stop-color="{CYAN}"/></linearGradient>')
+    d, _ = f.mono_semibold.path(title, 16, PAD + 26, PAD + 13)
+    # The header name's pink-to-cyan gradient, fitted to each title's own
+    # width so short and long names both run the full range.
+    out.insert(0, f'<defs><linearGradient id="title" x1="0" y1="0" x2="1" y2="0">'
+                  f'<stop offset="0" stop-color="#ff9de2"/><stop offset="0.45" stop-color="{PINK}"/>'
+                  f'<stop offset="1" stop-color="{CYAN}"/></linearGradient></defs>')
     out.append(f'<path d="{d}" fill="url(#title)"/>')
     lines = f.sans.wrap(desc, 14, CW - 2 * PAD)
     if len(lines) > 3:
@@ -464,7 +465,7 @@ BUTTONS = [
     ("btn-github", "GitHub", "github", "left", "cyan", ROW_W),
     ("btn-linkedin", "LinkedIn", "linkedin", "left", "pink", ROW_W),
     ("btn-contact", "Get in Touch", "arrow-right", "right", "primary", ROW_W),
-    ("btn-owasp-skills", "Try the OWASP Security Skills", "play", "left", "primary", None),
+    ("btn-owasp-skills", "Try the OWASP Skills for Claude Code", "play", "left", "primary", None),
 ]
 
 BTN_STYLES = {  # globals.css .btn-ghost-* / .btn-primary
