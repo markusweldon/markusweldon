@@ -116,7 +116,7 @@ def mountains() -> str:
             (600, 312), (650, 270), (720, 296), (790, 236), (865, 288), (930, 258), (1000, 292)]
     front = [(0, 318), (60, 298), (120, 316), (170, 290), (240, 322), (300, 326),
              (700, 326), (760, 318), (820, 284), (880, 314), (940, 300), (1000, 316)]
-    return ridge(back, "#2A1248", "#FF4FC3", 0.55) + "\n" + ridge(front, "#1A0B33", "#6DE2F1", 0.45)
+    return ridge(back, "#292138", "#D33D9B", 0.7) + "\n" + ridge(front, "#1E1829", "#6DE2F1", 0.5)
 
 
 def sun() -> str:
@@ -135,7 +135,7 @@ def terminal() -> str:
     src = (ROOT / "images/typing-focus.svg").read_text()
     inner = re.search(r"<svg[^>]*>(.*)</svg>", src, re.S).group(1)
     inner = inner.replace('fill="#292138" stroke="#3a3350"',
-                          'fill="#140A26" fill-opacity="0.82" stroke="#6DE2F1" stroke-opacity="0.5"')
+                          'fill="#292138" fill-opacity="0.9" stroke="#6DE2F1" stroke-opacity="0.5"')
     return f'<svg x="180" y="394" width="640" height="72" viewBox="0 0 640 72">{inner}</svg>'
 
 
@@ -160,28 +160,28 @@ def build(font_dir: Path) -> str:
   <clipPath id="sky"><rect width="{W}" height="{HORIZON}"/></clipPath>
   <clipPath id="floor"><rect y="{HORIZON}" width="{W}" height="{H - HORIZON}"/></clipPath>
   <linearGradient id="skyFill" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#0B0420"/><stop offset="0.55" stop-color="#1E0B3A"/>
-    <stop offset="1" stop-color="#4A1257"/>
+    <stop offset="0" stop-color="#15101F"/><stop offset="0.55" stop-color="#292138"/>
+    <stop offset="1" stop-color="#4A2552"/>
   </linearGradient>
   <linearGradient id="floorFill" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#3A0F4F"/><stop offset="1" stop-color="#0B0420"/>
+    <stop offset="0" stop-color="#3A2650"/><stop offset="1" stop-color="#15101F"/>
   </linearGradient>
-  <linearGradient id="sunFill" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#FFE45C"/><stop offset="0.45" stop-color="#FF8A3D"/>
-    <stop offset="0.75" stop-color="#FF2E88"/><stop offset="1" stop-color="#B42BD8"/>
+  <linearGradient id="sunFill" gradientUnits="userSpaceOnUse" x1="0" y1="{HORIZON - SUN_R}" x2="0" y2="{HORIZON}">
+    <stop offset="0" stop-color="#FF4FC3"/><stop offset="0.45" stop-color="#D33D9B"/>
+    <stop offset="0.8" stop-color="#A06BFF"/><stop offset="1" stop-color="#8957E5"/>
   </linearGradient>
   <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#3A0F4F" stop-opacity="0.95"/><stop offset="1" stop-color="#3A0F4F" stop-opacity="0"/>
+    <stop offset="0" stop-color="#3A2650" stop-opacity="0.95"/><stop offset="1" stop-color="#3A2650" stop-opacity="0"/>
   </linearGradient>
   <radialGradient id="sunGlow">
-    <stop offset="0.7" stop-color="#FF4FC3" stop-opacity="0.35"/><stop offset="1" stop-color="#FF4FC3" stop-opacity="0"/>
+    <stop offset="0.7" stop-color="#D33D9B" stop-opacity="0.4"/><stop offset="1" stop-color="#D33D9B" stop-opacity="0"/>
   </radialGradient>
   <linearGradient id="neon" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#FF4FC3"/><stop offset="0.5" stop-color="#B98BFF"/><stop offset="1" stop-color="#6DE2F1"/>
+    <stop offset="0" stop-color="#D33D9B"/><stop offset="0.5" stop-color="#8957E5"/><stop offset="1" stop-color="#6DE2F1"/>
   </linearGradient>
   <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#FFFFFF"/><stop offset="0.48" stop-color="#E9DDFF"/>
-    <stop offset="0.52" stop-color="#FF7AD9"/><stop offset="1" stop-color="#FFB8F0"/>
+    <stop offset="0.52" stop-color="#FF4FC3"/><stop offset="1" stop-color="#FFB3E6"/>
   </linearGradient>
   <filter id="glow" x="-10%" y="-40%" width="120%" height="180%">
     <feGaussianBlur stdDeviation="5" result="b"/>
@@ -203,16 +203,16 @@ def build(font_dir: Path) -> str:
 {sun()}
 {mountains()}
 <rect y="{HORIZON}" width="{W}" height="{H - HORIZON}" fill="url(#floorFill)"/>
-<g clip-path="url(#floor)" stroke="#FF4FC3" stroke-width="1.5" stroke-opacity="0.75" filter="url(#softGlow)">
+<g clip-path="url(#floor)" stroke="#D33D9B" stroke-width="1.6" stroke-opacity="0.9" filter="url(#softGlow)">
 {grid_svg}
 </g>
 <rect y="{HORIZON}" width="{W}" height="34" fill="url(#haze)"/>
-<line x1="0" y1="{HORIZON}" x2="{W}" y2="{HORIZON}" stroke="#FF8AD8" stroke-width="2" filter="url(#softGlow)"/>
+<line x1="0" y1="{HORIZON}" x2="{W}" y2="{HORIZON}" stroke="#6DE2F1" stroke-width="2" filter="url(#softGlow)"/>
 <g class="name">
 <path d="{name_d}" fill="url(#neon)" filter="url(#glow)" opacity="0.9"/>
-<path d="{name_d}" fill="url(#chrome)" stroke="#FF4FC3" stroke-width="0.8"/>
+<path d="{name_d}" fill="url(#chrome)" stroke="#D33D9B" stroke-width="0.8"/>
 </g>
-<path d="{title_d}" fill="#FF7AD9" filter="url(#softGlow)"/>
+<path d="{title_d}" fill="#FF4FC3" filter="url(#softGlow)"/>
 <path d="{tag_d}" fill="#6DE2F1" filter="url(#softGlow)"/>
 {terminal()}
 <rect width="{W}" height="{H}" fill="url(#scan)" pointer-events="none"/>
