@@ -23,6 +23,7 @@ Usage:
 import sys
 from pathlib import Path
 
+from fontTools.pens.boundsPen import BoundsPen
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
 from fontTools.ttLib import TTFont
@@ -138,8 +139,8 @@ LINES = [
     "Ship Faster With AI, Securely",
 ]
 
-HW, HH = 1000, 520
-HORIZON = 414
+HW, HH = 1000, 549
+HORIZON = 443
 LEFT = 56
 
 # Site typewriter timing (Hero.tsx): 55 ms per typed character, 1.8 s hold,
@@ -292,10 +293,18 @@ def location(f: Fonts, baseline: float) -> str:
 def header(f: Fonts) -> str:
     name_size = 94
     tracking = -0.025 * name_size  # Tailwind tracking-tight
-    top = 32
-    line1, _ = f.display.path(NAME[0], name_size, LEFT, top + 0.72 * name_size, tracking)
-    line2, _ = f.display.path(NAME[1], name_size, LEFT, top + 1.72 * name_size, tracking)
-    tagline, _ = f.sans.path(TAGLINE, 20, LEFT, 318)
+    # Put the top of the capitals as far from the panel's top edge as the
+    # first letter's ink is from its left edge.
+    first = f.display.glyphs[f.display.cmap[ord(NAME[0][0])]]
+    bounds = BoundsPen(f.display.glyphs)
+    first.draw(bounds)
+    scale = name_size / f.display.upm
+    ink_left, cap_top = LEFT + bounds.bounds[0] * scale, bounds.bounds[3] * scale
+    baseline = ink_left + cap_top
+    top = baseline - 0.72 * name_size
+    line1, _ = f.display.path(NAME[0], name_size, LEFT, baseline, tracking)
+    line2, _ = f.display.path(NAME[1], name_size, LEFT, baseline + name_size, tracking)
+    tagline, _ = f.sans.path(TAGLINE, 20, LEFT, 347)
     grid_svg, grid_css = grid()
 
     # The site's .gradient-text is 135deg across the full-width heading box.
@@ -360,9 +369,9 @@ def header(f: Fonts) -> str:
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)"/>
 </g>
 <path d="{line1} {line2}" fill="url(#nameFill)"/>
-{terminal(f, 226)}
+{terminal(f, 255)}
 <path d="{tagline}" fill="{TEXT_2}"/>
-{location(f, 352)}
+{location(f, 381)}
 </g>
 <rect x="0.5" y="0.5" width="{HW - 1}" height="{HH - 1}" rx="15.5" fill="none" stroke="url(#border)" stroke-opacity="0.45"/>"""
     return svg(HW, HH, body, "Markus Weldon · Principal Solutions Engineer")
@@ -383,8 +392,8 @@ CARDS = [
      "Red-teams and statically audits MCP servers and AI agents against the OWASP Agentic "
      "Top 10 (2026).", "Python", "#3572A5", "MCP & Agent Security"),
     ("claude-owasp-security-skills", "claude-owasp-security-skills",
-     "OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, shipped as Claude "
-     "Code skills.", "Shell", "#89e051", "Claude Code Skills"),
+     "OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, packaged as "
+     "skills for Claude Code and other AI coding agents.", "Shell", "#89e051", "Agent Skills"),
     ("snyk-ai-secure-pipeline", "snyk-ai-secure-pipeline",
      "End-to-end DevSecOps demo: Snyk Code, OSS, Container and IaC, plus an MCP server for "
      "Claude Code.", "JavaScript", "#f1e05a", "DevSecOps"),
@@ -423,9 +432,13 @@ def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: st
            f'<rect width="{CW}" height="{CH}" fill="url(#glow)"/></g>',
            f'<rect x="0.5" y="0.5" width="{CW - 1}" height="{CH - 1}" rx="15.5" fill="none" '
            f'stroke="{PINK}" stroke-opacity="0.3"/>',
-           f'<path transform="translate({PAD} {PAD})" d="{OCTOCAT}" fill="{TEXT_2}"/>']
-    d, _ = f.mono_semibold.path(title, 15, PAD + 26, PAD + 13)
-    out.append(f'<path d="{d}" fill="{TEXT}"/>')
+           f'<path transform="translate({PAD} {PAD})" d="{OCTOCAT}" fill="{PINK}"/>']
+    d, w = f.mono_semibold.path(title, 16, PAD + 26, PAD + 13)
+    # The header name's white-pink-cyan gradient, stretched over the title.
+    out.append(f'<linearGradient id="title" gradientUnits="userSpaceOnUse" x1="{PAD + 26}" y1="0" '
+               f'x2="{fmt(PAD + 26 + max(w, 140))}" y2="0"><stop offset="0" stop-color="#ff9de2"/>'
+               f'<stop offset="0.45" stop-color="{PINK}"/><stop offset="1" stop-color="{CYAN}"/></linearGradient>')
+    out.append(f'<path d="{d}" fill="url(#title)"/>')
     lines = f.sans.wrap(desc, 14, CW - 2 * PAD)
     if len(lines) > 3:
         sys.exit(f"Card description for {title} needs more than three lines")
@@ -451,7 +464,7 @@ BUTTONS = [
     ("btn-github", "GitHub", "github", "left", "cyan", ROW_W),
     ("btn-linkedin", "LinkedIn", "linkedin", "left", "pink", ROW_W),
     ("btn-contact", "Get in Touch", "arrow-right", "right", "primary", ROW_W),
-    ("btn-owasp-skills", "Try the OWASP Skills for Claude Code", "play", "left", "primary", None),
+    ("btn-owasp-skills", "Try the OWASP Security Skills", "play", "left", "primary", None),
 ]
 
 BTN_STYLES = {  # globals.css .btn-ghost-* / .btn-primary

@@ -19,7 +19,7 @@
 **Principal Solutions Engineer** working where AI meets security. I help enterprises adopt agentic AI-assisted development without losing control of their risk posture.
 
 - **Securing agentic AI in production:** agent and MCP workflows, plus the guardrails and safety directives that let teams ship *faster* with AI, not slower.
-- **Building the tooling that makes it real:** security scanners for MCP servers and AI agents, OWASP standards shipped as Claude Code skills, and end-to-end secure CI/CD pipelines.
+- **Building the tooling that makes it real:** security scanners for MCP servers and AI agents, OWASP standards shipped as skills for AI coding agents, and end-to-end secure CI/CD pipelines.
 - **Two decades of B2B solutions engineering:** discovery that finds the real business problem, value proven in the customer's own context, and architecture that survives production.
 
 > *AI writes the code, security checks every line.*
@@ -39,15 +39,18 @@
 <a href="https://github.com/markusweldon/openfix"><img src="images/card-openfix.svg" width="400" alt="OpenFix: turns scanner findings into verified fixes with any model. Each patch is proven by a rescan, your tests and a regression test, then lands as a draft PR."></a>
 
 <a href="https://github.com/markusweldon/agentinel"><img src="images/card-agentinel.svg" width="400" alt="agentinel: red-teams and statically audits MCP servers and AI agents against the OWASP Agentic Top 10 (2026)"></a>
-<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/card-claude-owasp-security-skills.svg" width="400" alt="claude-owasp-security-skills: OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards as Claude Code skills"></a>
+<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/card-claude-owasp-security-skills.svg" width="400" alt="claude-owasp-security-skills: OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, packaged as skills for Claude Code and other AI coding agents"></a>
 
 <a href="https://github.com/markusweldon/snyk-ai-secure-pipeline"><img src="images/card-snyk-ai-secure-pipeline.svg" width="400" alt="snyk-ai-secure-pipeline: end-to-end DevSecOps demo with Snyk Code, OSS, Container, IaC and an MCP server for Claude Code"></a>
 <a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="images/card-claude-snyk-security-expert.svg" width="400" alt="claude-snyk-security-expert: Snyk-powered security subagent for Claude Code"></a>
 
-<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/btn-owasp-skills.svg" alt="Try the OWASP Skills for Claude Code"></a>
+<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/btn-owasp-skills.svg" alt="Try the OWASP Security Skills"></a>
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/install.sh | bash
+# Download the installer, read it, then run it
+curl -fsSLO https://raw.githubusercontent.com/markusweldon/claude-owasp-security-skills/main/install.sh
+less install.sh
+bash install.sh
 ```
 
 <picture>
