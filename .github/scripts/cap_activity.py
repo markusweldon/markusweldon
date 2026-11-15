@@ -21,6 +21,7 @@ POINT = re.compile(
 )
 HGRID = re.compile(r'<line y1="' + NUM + r'" y2="' + NUM + r'" x1="' + NUM + r'" x2="' + NUM + r'" class="ct-grid ct-vertical"></line>')
 LINE = re.compile(r'<path d="[^"]*" class="ct-line"></path>')
+AREA = re.compile(r'<path d="[^"]*" class="ct-area"></path>')
 YLABEL = re.compile(r'(<text y="' + NUM + r'" x="' + NUM + r'"[^>]*class="ct-label ct-vertical ct-start">)([^<]*)(</text>)')
 
 
@@ -76,7 +77,12 @@ def cap_svg(svg, cap):
         return f'<line x1="{m.group(1)}" y1="{y}" x2="{m.group(3)}" y2="{y}" class="ct-point" ct:value="{m.group(5)}"></line>'
 
     out = POINT.sub(fix_point, svg)
-    out = LINE.sub(f'<path d="{monotone_cubic(xs, ys)}" class="ct-line"></path>', out, count=1)
+    curve = monotone_cubic(xs, ys)
+    out = LINE.sub(f'<path d="{curve}" class="ct-line"></path>', out, count=1)
+    # The shaded area under the line was drawn at the old scale too: rebuild it
+    # from the same curve, closed down to the baseline.
+    area = f"M{r3(xs[0])},{r3(bottom)}L{curve[1:]}L{r3(xs[-1])},{r3(bottom)}Z"
+    out = AREA.sub(f'<path d="{area}" class="ct-area"></path>', out, count=1)
 
     # Redraw the horizontal grid lines and axis labels at a round step (0, 5, 10 ... cap).
     step = next(st for st in (1, 2, 5, 10, 20, 25, 50, 100) if cap / st <= 8)

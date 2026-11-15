@@ -8,7 +8,11 @@ The graph's own background is switched off so the panel shows through.
 Sizes are set for the image's displayed width in the README (about 830px),
 so the grid, corners and border match the cards whatever the SVG's size.
 
-Usage: frame_card.py <in.svg> <out.svg>
+With --chart (for the activity line chart), the panel skips its own grid and
+the chart's grid becomes it: the dashed line for every day goes, and the
+value lines turn into the site's faint cyan rows, so two grids don't clash.
+
+Usage: frame_card.py <in.svg> <out.svg> [--chart]
 If the SVG can't be framed, the input is copied unchanged and a warning is
 printed, so the graph still publishes.
 """
@@ -41,14 +45,22 @@ def size(root):
     return w, h
 
 
-def frame(svg):
+CHART_GRID = (
+    "<style>"
+    ".ct-grid.ct-horizontal{display:none}"
+    ".ct-grid.ct-vertical{stroke:#36f9f6!important;stroke-opacity:.14!important;stroke-dasharray:none!important}"
+    "</style>"
+)
+
+
+def frame(svg, chart=False):
     root = ET.fromstring(svg.encode("utf-8"))
     w, h = size(root)
     if not w or not h:
         return svg, "no width or height"
     k = w / DISPLAY_WIDTH
     r, cell, line = 16 * k, 30 * k, k
-    panel = f"""{HIDE}
+    panel = f"""{HIDE}{CHART_GRID if chart else ""}
 <defs>
   <pattern id="mwf-grid" width="{fmt(cell)}" height="{fmt(cell)}" patternUnits="userSpaceOnUse">
     <rect y="{fmt(cell - line)}" width="{fmt(cell)}" height="{fmt(line)}" fill="{CYAN}" fill-opacity="0.09"/>
@@ -61,7 +73,7 @@ def frame(svg):
 </defs>
 <g clip-path="url(#mwf-clip)">
   <rect width="{fmt(w)}" height="{fmt(h)}" fill="{SURFACE}"/>
-  <rect width="{fmt(w)}" height="{fmt(h)}" fill="url(#mwf-grid)"/>
+{"" if chart else f'  <rect width="{fmt(w)}" height="{fmt(h)}" fill="url(#mwf-grid)"/>'}
   <rect width="{fmt(w)}" height="{fmt(h)}" fill="url(#mwf-glow)"/>
 </g>
 """
@@ -77,9 +89,10 @@ def frame(svg):
 
 def main():
     src, dst = sys.argv[1], sys.argv[2]
+    chart = "--chart" in sys.argv[3:]
     svg = open(src, encoding="utf-8").read()
     try:
-        out, note = frame(svg)
+        out, note = frame(svg, chart)
         ET.fromstring(out.encode("utf-8"))  # refuse to publish a broken SVG
     except ET.ParseError as err:
         out, note = svg, f"could not parse ({err})"
