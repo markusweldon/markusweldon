@@ -43,14 +43,14 @@
                 <rect stroke='#000000' stroke-opacity='0' fill='#000000' fill-opacity='0' rx='0' x='0.5' y='0.5' width='829' height='194'/>
             </g>
             <g style='isolation: isolate'>
-                <line x1='276.66666666667' y1='28' x2='276.66666666667' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='#f92aad' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
-                <line x1='553.33333333333' y1='28' x2='553.33333333333' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='#f92aad' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
+                <line x1='276.66666666667' y1='28' x2='276.66666666667' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='#f92aad' stroke-opacity='0.34901960784314' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
+                <line x1='553.33333333333' y1='28' x2='553.33333333333' y2='170' vector-effect='non-scaling-stroke' stroke-width='1' stroke='#f92aad' stroke-opacity='0.34901960784314' stroke-linejoin='miter' stroke-linecap='square' stroke-miterlimit='3'/>
             </g>
             <g style='isolation: isolate'>
                 <!-- Total Contributions big number -->
                 <g transform='translate(138.33333333333, 48)'>
                     <text x='0' y='32' stroke-width='0' text-anchor='middle' fill='#f92aad' stroke='none' font-family='"Segoe UI", Ubuntu, sans-serif' font-weight='700' font-size='28px' font-style='normal' style='opacity: 0; animation: fadein 0.5s linear forwards 0.6s'>
-                        16,999
+                        17,001
                     </text>
                 </g>
 
