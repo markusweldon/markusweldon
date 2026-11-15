@@ -106,7 +106,7 @@ def side_defs():
 
 # Optional effects; set either to False to switch it off.
 REFLECTION = False  # buildings mirrored into the grid floor, like a wet street
-HORIZON = True      # a pink-to-cyan line and glow behind the far end of the city
+HORIZON = False     # a pink-to-cyan line and glow behind the far end of the city
 HORIZON_GAP = 1.6    # clear space between the horizon and the tallest tower under it
 TEXT_COLUMN = 455    # card x where the streak figures start; the horizon stops before it
 CALENDAR_DROP = 30   # px the calendar moves down into the card's empty lower edge
@@ -282,9 +282,9 @@ def restyle(svg):
     <stop offset="0.55" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
   </radialGradient>
   <mask id="mws-mask"><rect x="-200" y="-200" width="600" height="400" fill="url(#mws-fade)"/></mask>
-  <radialGradient id="mws-pool" gradientUnits="userSpaceOnUse" cx="{fmt(cx)}" cy="{fmt(cy)}" r="{fmt(cols * 0.9)}"
+  <radialGradient id="mws-pool" gradientUnits="userSpaceOnUse" cx="{fmt(cx)}" cy="{fmt(cy)}" r="{fmt(cols * 1.05)}"
       gradientTransform="translate({fmt(cx)} {fmt(cy)}) scale(1 0.42) translate({fmt(-cx)} {fmt(-cy)})">
-    <stop offset="0" stop-color="#f92aad" stop-opacity="0.22"/><stop offset="0.6" stop-color="#b01fff" stop-opacity="0.1"/>
+    <stop offset="0" stop-color="#f92aad" stop-opacity="0.32"/><stop offset="0.6" stop-color="#b01fff" stop-opacity="0.15"/>
     <stop offset="1" stop-color="#b01fff" stop-opacity="0"/>
   </radialGradient>
 </defs>
