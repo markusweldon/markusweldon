@@ -62,7 +62,7 @@
 
 ### 🔥 Streaks
 
-<img alt="GitHub contribution streak stats" src="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&fire=36f9f6&ring=f92aad&background=130022&stroke=f92aad&currStreakNum=f92aad&sideNums=f92aad&currStreakLabel=36f9f6&sideLabels=36f9f6&dates=a78bca&card_width=830" width="100%">
+<img alt="GitHub contribution streak stats" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/streak-stats.svg" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">

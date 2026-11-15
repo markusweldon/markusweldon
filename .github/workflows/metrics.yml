@@ -63,14 +63,38 @@ jobs:
 
       # One very busy day flattens every other tower in the isocalendar, because the
       # plugin scales each day to the busiest one. Cap it: 30 contributions is full height.
-      - name: Checkout the cap script
+      - name: Checkout the README scripts
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           sparse-checkout: .github/scripts
           persist-credentials: false
 
       - name: Cap the isocalendar towers
-        run: python3 -I .github/scripts/cap_isocalendar.py /metrics_renders/github-metrics.svg "$RUNNER_TEMP/github-metrics.svg" 30
+        run: python3 -I .github/scripts/cap_isocalendar.py /metrics_renders/github-metrics.svg "$RUNNER_TEMP/capped.svg" 30
+
+      # Colour towers by height on a neon grid floor, then frame the card like the
+      # README's project cards.
+      - name: Restyle the calendar and frame the card
+        run: |
+          python3 -I .github/scripts/skyline_isocalendar.py "$RUNNER_TEMP/capped.svg" "$RUNNER_TEMP/skyline.svg"
+          python3 -I .github/scripts/frame_card.py "$RUNNER_TEMP/skyline.svg" "$RUNNER_TEMP/github-metrics.svg"
+
+      # The streak card comes from the self-hosted streak service with a transparent
+      # background, gets the same frame, and is published next to the metrics card.
+      # If the service is down, yesterday's card stays in place.
+      - name: Fetch and frame the streak card
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          url="https://markus-weldon-github-readme-streak-stats.vercel.app/?user=markusweldon&hide_border=true&border_radius=0&background=00000000&fire=36f9f6&ring=f92aad&stroke=f92aad&currStreakNum=f92aad&sideNums=f92aad&currStreakLabel=36f9f6&sideLabels=36f9f6&dates=a78bca&card_width=830"
+          curl -fsS --retry 3 --max-time 30 -o "$RUNNER_TEMP/streak-raw.svg" "$url"
+          python3 -I - "$RUNNER_TEMP/streak-raw.svg" <<'PY'
+          import sys
+          import xml.etree.ElementTree as ET
+          root = ET.parse(sys.argv[1]).getroot()
+          assert root.tag == "{http://www.w3.org/2000/svg}svg", "Expected an SVG document"
+          PY
+          python3 -I .github/scripts/frame_card.py "$RUNNER_TEMP/streak-raw.svg" "$RUNNER_TEMP/streak-stats.svg"
 
       - name: Publish to the metrics branch
         env:
@@ -80,8 +104,12 @@ jobs:
           dir="$RUNNER_TEMP/metrics-branch"
           git clone --quiet --depth 1 --branch metrics "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$dir"
           cp "$RUNNER_TEMP/github-metrics.svg" "$dir/github-metrics.svg"
+          if [ -s "$RUNNER_TEMP/streak-stats.svg" ]; then
+            cp "$RUNNER_TEMP/streak-stats.svg" "$dir/streak-stats.svg"
+          fi
           cd "$dir"
-          if git diff --quiet; then echo "No change"; exit 0; fi
+          git add -A
+          if git diff --cached --quiet; then echo "No change"; exit 0; fi
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-            commit --quiet -am "Update github-metrics.svg"
+            commit --quiet -m "Update github-metrics.svg and streak-stats.svg"
           git push --quiet origin metrics
