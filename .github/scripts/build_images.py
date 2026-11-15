@@ -21,6 +21,7 @@ Usage:
 """
 
 import sys
+from html import escape
 from pathlib import Path
 
 from fontTools.pens.boundsPen import BoundsPen
@@ -51,6 +52,9 @@ ICONS = {
     "arrow-right": '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
     "map-pin": '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
     "play": '<polygon points="6 3 20 12 6 21 6 3"/>',
+    "shield": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+    "code": '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+    "building-2": '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>',
 }
 
 # GitHub's mark (Octicons, MIT), 16x16, filled; the site's project cards use it.
@@ -112,6 +116,7 @@ class Fonts:
                 sys.exit(f"Font not found: {filename} under {font_dir}")
             return Font(hits[0])
         self.display = load("orbitron-latin-900-normal.woff2")
+        self.display_bold = load("orbitron-latin-700-normal.woff2")
         self.sans = load("Geist-Regular.woff2")
         self.sans_medium = load("Geist-Medium.woff2")
         self.sans_semibold = load("Geist-SemiBold.woff2")
@@ -120,7 +125,7 @@ class Fonts:
 
 
 def svg(width: float, height: float, body: str, title: str = "") -> str:
-    t = f"<title>{title}</title>\n" if title else ""
+    t = f"<title>{escape(title)}</title>\n" if title else ""
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{fmt(width)}" height="{fmt(height)}" '
             f'viewBox="0 0 {fmt(width)} {fmt(height)}">\n{t}{body}\n</svg>\n')
 
@@ -405,11 +410,11 @@ CARDS = [
 CW, CH, PAD = 400, 182, 24
 
 
-def pill(f: Fonts, x: float, y: float, text: str, dot: str | None = None) -> tuple[str, float]:
+def pill(f: Fonts, x: float, y: float, text: str, dot: str | None = None,
+         size: float = 12, h: float = 22) -> tuple[str, float]:
     """The site's tag pill: text-xs, purple tint, rounded-full."""
-    size, h = 12, 22
     tx = x + 9 + (12 if dot else 0)
-    d, w = f.sans.path(text, size, tx, y + 15)
+    d, w = f.sans.path(text, size, tx, y + h / 2 + size * 0.36)
     width = (tx - x) + w + 9
     out = (f'<rect x="{fmt(x + .5)}" y="{fmt(y + .5)}" width="{fmt(width - 1)}" height="{h - 1}" rx="{h / 2 - .5}" '
            f'fill="{PURPLE}" fill-opacity="0.08" stroke="{PURPLE}" stroke-opacity="0.2"/>')
@@ -419,20 +424,35 @@ def pill(f: Fonts, x: float, y: float, text: str, dot: str | None = None) -> tup
     return out, width
 
 
-def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: str) -> str:
-    # globals.css .section-grid: faint cyan rows and purple columns.
+def panel(w: float, h: float, wash: bool = False, top_line: bool = False) -> list[str]:
+    """The card background: #130022 panel, the site's section grid (faint cyan
+    rows, purple columns), a pink corner glow and a thin pink border. `wash`
+    adds the Focus Areas cards' pink-violet-cyan tint; `top_line` their glowing
+    top edge."""
     out = [f'<defs><pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse" x="{PAD}" y="0">'
            f'<rect y="29" width="30" height="1" fill="{CYAN}" fill-opacity="0.09"/>'
            f'<rect x="29" width="1" height="30" fill="{PURPLE}" fill-opacity="0.1"/></pattern>'
            f'<radialGradient id="glow" cx="1" cy="0" r="0.9"><stop offset="0" stop-color="{PINK}" stop-opacity="0.12"/>'
            f'<stop offset="1" stop-color="{PINK}" stop-opacity="0"/></radialGradient>'
-           f'<clipPath id="c"><rect width="{CW}" height="{CH}" rx="16"/></clipPath></defs>',
-           f'<rect width="{CW}" height="{CH}" rx="16" fill="{SURFACE}"/>',
-           f'<g clip-path="url(#c)"><rect width="{CW}" height="{CH}" fill="url(#grid)"/>'
-           f'<rect width="{CW}" height="{CH}" fill="url(#glow)"/></g>',
-           f'<rect x="0.5" y="0.5" width="{CW - 1}" height="{CH - 1}" rx="15.5" fill="none" '
-           f'stroke="{PINK}" stroke-opacity="0.3"/>',
-           f'<path transform="translate({PAD} {PAD})" d="{OCTOCAT}" fill="{PINK}"/>']
+           f'<linearGradient id="wash" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{PINK}" stop-opacity="0.07"/>'
+           f'<stop offset="0.5" stop-color="{VIOLET}" stop-opacity="0.05"/><stop offset="1" stop-color="{CYAN}" stop-opacity="0.04"/></linearGradient>'
+           f'<linearGradient id="edge" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{PINK}" stop-opacity="0"/>'
+           f'<stop offset="0.4" stop-color="{PINK}" stop-opacity="0.8"/><stop offset="0.75" stop-color="{CYAN}" stop-opacity="0.4"/>'
+           f'<stop offset="1" stop-color="{CYAN}" stop-opacity="0"/></linearGradient>'
+           f'<clipPath id="c"><rect width="{w}" height="{h}" rx="16"/></clipPath></defs>',
+           f'<rect width="{w}" height="{h}" rx="16" fill="{SURFACE}"/>',
+           f'<g clip-path="url(#c)"><rect width="{w}" height="{h}" fill="url(#grid)"/>'
+           + (f'<rect width="{w}" height="{h}" fill="url(#wash)"/>' if wash else "")
+           + f'<rect width="{w}" height="{h}" fill="url(#glow)"/>'
+           + (f'<rect x="16" width="{w - 32}" height="1" fill="url(#edge)"/>' if top_line else "")
+           + '</g>',
+           f'<rect x="0.5" y="0.5" width="{w - 1}" height="{h - 1}" rx="15.5" fill="none" '
+           f'stroke="{PINK}" stroke-opacity="0.3"/>']
+    return out
+
+
+def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: str) -> str:
+    out = panel(CW, CH) + [f'<path transform="translate({PAD} {PAD})" d="{OCTOCAT}" fill="{PINK}"/>']
     d, _ = f.mono_semibold.path(title, 16, PAD + 26, PAD + 13)
     # The header name's pink-to-cyan gradient, fitted to each title's own
     # width so short and long names both run the full range.
@@ -452,6 +472,108 @@ def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: st
     p, _ = pill(f, x + w + 6, y, topic)
     out.append(p)
     return svg(CW, CH, "\n".join(out), title)
+
+
+# ══ Focus Areas cards ══════════════════════════════════════════════════════
+
+# The site's FOCUS_AREAS (personal-site src/lib/content.ts), shortened to fit.
+FOCUS = [
+    ("agentic-ai-security", "shield", "Agentic AI Security",
+     "Security for AI agents, MCP servers and AI-native apps, from runtime "
+     "orchestration to evaluation loops."),
+    ("secure-ai-development", "code", "Securing AI-Driven Development",
+     "Secure-at-inception guardrails in AI coding assistants, IDEs and CI/CD, "
+     "so AI-written code ships secure."),
+    ("enterprise-ai-strategy", "building-2", "Enterprise AI Security Strategy",
+     "Partnering with CISOs and platform leaders on AI security programs, from "
+     "asset visibility to agentic defense."),
+]
+FW, FPAD = 270, 22
+
+
+def focus_cards(f: Fonts, wide: bool = False) -> dict[str, str]:
+    """Cards like the site's Focus Areas. The 270px set sits three across on
+    desktop; the wide set (400px, icon beside the title) is what phones get,
+    so the cards match the width of every other card on the page."""
+    w = CW if wide else FW
+    pad = PAD if wide else FPAD
+    text_x = pad + 44 + 16 if wide else pad
+    wrapped = [f.sans.wrap(desc, 13.5, w - 2 * pad) for *_, desc in FOCUS]
+    titles = [f.sans_semibold.wrap(title, 16, w - text_x - pad) for _, _, title, _ in FOCUS]
+    title_lines = max(len(t) for t in titles)  # every card leaves room for the longest title
+    if wide:
+        title_y = pad + 22 + 6 - (title_lines - 1) * 10.5  # centred on the icon tile
+        desc_y = pad + 44 + 30
+    else:
+        title_y = pad + 44 + 30
+        desc_y = title_y + (title_lines - 1) * 21 + 26
+    h = desc_y + (max(len(w) for w in wrapped) - 1) * 21 + pad + 2
+    cards = {}
+    for (slug, icon_name, title, _), lines, tlines in zip(FOCUS, wrapped, titles):
+        out = panel(w, h, wash=True, top_line=True)
+        out.insert(0, f'<defs><linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">'
+                      f'<stop offset="0" stop-color="{PINK}" stop-opacity="0.15"/>'
+                      f'<stop offset="1" stop-color="{VIOLET}" stop-opacity="0.15"/></linearGradient>'
+                      f'<filter id="tileGlow" x="-50%" y="-50%" width="200%" height="200%">'
+                      f'<feGaussianBlur stdDeviation="8"/></filter></defs>')
+        out.append(f'<rect x="{pad}" y="{pad}" width="44" height="44" rx="12" fill="{PINK}" fill-opacity="0.12" '
+                   f'filter="url(#tileGlow)"/>')
+        out.append(f'<rect x="{pad + .5}" y="{pad + .5}" width="43" height="43" rx="11.5" fill="url(#tile)" '
+                   f'stroke="{PINK}" stroke-opacity="0.35"/>')
+        out.append(icon(icon_name, pad + 12, pad + 12, 20, PINK))
+        for i, tline in enumerate(tlines):
+            d, _ = f.sans_semibold.path(tline, 16, text_x, title_y + i * 21)
+            out.append(f'<path d="{d}" fill="{TEXT}"/>')
+        for i, line in enumerate(lines):
+            d, _ = f.sans.path(line, 13.5, pad, desc_y + i * 21)
+            out.append(f'<path d="{d}" fill="{TEXT_2}"/>')
+        name = f"focus-{slug}-wide.svg" if wide else f"focus-{slug}.svg"
+        cards[name] = svg(w, h, "\n".join(out), title)
+    return cards
+
+
+# ══ Stack cards ════════════════════════════════════════════════════════════
+
+STACK = [
+    ("ai-security", "AI & Security", ["Claude Code", "MCP", "Snyk", "OWASP"]),
+    ("languages", "Languages", ["Python", "TypeScript", "JavaScript"]),
+    ("web-runtime", "Web & Runtime", ["React", "Next.js", "Svelte", "Astro", "Node.js", "GraphQL"]),
+    ("cloud-infra", "Cloud & Infra", ["AWS", "GCP", "Vercel", "Cloudflare", "Docker", "Kubernetes"]),
+]
+
+
+def stack_cards(f: Fonts) -> dict[str, str]:
+    """A 2x2 grid of cards: the site's pink section label over its tag pills."""
+    size, ph, gap = 13, 26, 8
+    label_y = PAD + 10
+    first_row = label_y + 18
+
+    def layout(tags):
+        rows, x, row = [[]], PAD, 0
+        for tag in tags:
+            w = f.sans.width(tag, size) + 18
+            if x + w > CW - PAD and rows[-1]:
+                rows.append([])
+                x, row = PAD, row + 1
+            rows[-1].append((x, tag))
+            x += w + gap
+        return rows
+
+    layouts = [layout(tags) for *_, tags in STACK]
+    cards = {}
+    for i, ((slug, label, _), rows) in enumerate(zip(STACK, layouts)):
+        # Cards sit two to a row in the README; each pair shares a height.
+        pair = layouts[i - i % 2:i - i % 2 + 2]
+        h = first_row + max(len(r) for r in pair) * (ph + gap) - gap + PAD
+        out = panel(CW, h, top_line=True)
+        d, _ = f.display_bold.path(label.upper(), 11, PAD, label_y, tracking=2.4)
+        out.append(f'<path d="{d}" fill="{PINK}"/>')
+        for r, row in enumerate(rows):
+            for x, tag in row:
+                p, _ = pill(f, x, first_row + r * (ph + gap), tag, size=size, h=ph)
+                out.append(p)
+        cards[f"stack-{slug}.svg"] = svg(CW, h, "\n".join(out), label)
+    return cards
 
 
 # ══ Pill buttons ═══════════════════════════════════════════════════════════
@@ -529,6 +651,9 @@ def main(font_dir: Path) -> None:
     outputs = {"header.svg": header(f)}
     for repo, *details in CARDS:
         outputs[f"card-{repo}.svg"] = card(f, *details)
+    outputs.update(focus_cards(f))
+    outputs.update(focus_cards(f, wide=True))
+    outputs.update(stack_cards(f))
     for name, *details in BUTTONS:
         outputs[f"{name}.svg"] = button(f, *details)
     outputs["synthwave-divider.svg"] = divider(PINK, CYAN, 0.7)
