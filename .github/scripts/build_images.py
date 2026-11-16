@@ -330,25 +330,27 @@ def skyline_neon(avoid=(), tallest: float = 150, centre: float = 0.82, spread: f
 # Downtown Portland, left to right, in design units (Wells Fargo Center = 120
 # tall): (x, width, height, shape, name).
 PORTLAND = [
-    (0, 16, 26, "rect", ""), (17, 14, 38, "rect", ""), (32, 12, 52, "spire", "Union Station"),
-    (46, 18, 44, "rect", ""), (66, 22, 104, "chamfer", "Big Pink"), (90, 16, 62, "rect", ""),
-    (107, 20, 86, "pill", "1000 Broadway"), (129, 24, 96, "pyramid", "KOIN Center"),
-    (155, 18, 72, "rect", "Fox Tower"), (175, 24, 120, "crown", "Wells Fargo Center"),
-    (201, 20, 88, "chamfer", "PacWest Center"), (223, 18, 66, "rect", "Standard Insurance"),
-    (243, 16, 54, "setback", ""), (261, 20, 42, "rect", ""), (283, 16, 30, "rect", ""),
-    (301, 22, 20, "rect", ""),
+    (0, 12, 22, "rect", ""), (13, 10, 30, "rect", ""), (24, 13, 40, "rect", ""),
+    (38, 11, 52, "spire", "Union Station"), (50, 14, 46, "rect", ""), (65, 16, 60, "rect", ""),
+    (82, 19, 118, "chamfer", "Big Pink"), (102, 13, 70, "rect", ""), (116, 17, 92, "pill", "PacWest Center"),
+    (134, 12, 64, "rect", ""), (147, 15, 110, "rect", "Park Avenue West"), (163, 12, 76, "rect", ""),
+    (176, 16, 82, "rect", "Fox Tower"), (193, 17, 97, "pill", "1000 Broadway"), (211, 12, 68, "rect", ""),
+    (224, 21, 120, "crown", "Wells Fargo Center"), (246, 14, 81, "rect", "Standard Insurance"),
+    (261, 17, 112, "pyramid", "KOIN Center"), (279, 13, 58, "rect", ""), (293, 15, 44, "rect", ""),
+    (309, 12, 34, "rect", ""), (322, 14, 24, "rect", ""),
 ]
 # Mt Hood, unit half-width: broad shoulders, slightly concave flanks and a
 # softened summit.
-HOOD = [(-1, 0), (-0.7, 0.16), (-0.5, 0.31), (-0.32, 0.5), (-0.18, 0.7), (-0.09, 0.86),
-        (-0.03, 0.96), (0.03, 1), (0.1, 0.95), (0.2, 0.82), (0.34, 0.63), (0.52, 0.42),
-        (0.74, 0.2), (1, 0)]
+HOOD = [(-1, 0), (-0.76, 0.12), (-0.52, 0.3), (-0.34, 0.54), (-0.21, 0.79), (-0.14, 0.94),
+        (-0.09, 1.0), (-0.03, 0.96), (0.06, 0.84), (0.17, 0.71), (0.28, 0.62), (0.36, 0.57),
+        (0.43, 0.5), (0.56, 0.34), (0.76, 0.16), (1, 0)]
+RIDGE = 38          # the far foothill ridge Hood stands on, in design units
 
 
 # Mt Hood's place in the scene, in the same design units as PORTLAND: centred
 # behind the right of downtown, its peak just under the tallest tower.
-HOOD_AT, HOOD_HALF, HOOD_HIGH = 292, 150, 64     # low and broad: far off, behind the city
-SCENE_W = HOOD_AT + HOOD_HALF  # the scene's full width, city plus mountain
+HOOD_AT, HOOD_HALF, HOOD_HIGH = 300, 118, 66      # broad and distant, behind the low east end of downtown
+SCENE_W = 336                  # the scene's full width: downtown, with Hood behind it
 
 
 def portland(x0: float, scale: float) -> str:
@@ -357,6 +359,7 @@ def portland(x0: float, scale: float) -> str:
     pink-to-cyan line, and Hood's snowcap and outline in lavender. One scene,
     placed at x0 and scaled as a whole, so it looks the same everywhere."""
     hood_x, hood_w, hood_h = x0 + HOOD_AT * scale, HOOD_HALF * scale, HOOD_HIGH * scale
+    hood_base = HORIZON - RIDGE * scale * 0.92          # Hood rises from the far ridge, not the street
     span = max(bx + bw for bx, bw, *_ in PORTLAND) * scale
     width = int(HW) + 2
     prof = [0.0] * width
@@ -408,11 +411,11 @@ def portland(x0: float, scale: float) -> str:
     roof = " ".join(f"{fmt(px)},{fmt(py)}" for px, py in simple[1:-1])
     city = "M" + " L".join(f"{fmt(px)},{fmt(py)}" for px, py in simple) + " Z"
 
-    hood = [(hood_x + u * hood_w, HORIZON - v * hood_h) for u, v in HOOD]
+    hood = [(hood_x + u * hood_w, hood_base - v * hood_h) for u, v in HOOD]
     hood_d = "M" + " L".join(f"{fmt(x)},{fmt(y)}" for x, y in hood) + " Z"
     hood_line = " ".join(f"{fmt(x)},{fmt(y)}" for x, y in hood)
     # Snowcap: the top of the cone down to a ragged snowline.
-    snow_v = 0.6
+    snow_v = 0.46
     def edge(v, side):
         seq = HOOD if side < 0 else HOOD[::-1]
         for (u1, v1), (u2, v2) in zip(seq, seq[1:]):
@@ -421,21 +424,22 @@ def portland(x0: float, scale: float) -> str:
         return 0
     left_u, right_u = edge(snow_v, -1), edge(snow_v, 1)
     top = [(u, v) for u, v in HOOD if v > snow_v]
-    jag, n = [], 9
+    jag, n = [], 22
+    rng_s = random.Random(11)
     for i in range(n + 1):
         u = right_u - (right_u - left_u) * i / n
-        v = snow_v + (0.07 if i % 2 else -0.02) + (0.05 if i in (3, 6) else 0)
-        jag.append((u, v))
+        finger = 0.11 * rng_s.random() if i % 2 else 0.0      # snow running down a gully
+        jag.append((u, snow_v - finger + (0.05 if not i % 2 else 0)))
     snow = [(left_u, snow_v)] + top + [(right_u, snow_v)] + jag[1:-1]
-    snow_d = "M" + " L".join(f"{fmt(hood_x + u * hood_w)},{fmt(HORIZON - v * hood_h)}" for u, v in snow) + " Z"
+    snow_d = "M" + " L".join(f"{fmt(hood_x + u * hood_w)},{fmt(hood_base - v * hood_h)}" for u, v in snow) + " Z"
 
     # A dimmer row of towers behind downtown, for depth.
     rng = random.Random(503)
     back, bx = [], 4.0
-    while bx < 296:
+    while bx < 330:
         bw = rng.uniform(10, 20)
         mid = bx + bw / 2
-        env = 0.35 + 0.65 * math.exp(-((mid - 170) / 95) ** 2)
+        env = 0.35 + 0.65 * math.exp(-((mid - 190) / 110) ** 2)
         bh = rng.uniform(0.55, 1.0) * 92 * env
         back.append(f'<rect x="{fmt(x0 + bx * scale)}" y="{fmt(HORIZON - bh * scale)}" width="{fmt(bw * scale)}" '
                     f'height="{fmt(bh * scale)}"/>')
@@ -459,7 +463,24 @@ def portland(x0: float, scale: float) -> str:
                 xx += gx
             y += gy
 
+    def ridge(amp, base_h, seed, step=4):
+        r = random.Random(seed)
+        waves = [(r.uniform(0.004, 0.02), r.uniform(0, 6.3), r.uniform(0.4, 1.0)) for _ in range(4)]
+        pts = []
+        for px in range(-4, int(HW) + 8, step):
+            y = sum(a * math.sin(px * f + ph) for f, ph, a in waves) / 2.4
+            pts.append((px, HORIZON - (base_h + amp * y) * scale))
+        return pts
+    far = ridge(5, RIDGE * 0.85, 3)
+    near = ridge(6, RIDGE * 0.32, 9, 3)
+    def shape(pts):
+        return "M" + " L".join(f"{fmt(x)},{fmt(y)}" for x, y in pts) + f" L{fmt(HW + 8)},{HORIZON} L-4,{HORIZON} Z"
+    def line(pts):
+        return " ".join(f"{fmt(x)},{fmt(y)}" for x, y in pts)
+
     parts = [
+        f'<path d="{shape(far)}" fill="#24104a" opacity="0.75"/>',
+        f'<polyline points="{line(far)}" fill="none" stroke="#9b7bff" stroke-opacity="0.35" stroke-width="0.8"/>',
         f'<linearGradient id="pdxNeon" gradientUnits="userSpaceOnUse" x1="{c0}" y1="0" x2="{c1}" y2="0">'
         f'<stop offset="0" stop-color="{PINK}" stop-opacity="0"/><stop offset="0.18" stop-color="{PINK}"/>'
         f'<stop offset="0.7" stop-color="#ff6ec7"/><stop offset="0.9" stop-color="{CYAN}"/>'
@@ -473,6 +494,8 @@ def portland(x0: float, scale: float) -> str:
         f'<polyline points="{hood_line}" fill="none" stroke="#b98cff" stroke-width="2" stroke-opacity="0.35" filter="url(#lineGlow)"/>'
         f'<polyline points="{hood_line}" fill="none" stroke="#d9c6ff" stroke-width="0.8" stroke-opacity="0.6" stroke-linejoin="round"/>'
         f'</g>',
+        f'<path d="{shape(near)}" fill="#160830"/>',
+        f'<polyline points="{line(near)}" fill="none" stroke="{PINK}" stroke-opacity="0.18" stroke-width="0.7"/>',
         f'<g fill="#1d0a36" opacity="0.85">{"".join(back)}</g>',
         f'<path d="{city}" fill="url(#citySil)"/>',
         f'<path d="{" ".join(edges)}" stroke="{PINK}" stroke-opacity="0.22" stroke-width="{fmt(0.7 * scale)}" fill="none"/>',
