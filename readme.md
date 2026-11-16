@@ -104,7 +104,9 @@
 
 ### Workspace
 
-<img src="images/workspace-vscode.png" width="49%" alt="VS Code with SynthWave '84 syntax colours in the markusweldon.com palette, open on routes/index.js from Snyk's nodejs-goof demo app with Snyk findings underlined"> <img src="images/workspace-warp.png" width="49%" alt="Warp terminal running neofetch on an M2 Pro MacBook Pro, over a synthwave starfield, treeline and neon grid">
+<img src="images/workspace-vscode.png" width="100%" alt="VS Code with SynthWave '84 syntax colours in the markusweldon.com palette, open on routes/index.js from Snyk's nodejs-goof demo app with Snyk findings underlined">
+
+<img src="images/workspace-warp.png" width="100%" alt="Warp terminal running neofetch on an M2 Pro MacBook Pro, over a synthwave starfield, treeline and neon grid">
 
 <sub>Car model: "Tesla roadster" by Delta Xeon on Sketchfab, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></sub>
 
