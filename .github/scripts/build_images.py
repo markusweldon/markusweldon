@@ -345,10 +345,18 @@ HOOD = [(-1, 0), (-0.7, 0.16), (-0.5, 0.31), (-0.32, 0.5), (-0.18, 0.7), (-0.09,
         (0.74, 0.2), (1, 0)]
 
 
-def portland(x0: float, scale: float, hood_x: float, hood_w: float, hood_h: float) -> str:
+# Mt Hood's place in the scene, in the same design units as PORTLAND: centred
+# behind the right of downtown, its peak just under the tallest tower.
+HOOD_AT, HOOD_HALF, HOOD_HIGH = 250, 145, 112
+SCENE_W = HOOD_AT + HOOD_HALF  # the scene's full width, city plus mountain
+
+
+def portland(x0: float, scale: float) -> str:
     """Portland's skyline with Mt Hood behind it, in the outrun neon style:
     dark silhouettes backlit by a pink haze, the rooftops traced in a glowing
-    pink-to-cyan line, and Hood's snowcap and outline in lavender."""
+    pink-to-cyan line, and Hood's snowcap and outline in lavender. One scene,
+    placed at x0 and scaled as a whole, so it looks the same everywhere."""
+    hood_x, hood_w, hood_h = x0 + HOOD_AT * scale, HOOD_HALF * scale, HOOD_HIGH * scale
     span = max(bx + bw for bx, bw, *_ in PORTLAND) * scale
     width = int(HW) + 2
     prof = [0.0] * width
@@ -708,7 +716,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 {grid_svg}
 </g>
 <rect y="{HORIZON}" width="{HW}" height="{HH - HORIZON}" fill="url(#floorFade)"/>
-{(portland(52, 0.72, 345, 112, 70) if phone else portland(600, 1.0, 850, 145, 112)) if HEADER_SKYLINE else ""}
+{(portland((HW - SCENE_W * 0.72) / 2, 0.72) if phone else portland(600, 1.0)) if HEADER_SKYLINE else ""}
 {treeline()}
 <g class="horizon">
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
