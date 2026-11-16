@@ -663,7 +663,7 @@ def treeline(avoid=(), clear=None) -> str:
     rng = random.Random(42)
     sig = []
     for i, (x, h, w) in enumerate(front):
-        if h < 14 or rng.random() < 0.15:
+        if h < 10:                                  # every visible front-row tree carries a signal
             continue
         _, _, boughs = silicon_fir(x, h, w, HORIZON)
         y0, bough = rng.choice(boughs[len(boughs) // 2:])
