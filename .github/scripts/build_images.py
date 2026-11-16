@@ -486,10 +486,43 @@ def pine(x: float, h: float, w: float, base: float) -> str:
     return " ".join(f"{fmt(px)},{fmt(py)}" for px, py in pts)
 
 
-def treeline(avoid=()) -> str:
-    def capped(layer):
+def silicon_fir(x: float, h: float, w: float, base: float) -> tuple[str, str]:
+    """A "Silicon Forest" fir drawn as a circuit board: a trunk trace, tiers of
+    branch traces that leave it at 45 degrees and run out flat, each ending in
+    a solder pad, narrowing to a pad at the top. Returns (traces, pads)."""
+    rng = random.Random(round(x * 7.3 + h))
+    trunk = h * 0.08
+    crown = h - trunk
+    tiers = max(3, min(7, int(h // 9)))
+    traces = [f"M{fmt(x)},{fmt(base)} V{fmt(base - h + 2)}"]
+    pads = [(x, base - h + 1.2, 1.5)]
+    for i in range(tiers):
+        t = (i + 1) / (tiers + 0.4)
+        y0 = base - trunk - crown * (1 - t)         # where the branch leaves the trunk
+        reach = w / 2 * (0.25 + 0.75 * t)           # longer branches lower down
+        rise = min(reach * 0.45, crown / tiers * 0.8)
+        for side in (-1, 1):
+            r = reach * rng.uniform(0.85, 1.0)
+            # Up-and-out at 45 degrees, then flat: the classic PCB trace bend.
+            x1, y1 = x + side * rise, y0 - rise
+            x2 = x + side * r
+            traces.append(f"M{fmt(x)},{fmt(y0)} L{fmt(x1)},{fmt(y1)} H{fmt(x2)}")
+            pads.append((x2, y1, 1.15))
+            if i >= 1 and rng.random() < 0.55:      # a short side trace with its own via
+                xs = x1 + side * (r - rise) * 0.5
+                traces.append(f"M{fmt(xs)},{fmt(y1)} l{fmt(side * 2.2)},{fmt(2.2)}")
+                pads.append((xs + side * 2.2, y1 + 2.2, 0.8))
+    return " ".join(traces), "".join(f'<circle cx="{fmt(px)}" cy="{fmt(py)}" r="{r}"/>' for px, py, r in pads)
+
+
+def treeline(avoid=(), clear=None) -> str:
+    """The Silicon Forest: circuit-trace firs along the horizon. Trees under
+    the text are kept below it, and none stand in front of the city
+    (clear = its x range)."""
+    def keep(layer):
         for x, h, w in layer:
-            # Keep tree tops clear of any text above them.
+            if clear and clear[0] - w / 2 < x < clear[1] + w / 2:
+                continue
             under = [y1 for x0, y0, x1, y1 in avoid if x0 - 10 < x < x1 + 10]
             if under:
                 room = HORIZON - max(under) - 6
@@ -497,13 +530,26 @@ def treeline(avoid=()) -> str:
                     h = max(8.0, room * (0.68 + 0.32 * ((x * 0.618) % 1)))
                     w = h * 0.55
             yield x, h, w
-    back = "".join(f'<polygon points="{pine(x, h, w, HORIZON)}"/>' for x, h, w in capped(tree_layer(48, 13, 52, 26)))
-    front = "".join(f'<polygon points="{pine(x, h, w, HORIZON)}"/>' for x, h, w in capped(tree_layer(34, 29, 68, 34)))
-    # Lit from the city: violet back row, plum front row with a faint lavender
-    # rim, so the treeline reads against the dark sky.
-    return (f'<g fill="url(#treeBack)" opacity="0.85">{back}</g>\n'
-            f'<g fill="url(#treeFront)" stroke="#b98cff" stroke-opacity="0.3" stroke-width="0.6" '
-            f'stroke-linejoin="round">{front}</g>')
+
+    def layer(trees, colour, width, opacity, glow):
+        paths, pads, firs = [], [], []
+        for x, h, w in trees:
+            p, d = silicon_fir(x, h, w, HORIZON)
+            paths.append(p)
+            pads.append(d)
+            firs.append(f'<polygon points="{pine(x, h, w * 1.05, HORIZON)}"/>')
+        d = " ".join(paths)
+        return (f'<g opacity="{opacity}">'
+                f'<g fill="url(#treeFront)" opacity="0.75">{"".join(firs)}</g>'  # the fir's shape, faintly
+                f'<path d="{d}" fill="none" stroke="{colour}" stroke-width="{width * 2.6}" stroke-opacity="0.35" '
+                f'stroke-linecap="round" stroke-linejoin="round" filter="url(#{glow})"/>'
+                f'<path d="{d}" fill="none" stroke="{colour}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round"/>'
+                f'<g fill="{BG}" stroke="{colour}" stroke-width="{width * 0.9}">{"".join(pads)}</g></g>')
+
+    back = list(keep(tree_layer(48, 13, 52, 26)))
+    front = list(keep(tree_layer(34, 29, 68, 34)))
+    return (layer(back, PURPLE, 0.8, 0.55, "treeGlow") + "\n"
+            + layer(front, CYAN, 1.0, 0.9, "treeGlow"))
 
 
 HEADER_CAR = True  # a modern electric roadster driving into the grid, seen from behind
@@ -703,6 +749,8 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
     cx, cy = LEFT + box_w / 2, top + box_h / 2
     g = (cx - half * .7071, cy - half * .7071, cx + half * .7071, cy + half * .7071)
 
+    city = ((HW - SCENE_W * 0.72) / 2, 0.72) if phone else (598, 0.92)
+    scene_x = (city[0] - 12, city[0] + SCENE_W * city[1] + 12) if HEADER_SKYLINE else None
     words = (f'<path d="{line1} {line2}" fill="url(#nameFill)"/>\n{term}\n'
              f'<path d="{tagline}" fill="{TEXT_2}"/>\n{loc}') if text else ""
     body = f"""<style>
@@ -774,6 +822,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
     <stop offset="1" stop-color="{VIOLET}" stop-opacity="0"/></radialGradient>
   <linearGradient id="cityFill" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2a0f4d"/><stop offset="1" stop-color="#12041f"/></linearGradient>
+  <filter id="treeGlow" x="-50%" y="-20%" width="200%" height="140%"><feGaussianBlur stdDeviation="1.6"/></filter>
   <filter id="lineGlow" x="-5%" y="-800%" width="110%" height="1700%"><feGaussianBlur stdDeviation="8"/></filter>
   <filter id="starGlow" x="-200%" y="-200%" width="500%" height="500%">
     <feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -788,8 +837,8 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 {grid_svg}
 </g>
 <rect y="{HORIZON}" width="{HW}" height="{HH - HORIZON}" fill="url(#floorFade)"/>
-{(portland((HW - SCENE_W * 0.72) / 2, 0.72) if phone else portland(598, 0.92)) if HEADER_SKYLINE else ""}
-{treeline(avoid)}
+{(portland(*city) if HEADER_SKYLINE else "")}
+{treeline(avoid, scene_x)}
 <g class="horizon">
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)"/>
