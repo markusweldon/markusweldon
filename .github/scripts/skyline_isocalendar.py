@@ -202,24 +202,26 @@ def iso_car(corner, cols, rows) -> tuple[str, str]:
         # Wheel frames shown in turn, so the wheels roll as the car drives.
         # A CSS animation, not SMIL: Safari drops SMIL-animated images when
         # the SVG is opened on its own.
-        dur = 0.07 * n
+        dur = 0.04 * n                             # quick wheel frames for the faster car
         image = (f"<style>@keyframes mws-wheel{{0%{{opacity:1}}{100 / n:.3f}%{{opacity:0}}100%{{opacity:0}}}}"
                  f".mws-w{{opacity:0;animation:mws-wheel {dur:.2f}s steps(1,end) infinite}}"
                  f"@media (prefers-reduced-motion: reduce){{.mws-w{{animation:none}}.mws-w0{{opacity:1}}}}</style>")
         for k, f in enumerate(files):
             b64 = base64.b64encode(f.read_bytes()).decode()
             image += (f'<image class="mws-w mws-w{k}" href="data:image/png;base64,{b64}" {geom} '
-                      f'style="animation-delay:-{dur - 0.07 * k:.2f}s"/>')
+                      f'style="animation-delay:-{dur - 0.04 * k:.2f}s"/>')
     else:
         image = f'<image href="data:image/png;base64,{data}" {geom}/>'
 
     def off(a):
         return corner(a, 0)[0] - corner(0, 0)[0], corner(a, 0)[1] - corner(0, 0)[1]
     (sx, sy), (ex, ey), (mx, my) = off(cols + 6), off(-8), off(cols * 0.45)
+    # A fast pass, about 4.5 s across the city, then a short gap before the next.
     css = (f"@keyframes mws-drive{{0%{{transform:translate({fmt(sx)}px,{fmt(sy)}px);opacity:0}}"
-           f"6%{{opacity:1}}88%{{opacity:1}}"
+           f"4%{{opacity:1}}70%{{opacity:1}}"
+           f"75%{{transform:translate({fmt(ex)}px,{fmt(ey)}px);opacity:0}}"
            f"100%{{transform:translate({fmt(ex)}px,{fmt(ey)}px);opacity:0}}}}"
-           f".mws-car{{animation:mws-drive 14s linear infinite}}"
+           f".mws-car{{animation:mws-drive 6s linear infinite}}"
            f"@media (prefers-reduced-motion: reduce){{.mws-car{{animation:none;transform:translate({fmt(mx)}px,{fmt(my)}px)}}}}")
     return f'<g class="mws-car">{floor}{image}</g>', css
 
