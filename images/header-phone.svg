@@ -5,8 +5,8 @@
 .star{fill:#fff;transform-box:fill-box;transform-origin:center;animation:twinkle 4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
 .horizon{animation:pulse 5s ease-in-out infinite}
-@keyframes run{0%{transform:translateY(451.7px)}5%{transform:translateY(452.9px)}10%{transform:translateY(454.3px)}15%{transform:translateY(455.8px)}20%{transform:translateY(457.6px)}25%{transform:translateY(459.5px)}30%{transform:translateY(461.6px)}35%{transform:translateY(464.0px)}40%{transform:translateY(466.7px)}45%{transform:translateY(469.7px)}50%{transform:translateY(473.0px)}55%{transform:translateY(476.7px)}60%{transform:translateY(480.9px)}65%{transform:translateY(485.5px)}70%{transform:translateY(490.7px)}75%{transform:translateY(496.4px)}80%{transform:translateY(502.9px)}85%{transform:translateY(510.0px)}90%{transform:translateY(518.1px)}95%{transform:translateY(527.0px)}100%{transform:translateY(537.0px)}}.h{animation:run 2.80s linear infinite}
-@keyframes bob{0%,100%{transform:translate(0,0)}25%{transform:translate(0.3px,-0.7px)}50%{transform:translate(0,-0.2px)}75%{transform:translate(-0.3px,-0.6px)}}.car{animation:bob .18s linear infinite}
+@keyframes run{0%{transform:translateY(451.7px)}5%{transform:translateY(452.9px)}10%{transform:translateY(454.3px)}15%{transform:translateY(455.8px)}20%{transform:translateY(457.6px)}25%{transform:translateY(459.5px)}30%{transform:translateY(461.6px)}35%{transform:translateY(464.0px)}40%{transform:translateY(466.7px)}45%{transform:translateY(469.7px)}50%{transform:translateY(473.0px)}55%{transform:translateY(476.7px)}60%{transform:translateY(480.9px)}65%{transform:translateY(485.5px)}70%{transform:translateY(490.7px)}75%{transform:translateY(496.4px)}80%{transform:translateY(502.9px)}85%{transform:translateY(510.0px)}90%{transform:translateY(518.1px)}95%{transform:translateY(527.0px)}100%{transform:translateY(537.0px)}}.h{animation:run 1.54s linear infinite}
+
 .hs{display:none}
 @keyframes winblink{0%,100%{opacity:.8}50%{opacity:.1}}
 .wb{animation:winblink 7s ease-in-out infinite}
@@ -121,17 +121,17 @@
 <line x1="436" y1="441" x2="2340" y2="537"/>
 <line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.00s"/>
 <line class="hs" x1="0" y1="453.5" x2="480" y2="453.5"/>
-<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.40s"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.22s"/>
 <line class="hs" x1="0" y1="458.1" x2="480" y2="458.1"/>
-<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.80s"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.44s"/>
 <line class="hs" x1="0" y1="464.4" x2="480" y2="464.4"/>
-<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-1.20s"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.66s"/>
 <line class="hs" x1="0" y1="473.0" x2="480" y2="473.0"/>
-<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-1.60s"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.88s"/>
 <line class="hs" x1="0" y1="484.8" x2="480" y2="484.8"/>
-<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-2.00s"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-1.10s"/>
 <line class="hs" x1="0" y1="501.0" x2="480" y2="501.0"/>
-<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-2.40s"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-1.32s"/>
 <line class="hs" x1="0" y1="523.1" x2="480" y2="523.1"/>
 </g>
 <rect y="441" width="480" height="96" fill="url(#floorFade)"/>
