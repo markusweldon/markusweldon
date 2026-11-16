@@ -240,11 +240,14 @@ def discrete(attr: str, values: list[str], times: list[int], total: int) -> str:
             f'keyTimes="{keys}" dur="{total / 1000:.3f}s" repeatCount="indefinite"/>')
 
 
-def terminal(f: Fonts, top: float) -> str:
-    mono, size, box_h = f.mono, 20, 38
-    baseline = top + 26
-    prompt_d, prompt_w = mono.path(PROMPT, size, LEFT + 12, baseline)
-    chevron_x = LEFT + 12 + prompt_w + 2
+def terminal(f: Fonts, top: float, size: float = 20, prompt: bool = True) -> str:
+    mono, box_h = f.mono, size * 1.9
+    baseline = top + size * 1.3
+    if prompt:
+        prompt_d, prompt_w = mono.path(PROMPT, size, LEFT + 12, baseline)
+        chevron_x = LEFT + 12 + prompt_w + 2
+    else:  # phones: just the chevron, so the longest line still fits
+        prompt_d, chevron_x = "", LEFT + 12
     text_x = chevron_x + mono.advance(" ", size) * 2
     adv = mono.advance("M", size)
     events, total = typing_timeline()
@@ -255,11 +258,12 @@ def terminal(f: Fonts, top: float) -> str:
     cursor_xs = [fmt(text_x + n * adv + 2) for n in counts]
 
     out = [
-        f'<rect x="{LEFT}" y="{top}" height="{box_h}" width="{widths[0]}" rx="4" '
+        f'<rect x="{LEFT}" y="{top}" height="{fmt(box_h)}" width="{widths[0]}" rx="4" '
         f'fill="{CYAN}" fill-opacity="0.04">{discrete("width", widths, times, total)}</rect>',
-        f'<rect x="{LEFT}" y="{top}" width="2" height="{box_h}" fill="{CYAN}" fill-opacity="0.4"/>',
+        f'<rect x="{LEFT}" y="{top}" width="2" height="{fmt(box_h)}" fill="{CYAN}" fill-opacity="0.4"/>',
         f'<path d="{prompt_d}" fill="{PROMPT_COL}"/>',
-        f'<path d="M{fmt(chevron_x)} {fmt(baseline - 13)} l6 6 l-6 6" fill="none" stroke="{PROMPT_COL}" '
+        f'<path d="M{fmt(chevron_x)} {fmt(baseline - size * 0.65)} l{fmt(size * 0.3)} {fmt(size * 0.3)} '
+        f'l{fmt(-size * 0.3)} {fmt(size * 0.3)}" fill="none" stroke="{PROMPT_COL}" '
         f'stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
     ]
     for i, line in enumerate(LINES):
@@ -271,33 +275,46 @@ def terminal(f: Fonts, top: float) -> str:
                 line_times.append(t)
                 line_widths.append(w)
                 last = w
-        out.append(f'<clipPath id="type{i}"><rect x="{fmt(text_x)}" y="{top}" height="{box_h}" '
+        out.append(f'<clipPath id="type{i}"><rect x="{fmt(text_x)}" y="{top}" height="{fmt(box_h)}" '
                    f'width="0">{discrete("width", line_widths, line_times, total)}</rect></clipPath>')
         out.append(f'<path d="{d}" fill="{CYAN}" clip-path="url(#type{i})"/>')
-    out.append(f'<rect x="{cursor_xs[0]}" y="{fmt(baseline - 15)}" width="2" height="16" fill="{CYAN}">'
+    out.append(f'<rect x="{cursor_xs[0]}" y="{fmt(baseline - size * 0.75)}" width="2" height="{fmt(size * 0.8)}" fill="{CYAN}">'
                f'{discrete("x", cursor_xs, times, total)}'
                f'<animate attributeName="opacity" calcMode="discrete" values="1;0" keyTimes="0;0.5" '
                f'dur="{2 * BLINK_MS / 1000:.2f}s" repeatCount="indefinite"/></rect>')
     return "\n".join(out)
 
 
-def location(f: Fonts, baseline: float) -> str:
+def location(f: Fonts, baseline: float, size: float = 15) -> str:
     """'Brit builder · (pin) Lake Oswego, Oregon' in the site's dim mono."""
-    size, colour, x = 15, PROMPT_COL, LEFT
+    colour, x, k = PROMPT_COL, LEFT, size / 15
     out = []
     d, w = f.mono.path(f"{LOCATION[0]} · ", size, x, baseline)
     out.append(f'<path d="{d}" fill="{colour}"/>')
-    x += w + 2
-    out.append(icon("map-pin", x, baseline - 13, 15, colour, 2.2))
-    x += 21
+    x += w + 2 * k
+    out.append(icon("map-pin", x, baseline - 13 * k, size, colour, 2.2))
+    x += 21 * k
     d, w = f.mono.path(LOCATION[1], size, x, baseline)
     out.append(f'<path d="{d}" fill="{colour}"/>')
     return "\n".join(out)
 
 
-def header(f: Fonts, text: bool = True) -> str:
+def header_phone(f: Fonts) -> str:
+    """The hero laid out for phones: 480 wide, so once a phone scales it to its
+    screen the text is a readable size. Served by a <picture> media query."""
+    global HW, HH, HORIZON, LEFT
+    saved = HW, HH, HORIZON, LEFT
+    try:
+        HW, LEFT = 480, 28
+        return header(f, phone=True)
+    finally:
+        HW, HH, HORIZON, LEFT = saved
+
+
+def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
     """The README hero. With text=False, just the scene (used as a backdrop)."""
-    name_size = 94
+    global HH, HORIZON
+    name_size = 76 if phone else 94
     tracking = -0.025 * name_size  # Tailwind tracking-tight
     # Put the top of the capitals as far from the panel's top edge as the
     # first letter's ink is from its left edge.
@@ -310,7 +327,23 @@ def header(f: Fonts, text: bool = True) -> str:
     top = baseline - 0.72 * name_size
     line1, _ = f.display.path(NAME[0], name_size, LEFT, baseline, tracking)
     line2, _ = f.display.path(NAME[1], name_size, LEFT, baseline + name_size, tracking)
-    tagline, _ = f.sans.path(TAGLINE, 20, LEFT, 347)
+    if phone:
+        # Stack everything under the name, then put the horizon below it.
+        term_top = baseline + name_size + 30
+        term_size = 16
+        tag_size, tag_lead = 18, 26
+        tag_lines = f.sans.wrap(TAGLINE, tag_size, HW - 2 * LEFT)
+        tag_y = term_top + term_size * 1.9 + 40
+        loc_y = tag_y + (len(tag_lines) - 1) * tag_lead + 32
+        HORIZON = round(loc_y + 62)
+        HH = HORIZON + 96
+        tagline = " ".join(f.sans.path(line, tag_size, LEFT, tag_y + i * tag_lead)[0]
+                           for i, line in enumerate(tag_lines))
+        term = terminal(f, term_top, term_size, prompt=False)
+        loc = location(f, loc_y, 13)
+    else:
+        tagline, _ = f.sans.path(TAGLINE, 20, LEFT, 347)
+        term, loc = terminal(f, 255), location(f, 381)
     grid_svg, grid_css = grid()
 
     # The site's .gradient-text is 135deg across the full-width heading box.
@@ -319,8 +352,8 @@ def header(f: Fonts, text: bool = True) -> str:
     cx, cy = LEFT + box_w / 2, top + box_h / 2
     g = (cx - half * .7071, cy - half * .7071, cx + half * .7071, cy + half * .7071)
 
-    words = (f'<path d="{line1} {line2}" fill="url(#nameFill)"/>\n{terminal(f, 255)}\n'
-             f'<path d="{tagline}" fill="{TEXT_2}"/>\n{location(f, 381)}') if text else ""
+    words = (f'<path d="{line1} {line2}" fill="url(#nameFill)"/>\n{term}\n'
+             f'<path d="{tagline}" fill="{TEXT_2}"/>\n{loc}') if text else ""
     body = f"""<style>
 @keyframes twinkle{{0%,100%{{opacity:1;transform:scale(1)}}50%{{opacity:.08;transform:scale(.4)}}}}
 .star{{fill:#fff;transform-box:fill-box;transform-origin:center;animation:twinkle 4s ease-in-out infinite}}
@@ -366,7 +399,7 @@ def header(f: Fonts, text: bool = True) -> str:
 <rect width="{HW}" height="{HH}" fill="{BG}"/>
 <rect width="{HW}" height="{HH}" fill="url(#skyGlow)"/>
 {stars()}
-<ellipse cx="680" cy="{HORIZON - 30}" rx="330" ry="170" fill="url(#aura)" filter="url(#blur28)"/>
+<ellipse cx="{fmt(HW * 0.68)}" cy="{HORIZON - 30}" rx="{fmt(HW * 0.33)}" ry="170" fill="url(#aura)" filter="url(#blur28)"/>
 <g clip-path="url(#floor)" stroke="{CYAN}" stroke-opacity="0.35" stroke-width="1">
 {grid_svg}
 </g>
@@ -648,7 +681,7 @@ def divider(pink: str, cyan: str, glow: float) -> str:
 
 def main(font_dir: Path) -> None:
     f = Fonts(font_dir)
-    outputs = {"header.svg": header(f)}
+    outputs = {"header.svg": header(f), "header-phone.svg": header_phone(f)}
     for repo, *details in CARDS:
         outputs[f"card-{repo}.svg"] = card(f, *details)
     outputs.update(focus_cards(f))
