@@ -194,8 +194,21 @@ def iso_car(corner, cols, rows) -> tuple[str, str]:
                   f'x2="{p(L + 4, y).split(",")[0]}" y2="{fmt(float(p(L + 4, y).split(",")[1]) - 0.1)}" '
                   f'stroke="url(#mws-trail)" stroke-width="0.08" stroke-linecap="round"/>' for y in (-0.42, 0.42))
     )
-    image = (f'<image href="data:image/png;base64,{data}" x="{fmt(ox + meta["x"])}" y="{fmt(oy + meta["y"])}" '
-             f'width="{fmt(meta["w"])}" height="{fmt(meta["h"])}"/>')
+    geom = (f'x="{fmt(ox + meta["x"])}" y="{fmt(oy + meta["y"])}" '
+            f'width="{fmt(meta["w"])}" height="{fmt(meta["h"])}"')
+    n = meta.get("frames", 0)
+    files = [ASSETS / f"roadster-iso-{k}.png" for k in range(n)]
+    if n > 1 and all(f.exists() for f in files):
+        # Wheel frames shown in turn, so the wheels roll as the car drives.
+        image = ""
+        for k, f in enumerate(files):
+            vals = ";".join("1" if j == k else "0" for j in range(n))
+            b64 = base64.b64encode(f.read_bytes()).decode()
+            image += (f'<image href="data:image/png;base64,{b64}" {geom} opacity="{1 if k == 0 else 0}">'
+                      f'<animate attributeName="opacity" calcMode="discrete" values="{vals}" '
+                      f'dur="{0.07 * n:.2f}s" repeatCount="indefinite"/></image>')
+    else:
+        image = f'<image href="data:image/png;base64,{data}" {geom}/>'
 
     def off(a):
         return corner(a, 0)[0] - corner(0, 0)[0], corner(a, 0)[1] - corner(0, 0)[1]

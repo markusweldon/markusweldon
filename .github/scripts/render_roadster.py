@@ -81,6 +81,29 @@ def setup(model):
     return sc
 
 
+# The wheel parts (tyre and rim per axle, both sides) and their axle centres.
+WHEELS = {"Object_24": (-1.56, 0.395), "Object_27": (-1.56, 0.395),
+          "Object_30": (1.80, 0.395), "Object_33": (1.80, 0.395)}
+WHEEL_FRAMES = 4          # six spokes repeat every 60 degrees: 4 frames of 15
+
+
+def turn_wheels(angle):
+    """Rotate the wheels by angle (radians) about their axles. The car drives
+    towards -X, so the tops of the wheels move towards -X: a negative turn
+    about +Y."""
+    from mathutils import Matrix
+    for name, (x, z) in WHEELS.items():
+        o = bpy.data.objects.get(name)
+        if o is None:
+            continue
+        if "rest" not in o:
+            o["rest"] = [list(r) for r in o.matrix_world]
+        rest = Matrix(o["rest"])
+        c = Vector((x, 0.0, z))
+        o.matrix_world = Matrix.Translation(c) @ Matrix.Rotation(-angle, 4, "Y") @ Matrix.Translation(-c) @ rest
+    bpy.context.view_layer.update()
+
+
 def camera(sc, loc, target, ortho=None, lens=85):
     cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam"))
     sc.collection.objects.link(cam)
@@ -149,9 +172,21 @@ def main(model):
     pa, p0 = project(sc, cam, (1, 0, 0)), project(sc, cam, (0, 0, 0))
     assert pa[0] > p0[0] and pa[1] > p0[1], "the rear must point to the lower right"
     iso = ASSETS / "roadster-iso.png"
-    render(sc, iso, W, H)
+    frames = []
+    for k in range(WHEEL_FRAMES):                  # the same view with the wheels a little further round
+        turn_wheels(math.radians(60 / WHEEL_FRAMES * k))
+        f = ASSETS / f"roadster-iso-{k}.png"
+        render(sc, f, W, H)
+        frames.append(f)
+    turn_wheels(0.0)
     nose = project(sc, cam, (-2.44, 0.0, 0.0))     # the car's front, on the ground, centreline
-    box, size = crop(iso)
+    from PIL import Image
+    ims = [Image.open(f).convert("RGBA") for f in frames]
+    box = None
+    for im in ims:                                 # one crop for every frame, so they line up
+        b = im.getchannel("A").point(lambda v: 255 if v > 4 else 0).getbbox()
+        box = b if box is None else (min(box[0], b[0]), min(box[1], b[1]), max(box[2], b[2]), max(box[3], b[3]))
+    size = (box[2] - box[0], box[3] - box[1])
     # Calendar units per pixel: a metre along the ground covers ISO_M * |(1.7, 1)|
     # calendar units, and this camera draws it |proj(a)| pixels long.
     pa, p0 = project(sc, cam, (1, 0, 0)), project(sc, cam, (0, 0, 0))
@@ -159,12 +194,14 @@ def main(model):
     upp = ISO_M * math.hypot(1.7, 1.0) / px_per_m
     # Shrink the PNG: it's drawn about 30 calendar units wide at 4 px each.
     scale = min(1.0, 140 / size[0])
-    from PIL import Image
-    im = Image.open(iso)
-    im = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
-    im.save(iso, optimize=True)
+    for k, (f, im) in enumerate(zip(frames, ims)):
+        im = im.crop(box)
+        im = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
+        im.save(f, optimize=True)
+        if k == 0:
+            im.save(iso, optimize=True)
     meta = {"iso": {"x": (box[0] - nose[0]) * upp, "y": (box[1] - nose[1]) * upp,
-                    "w": size[0] * upp, "h": size[1] * upp}}
+                    "w": size[0] * upp, "h": size[1] * upp, "frames": WHEEL_FRAMES}}
     (ASSETS / "roadster.json").write_text(json.dumps(meta, indent=1))
     print("rear", Image.open(rear).size, "iso", im.size, meta)
 
