@@ -36,9 +36,9 @@ h2 svg, h3 svg { fill: #f92aad !important; }
 svg.bar { margin: 0 0 12px 32px; width: calc(100% - 64px); }
 mask#languages-bar rect { fill: #fff !important; }
 .row.fill-width { margin: 0 0 4px 27px; }
-.row.fill-width section { flex: 0 0 auto !important; width: 25%; }
+.row.fill-width section { flex: 0 0 auto !important; width: calc(25% - 8px); }
 .field.language.details { justify-content: flex-start !important; margin-bottom: 4px; }
-.field.language.details &gt; ARCHITECTURE.md CODE_OF_CONDUCT.md CONTRIBUTING.md Dockerfile LICENSE README.md SECURITY.md action.yml package-lock.json package.json settings.example.json source tests vercel.json { flex: 0 0 auto !important; }
+.field.language.details &gt; .field, .field.language.details &gt; small { flex: 0 0 auto !important; }
 .field.language.details &gt; .field { width: 118px; }
 .field.language.details small { margin-left: 0; }
 .field.language.details .field svg { margin-left: 0 !important; }
