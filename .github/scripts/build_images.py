@@ -525,10 +525,10 @@ def car(cx: float, ground: float, width: float) -> str:
 </g>"""
 
 
-CAR_CSS = ("@keyframes drift{0%,100%{transform:translateX(-26px)}50%{transform:translateX(26px)}}"
-           ".carwrap{animation:drift 9s ease-in-out infinite}"
-           "@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-0.8px)}}"
-           ".car{animation:bob .35s ease-in-out infinite}")
+# The car holds its lane; a fast, slight road shake sells the speed.
+CAR_CSS = ("@keyframes bob{0%,100%{transform:translate(0,0)}25%{transform:translate(0.3px,-0.7px)}"
+           "50%{transform:translate(0,-0.2px)}75%{transform:translate(-0.3px,-0.6px)}}"
+           ".car{animation:bob .18s linear infinite}")
 
 
 def grid() -> tuple[str, str]:
@@ -537,7 +537,7 @@ def grid() -> tuple[str, str]:
     for i in range(-14, 15):
         parts.append(f'<line x1="{fmt(HW / 2 + i * 14)}" y1="{HORIZON}" '
                      f'x2="{fmt(HW / 2 + i * 150)}" y2="{HH}"/>')
-    lines, period, far = 7, 0.9, 9.0
+    lines, period, far = 7, 0.4, 9.0  # a line every 0.4 s: the floor rushes towards the viewer
     frames = []
     for step in range(21):
         t = step / 20
