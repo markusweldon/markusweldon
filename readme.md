@@ -60,18 +60,18 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### Activity
+### Streaks
 
-<img alt="Recent GitHub contribution activity" src="https://raw.githubusercontent.com/markusweldon/markusweldon/activity/activity-graph.svg?v=2" width="100%">
+<img alt="GitHub contribution streak stats" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/streak-stats.svg?v=2" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### Streaks
+### Activity
 
-<img alt="GitHub contribution streak stats" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/streak-stats.svg?v=2" width="100%">
+<img alt="Recent GitHub contribution activity" src="https://raw.githubusercontent.com/markusweldon/markusweldon/activity/activity-graph.svg?v=2" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
