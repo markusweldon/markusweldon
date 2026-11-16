@@ -186,7 +186,7 @@ def stars(avoid=()) -> str:
     return "\n".join(out)
 
 
-HEADER_SKYLINE = False  # the neon city behind the pines; off until a better style lands
+HEADER_SKYLINE = True  # Portland and Mt Hood in neon, behind the pines
 CITY = ["#36f9f6", "#ff6ec7", "#ffd6f5", "#b98cff"]  # lit window colours
 
 
