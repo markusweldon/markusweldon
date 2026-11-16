@@ -11,6 +11,8 @@ so the grid, corners and border match the cards whatever the SVG's size.
 With --chart (for the activity line chart), the panel skips its own grid and
 the chart's grid becomes it: the dashed line for every day goes, and the
 value lines turn into the site's faint cyan rows, so two grids don't clash.
+The area under the line becomes a pink-to-violet gradient that fades out at
+the baseline, and the line gets a soft neon glow.
 
 Usage: frame_card.py <in.svg> <out.svg> [--chart]
 If the SVG can't be framed, the input is copied unchanged and a warning is
@@ -49,7 +51,15 @@ CHART_GRID = (
     "<style>"
     ".ct-grid.ct-horizontal{display:none}"
     ".ct-grid.ct-vertical{stroke:#36f9f6!important;stroke-opacity:.14!important;stroke-dasharray:none!important}"
+    ".ct-series-a .ct-area{fill:url(#mwf-area)!important;fill-opacity:1!important}"
+    ".ct-series-a .ct-line{filter:drop-shadow(0 0 6px rgba(249,42,173,.55))}"
     "</style>"
+    # The area under the line: pink glow at the line, fading through violet
+    # to nothing at the baseline, like the header's sky.
+    '<defs><linearGradient id="mwf-area" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#f92aad" stop-opacity="0.42"/>'
+    '<stop offset="0.45" stop-color="#b01fff" stop-opacity="0.18"/>'
+    '<stop offset="1" stop-color="#7b2fff" stop-opacity="0"/></linearGradient></defs>'
 )
 
 
