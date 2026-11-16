@@ -347,7 +347,7 @@ HOOD = [(-1, 0), (-0.7, 0.16), (-0.5, 0.31), (-0.32, 0.5), (-0.18, 0.7), (-0.09,
 
 # Mt Hood's place in the scene, in the same design units as PORTLAND: centred
 # behind the right of downtown, its peak just under the tallest tower.
-HOOD_AT, HOOD_HALF, HOOD_HIGH = 320, 122, 106
+HOOD_AT, HOOD_HALF, HOOD_HIGH = 292, 150, 64     # low and broad: far off, behind the city
 SCENE_W = HOOD_AT + HOOD_HALF  # the scene's full width, city plus mountain
 
 
@@ -429,16 +429,54 @@ def portland(x0: float, scale: float) -> str:
     snow = [(left_u, snow_v)] + top + [(right_u, snow_v)] + jag[1:-1]
     snow_d = "M" + " L".join(f"{fmt(hood_x + u * hood_w)},{fmt(HORIZON - v * hood_h)}" for u, v in snow) + " Z"
 
+    # A dimmer row of towers behind downtown, for depth.
+    rng = random.Random(503)
+    back, bx = [], 4.0
+    while bx < 296:
+        bw = rng.uniform(10, 20)
+        mid = bx + bw / 2
+        env = 0.35 + 0.65 * math.exp(-((mid - 170) / 95) ** 2)
+        bh = rng.uniform(0.55, 1.0) * 92 * env
+        back.append(f'<rect x="{fmt(x0 + bx * scale)}" y="{fmt(HORIZON - bh * scale)}" width="{fmt(bw * scale)}" '
+                    f'height="{fmt(bh * scale)}"/>')
+        bx += bw + rng.uniform(1, 4)
+
+    # Lit windows and the edges between buildings, so each tower reads.
+    wins, edges = [], []
+    wcols = [CYAN, PINK, "#c9b4ff", "#ffd6f5"]
+    for bx, bw, bh, shape, name in PORTLAND:
+        X, W, H = x0 + bx * scale, bw * scale, bh * scale
+        edges.append(f"M{fmt(X)},{fmt(HORIZON)} V{fmt(HORIZON - H * 0.9)} M{fmt(X + W)},{fmt(HORIZON)} V{fmt(HORIZON - H * 0.9)}")
+        top = HORIZON - H * (0.78 if shape in ("pill", "pyramid", "chamfer", "spire") else 0.9)
+        gx, gy = 3.4 * scale, 4.6 * scale
+        y = top + gy * 0.5
+        while y < HORIZON - 3 * scale:
+            xx = X + 2.0 * scale
+            while xx < X + W - 2.4 * scale:
+                if rng.random() < 0.38:
+                    wins.append(f'<rect x="{fmt(xx)}" y="{fmt(y)}" width="{fmt(1.3 * scale)}" height="{fmt(1.8 * scale)}" '
+                                f'fill="{rng.choice(wcols)}" fill-opacity="{rng.uniform(0.35, 0.8):.2f}"/>')
+                xx += gx
+            y += gy
+
     parts = [
         f'<linearGradient id="pdxNeon" gradientUnits="userSpaceOnUse" x1="{c0}" y1="0" x2="{c1}" y2="0">'
-        f'<stop offset="0" stop-color="{PINK}" stop-opacity="0.2"/><stop offset="0.25" stop-color="{PINK}"/>'
-        f'<stop offset="0.7" stop-color="#ff6ec7"/><stop offset="1" stop-color="{CYAN}"/></linearGradient>',
-        f'<ellipse cx="{fmt(hood_x)}" cy="{HORIZON}" rx="{fmt(hood_w * 1.5)}" ry="{fmt(hood_h * 1.05)}" fill="url(#cityHaze)" filter="url(#blur28)"/>',
-        f'<path d="{hood_d}" fill="url(#hoodFill)"/>',
-        f'<path d="{snow_d}" fill="url(#hoodSnow)"/>',
-        f'<polyline points="{hood_line}" fill="none" stroke="#b98cff" stroke-width="2.4" stroke-opacity="0.5" filter="url(#lineGlow)"/>',
-        f'<polyline points="{hood_line}" fill="none" stroke="#d9c6ff" stroke-width="1" stroke-opacity="0.85" stroke-linejoin="round"/>',
+        f'<stop offset="0" stop-color="{PINK}" stop-opacity="0"/><stop offset="0.18" stop-color="{PINK}"/>'
+        f'<stop offset="0.7" stop-color="#ff6ec7"/><stop offset="0.9" stop-color="{CYAN}"/>'
+        f'<stop offset="1" stop-color="{CYAN}" stop-opacity="0"/></linearGradient>',
+        # Hood: far behind, so fainter and hazier than the city.
+        f'<ellipse cx="{fmt(hood_x)}" cy="{HORIZON}" rx="{fmt(hood_w * 1.3)}" ry="{fmt(hood_h * 1.2)}" fill="url(#cityHaze)" '
+        f'filter="url(#blur28)" opacity="0.6"/>',
+        f'<g opacity="0.6">'
+        f'<path d="{hood_d}" fill="url(#hoodFill)"/>'
+        f'<path d="{snow_d}" fill="url(#hoodSnow)" opacity="0.8"/>'
+        f'<polyline points="{hood_line}" fill="none" stroke="#b98cff" stroke-width="2" stroke-opacity="0.35" filter="url(#lineGlow)"/>'
+        f'<polyline points="{hood_line}" fill="none" stroke="#d9c6ff" stroke-width="0.8" stroke-opacity="0.6" stroke-linejoin="round"/>'
+        f'</g>',
+        f'<g fill="#1d0a36" opacity="0.85">{"".join(back)}</g>',
         f'<path d="{city}" fill="url(#citySil)"/>',
+        f'<path d="{" ".join(edges)}" stroke="{PINK}" stroke-opacity="0.22" stroke-width="{fmt(0.7 * scale)}" fill="none"/>',
+        f'<g>{"".join(wins)}</g>',
     ]
     for sx, sh, col in strips:
         parts.append(f'<rect x="{fmt(sx)}" y="{fmt(HORIZON - sh)}" width="1.4" height="{fmt(sh - 4)}" fill="{col}" '
