@@ -487,31 +487,29 @@ def pine(x: float, h: float, w: float, base: float) -> str:
 
 
 def silicon_fir(x: float, h: float, w: float, base: float) -> tuple[str, str]:
-    """A "Silicon Forest" fir drawn as a circuit board: a trunk trace, tiers of
-    branch traces that leave it at 45 degrees and run out flat, each ending in
-    a solder pad, narrowing to a pad at the top. Returns (traces, pads)."""
+    """A "Silicon Forest" fir drawn as a circuit board: a trunk trace with
+    stacked boughs that leave it and droop down and out at 45 degrees, like a
+    fir's branches, then run flat for a short stub to a solder pad. The pads
+    trace the fir's triangle; a pad caps the top. Returns (traces, pads)."""
     rng = random.Random(round(x * 7.3 + h))
-    trunk = h * 0.08
+    trunk = h * 0.1
     crown = h - trunk
-    tiers = max(3, min(7, int(h // 9)))
-    traces = [f"M{fmt(x)},{fmt(base)} V{fmt(base - h + 2)}"]
-    pads = [(x, base - h + 1.2, 1.5)]
+    top = base - h
+    tiers = max(3, min(8, int(h // 7)))
+    traces = [f"M{fmt(x)},{fmt(base)} V{fmt(top + 1.4)}"]
+    pads = [(x, top + 0.9, 1.25)]
     for i in range(tiers):
-        t = (i + 1) / (tiers + 0.4)
-        y0 = base - trunk - crown * (1 - t)         # where the branch leaves the trunk
-        reach = w / 2 * (0.25 + 0.75 * t)           # longer branches lower down
-        rise = min(reach * 0.45, crown / tiers * 0.8)
+        t = (i + 1) / tiers
+        tip_y = top + crown * t                     # bough tips sit on the fir's outline
+        reach = w / 2 * (0.18 + 0.82 * t)
+        drop = min(reach * 0.55, crown / tiers * 1.1)
         for side in (-1, 1):
-            r = reach * rng.uniform(0.85, 1.0)
-            # Up-and-out at 45 degrees, then flat: the classic PCB trace bend.
-            x1, y1 = x + side * rise, y0 - rise
-            x2 = x + side * r
-            traces.append(f"M{fmt(x)},{fmt(y0)} L{fmt(x1)},{fmt(y1)} H{fmt(x2)}")
-            pads.append((x2, y1, 1.15))
-            if i >= 1 and rng.random() < 0.55:      # a short side trace with its own via
-                xs = x1 + side * (r - rise) * 0.5
-                traces.append(f"M{fmt(xs)},{fmt(y1)} l{fmt(side * 2.2)},{fmt(2.2)}")
-                pads.append((xs + side * 2.2, y1 + 2.2, 0.8))
+            r = reach * rng.uniform(0.9, 1.0)
+            stub = min(2.2, r * 0.25)
+            x1 = x + side * (r - stub)
+            # Leaves the trunk higher up, droops at 45 degrees, then a flat stub.
+            traces.append(f"M{fmt(x)},{fmt(tip_y - (r - stub))} L{fmt(x1)},{fmt(tip_y)} H{fmt(x + side * r)}")
+            pads.append((x + side * r, tip_y, 0.85))
     return " ".join(traces), "".join(f'<circle cx="{fmt(px)}" cy="{fmt(py)}" r="{r}"/>' for px, py, r in pads)
 
 
@@ -540,14 +538,14 @@ def treeline(avoid=(), clear=None) -> str:
             firs.append(f'<polygon points="{pine(x, h, w * 1.05, HORIZON)}"/>')
         d = " ".join(paths)
         return (f'<g opacity="{opacity}">'
-                f'<g fill="url(#treeFront)" opacity="0.75">{"".join(firs)}</g>'  # the fir's shape, faintly
+                f'<g fill="url(#treeFront)" opacity="0.55">{"".join(firs)}</g>'  # the fir's shape, faintly
                 f'<path d="{d}" fill="none" stroke="{colour}" stroke-width="{width * 2.6}" stroke-opacity="0.35" '
                 f'stroke-linecap="round" stroke-linejoin="round" filter="url(#{glow})"/>'
                 f'<path d="{d}" fill="none" stroke="{colour}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round"/>'
                 f'<g fill="{BG}" stroke="{colour}" stroke-width="{width * 0.9}">{"".join(pads)}</g></g>')
 
-    back = list(keep(tree_layer(48, 13, 52, 26)))
-    front = list(keep(tree_layer(34, 29, 68, 34)))
+    back = list(keep(tree_layer(30, 13, 56, 24)))
+    front = list(keep(tree_layer(22, 29, 74, 30)))
     return (layer(back, PURPLE, 0.8, 0.55, "treeGlow") + "\n"
             + layer(front, CYAN, 1.0, 0.9, "treeGlow"))
 
