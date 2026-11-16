@@ -37,10 +37,8 @@
 
 <a href="https://github.com/markusweldon/cverdict"><img src="images/card-cverdict.svg" width="400" alt="CVErdict: CVE Verdict - cuts through the noise of the CVE program surge to show which new vulnerabilities need attention and why."></a>
 <a href="https://github.com/markusweldon/openfix"><img src="images/card-openfix.svg" width="400" alt="OpenFix: turns scanner findings into verified fixes with any model. Each patch is proven by a rescan, your tests and a regression test, then lands as a draft PR."></a>
-
 <a href="https://github.com/markusweldon/agentinel"><img src="images/card-agentinel.svg" width="400" alt="agentinel: red-teams and statically audits MCP servers and AI agents against the OWASP Agentic Top 10 (2026)"></a>
 <a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/card-claude-owasp-security-skills.svg" width="400" alt="claude-owasp-security-skills: OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, shipped as Claude Code skills"></a>
-
 <a href="https://github.com/markusweldon/snyk-ai-secure-pipeline"><img src="images/card-snyk-ai-secure-pipeline.svg" width="400" alt="snyk-ai-secure-pipeline: end-to-end DevSecOps demo with Snyk Code, OSS, Container, IaC and an MCP server for Claude Code"></a>
 <a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="images/card-claude-snyk-security-expert.svg" width="400" alt="claude-snyk-security-expert: Snyk-powered security subagent for Claude Code"></a>
 
@@ -93,7 +91,6 @@
 
 <img src="images/stack-ai-security.svg" width="400" alt="AI and Security: Claude Code, MCP, Snyk, OWASP">
 <img src="images/stack-languages.svg" width="400" alt="Languages: Python, TypeScript, JavaScript">
-
 <img src="images/stack-web-runtime.svg" width="400" alt="Web and Runtime: React, Next.js, Svelte, Astro, Node.js, GraphQL">
 <img src="images/stack-cloud-infra.svg" width="400" alt="Cloud and Infra: AWS, GCP, Vercel, Cloudflare, Docker, Kubernetes">
 

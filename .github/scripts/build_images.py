@@ -126,10 +126,17 @@ class Fonts:
         self.mono_semibold = load("GeistMono-SemiBold.woff2")
 
 
-def svg(width: float, height: float, body: str, title: str = "") -> str:
+def svg(width: float, height: float, body: str, title: str = "", margin: float = 0) -> str:
+    """An SVG of the given size. `margin` adds clear space on every side, so
+    images that wrap in the README sit the same distance apart whichever way
+    they wrap (side by side on desktop, stacked on a phone)."""
     t = f"<title>{escape(title)}</title>\n" if title else ""
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{fmt(width)}" height="{fmt(height)}" '
-            f'viewBox="0 0 {fmt(width)} {fmt(height)}">\n{t}{body}\n</svg>\n')
+    m = margin
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{fmt(width + 2 * m)}" height="{fmt(height + 2 * m)}" '
+            f'viewBox="{fmt(-m)} {fmt(-m)} {fmt(width + 2 * m)} {fmt(height + 2 * m)}">\n{t}{body}\n</svg>\n')
+
+
+CARD_GAP = 6  # clear space around each project and Stack card
 
 
 # ══ Header ═════════════════════════════════════════════════════════════════
@@ -1090,7 +1097,7 @@ def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: st
     out.append(p)
     p, _ = pill(f, x + w + 6, y, topic)
     out.append(p)
-    return svg(CW, CH, "\n".join(out), title)
+    return svg(CW, CH, "\n".join(out), title, margin=CARD_GAP)
 
 
 # ══ Focus Areas cards ══════════════════════════════════════════════════════
@@ -1191,7 +1198,7 @@ def stack_cards(f: Fonts) -> dict[str, str]:
             for x, tag in row:
                 p, _ = pill(f, x, first_row + r * (ph + gap), tag, size=size, h=ph)
                 out.append(p)
-        cards[f"stack-{slug}.svg"] = svg(CW, h, "\n".join(out), label)
+        cards[f"stack-{slug}.svg"] = svg(CW, h, "\n".join(out), label, margin=CARD_GAP)
     return cards
 
 
