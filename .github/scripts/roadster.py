@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # ── Shape (metres; x forward from the rear face, y left, z up) ─────────────
 LENGTH = 4.3
+WING = False                 # an 80s-style rear wing; off so the rear fins show
 WHEELS = (0.95, 3.45)        # axle positions
 TYRE_R, TYRE_W, RIM_R = 0.36, 0.30, 0.27
 
@@ -68,8 +69,19 @@ def roof(x):
     return None
 
 
+def fin(x):
+    """The pointed sail fins either side of the rear glass: rising from the
+    deck's trailing edge to a sharp peak where the glass ends, then fading
+    into the glass edge further forward."""
+    if x <= 0.1 or x >= 1.9:
+        return 0.0
+    if x <= 0.55:
+        return 0.2 * (x - 0.1) / 0.45
+    return 0.2 * (1.9 - x) / 1.35
+
+
 def glass_half(x):
-    return 0.34 + 0.38 * min(1.0, max(0.0, (x - 0.55) / 2.1))      # straight edges, narrowing rearwards
+    return 0.42 + 0.32 * min(1.0, max(0.0, (x - 0.55) / 2.1))      # straight edges, narrowing rearwards
 
 
 def arch_lift(x):
@@ -97,17 +109,21 @@ def section(x):
     pts.append([0.88 * w, zd])                      # top of the side wall
     r = roof(x)
     g = glass_half(x)
-    if r is None:                                   # hood / rear deck
-        top = zd - 0.04 if x > 3 else zd + 0.05     # the hood sits between the fenders
-        if x < 0.55:                                # deck rising to the glass's trailing edge
-            top = lerp(top, roof(0.55) - 0.04, smooth((x - 0.12) / 0.43))
-        pts += [[g, max(top - 0.02, zd + 0.02)], [0.82 * g, top], [0.45 * g, top + 0.005], [0.0, top + 0.01]]
+    f = fin(x)
+    if r is None:                                   # hood / flat rear deck
+        top = zd - 0.04 if x > 3 else zd + 0.03     # the hood sits between the fenders
+        pts += [[g, top + f], [(0.88 - 1.6 * f) * g, top], [0.45 * g, top + 0.003], [0.0, top + 0.005]]
         cabin = False
     else:
+        # Flat, sharp-edged glass: a short steep edge, then a flat roof. At
+        # the rear the fins rise above it, so the glass sits down between them.
         ze = zd + 0.07
-        pts += [[g, ze], [0.82 * g, ze + 0.55 * (r - ze)], [0.45 * g, r - 0.02], [0.0, r]]
+        pts += [[g, ze + f], [(0.93 - 1.6 * f) * g, r - 0.035], [0.5 * g, r - 0.004], [0.0, r]]
         cabin = True
-    mats = ["trim", "body", "body", "body", "body"] + (["glass"] * 3 if cabin else ["body"] * 3)
+    # The face from the glass edge point inward is glass, except where a fin
+    # rises: there it's body, and the glass starts at the fin's inner foot.
+    edge = "body" if (f > 0.02 or not cabin) else "glass"
+    mats = ["trim", "body", "body", "body", "body", edge] + (["glass"] * 2 if cabin else ["body"] * 2)
     return [(-y, z) for y, z in pts], mats
 
 
@@ -149,7 +165,8 @@ def build() -> Mesh:
     m = Mesh()
     xs = sorted(set([0.0, 0.015, 0.04] + list(np.linspace(0.08, LENGTH - 0.08, 60))
                     + [LENGTH - 0.04, LENGTH - 0.015, LENGTH]
-                    + [c + d for c in WHEELS for d in (-0.5, -0.4, -0.27, -0.2, 0, 0.2, 0.27, 0.4, 0.5)]))
+                    + [c + d for c in WHEELS for d in (-0.5, -0.4, -0.27, -0.2, 0, 0.2, 0.27, 0.4, 0.5)]
+                    + [0.1, 0.55, 0.551, 3.25, 3.251]))
     rings, ring_mats = [], []
     for x in xs:
         half, mt = section(x)
@@ -185,17 +202,26 @@ def build() -> Mesh:
     for j in (3, n - 4):                                     # shoulder creases
         m.line([r[j] for r in rings], NEON_PINK, 1.3)
     cab = [i for i, x in enumerate(xs) if roof(x) is not None]
-    for j in (5, n - 6):                                     # glass edges
+    for j in (6, n - 7):                                     # glass edges
         m.line([rings[i][j] for i in cab], NEON_CYAN, 1.1)
-    m.line([rings[cab[-1]][j] for j in range(5, n - 5)], NEON_CYAN, 1.1)   # windscreen base
-    m.line([rings[cab[0]][j] for j in range(5, n - 5)], NEON_CYAN, 1.1)    # rear glass edge
+    m.line([rings[cab[-1]][j] for j in range(6, n - 6)], NEON_CYAN, 1.1)   # windscreen base
+    m.line([rings[cab[0]][j] for j in range(6, n - 6)], NEON_CYAN, 1.1)    # rear glass edge
+    finned = [i for i, x in enumerate(xs) if fin(x) > 0.0]
+    for j in (5, n - 6):                                     # fin crests
+        m.line([rings[i][j] for i in finned], NEON_PINK, 1.1)
     m.line(rings[0][2:n - 2], NEON_PINK, 1.3)                # rear face outline
     for c in WHEELS:                                         # arch outlines
         arch = [i for i, x in enumerate(xs) if abs(x - c) <= 0.5]
         for j in (2, n - 3):
             m.line([rings[i][j] for i in arch], NEON_PINK, 1.1)
 
-    # A big rear wing on two struts, as on the 80s wedge and the track roadster.
+    if WING:
+        add_wing(m)
+    return finish(m)
+
+
+def add_wing(m):
+    """A big rear wing on two struts, as on the 80s wedge and the track roadster."""
     wy, xl, xt = 0.98, 0.42, -0.04                           # half span, leading and trailing edge
     zl, zt, th = 1.12, 1.18, 0.035
     bottom = [np.array(p) for p in ((xt, -wy, zt), (xl, -wy, zl), (xl, wy, zl), (xt, wy, zt))]
@@ -217,6 +243,10 @@ def build() -> Mesh:
     m.quad(np.array([xt - 0.004, -wy * 0.96, zt + 0.004]), np.array([xt - 0.004, wy * 0.96, zt + 0.004]),
            np.array([xt - 0.004, wy * 0.96, zt + th - 0.004]), np.array([xt - 0.004, -wy * 0.96, zt + th - 0.004]), "light")
 
+
+
+def finish(m):
+    """Rear face details, haunch vents and wheels."""
     # Rear face details, just behind the cap.
     w0 = half_width(0.0)
     X = -0.006
