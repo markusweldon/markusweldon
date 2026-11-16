@@ -43,6 +43,8 @@ jobs:
           plugin_languages_limit: 6
 
           # markusweldon.com theming. metrics has no dark toggle, so override its CSS.
+          # Never use a bare universal selector in this CSS: the action passes it
+          # through a shell, which expands it into a file list and breaks the rule.
           # (Verify + tune against the first CI-rendered SVG.)
           extras_css: |
             svg { background: #130022; color: #a78bca; }
@@ -63,8 +65,6 @@ jobs:
             .row.fill-width { margin: 0 0 4px 27px; }
             .row.fill-width section { flex: 0 0 auto !important; width: calc(25% - 8px); }
             .field.language.details { justify-content: flex-start !important; margin-bottom: 4px; }
-            /* No "*" selectors here: the metrics action passes this CSS through a
-               shell, which expands "*" into a file list and breaks the rule. */
             .field.language.details > .field, .field.language.details > small { flex: 0 0 auto !important; }
             .field.language.details > .field { width: 118px; }
             .field.language.details small { margin-left: 0; }
