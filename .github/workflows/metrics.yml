@@ -45,6 +45,8 @@ jobs:
           # markusweldon.com theming. metrics has no dark toggle, so override its CSS.
           # Never use a bare universal selector in this CSS: the action passes it
           # through a shell, which expands it into a file list and breaks the rule.
+          # Never use opacity on text here either: Safari draws translucent HTML
+          # inside an SVG image at the wrong size and position. Use a dimmer colour.
           # (Verify + tune against the first CI-rendered SVG.)
           extras_css: |
             svg { background: #130022; color: #a78bca; }
@@ -54,12 +56,12 @@ jobs:
                language percentages. */
             .field svg { fill: #a78bca !important; }
             h2 svg, h3 svg { fill: #f92aad !important; }
-            .field.language.details small { color: #a78bca !important; opacity: 0.75; }
+            .field.language.details small { color: #8a72ab !important; }
             /* Tidy the top of the card: one left-aligned heading per section, the
                language bar back, names and percentages side by side. */
             .column { align-items: stretch !important; }
             .column > h3.field { display: none !important; }
-            .column > small { margin: -2px 0 10px 32px; color: #a78bca; opacity: 0.75; }
+            .column > small { margin: -2px 0 10px 32px; color: #8a72ab; }
             svg.bar { margin: 0 0 12px 32px; width: calc(100% - 64px); }
             mask#languages-bar rect { fill: #fff !important; }
             .row.fill-width { margin: 0 0 4px 27px; }
