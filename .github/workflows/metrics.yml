@@ -53,6 +53,21 @@ jobs:
             .field svg { fill: #a78bca !important; }
             h2 svg, h3 svg { fill: #f92aad !important; }
             .field.language.details small { color: #a78bca !important; opacity: 0.75; }
+            /* Tidy the top of the card: one left-aligned heading per section, the
+               language bar back, names and percentages side by side. */
+            .column { align-items: stretch !important; }
+            .column > h3.field { display: none !important; }
+            .column > small { margin: -2px 0 10px 32px; color: #a78bca; opacity: 0.75; }
+            svg.bar { margin: 0 0 12px 32px; width: calc(100% - 64px); }
+            mask#languages-bar rect { fill: #fff !important; }
+            .row.fill-width { margin: 0 0 4px 27px; }
+            .row.fill-width section { flex: 0 0 auto !important; width: 25%; }
+            .field.language.details { justify-content: flex-start !important; margin-bottom: 4px; }
+            .field.language.details > * { flex: 0 0 auto !important; }
+            .field.language.details > .field { width: 118px; }
+            .field.language.details small { margin-left: 0; }
+            .field.language.details .field svg { margin-left: 0 !important; }
+            section > h2.field { margin: 14px 0 6px !important; }
             /* Recolor the isometric contribution calendar to a synthwave ramp.
                The cells are inline fill attributes (specificity 0), so plain
                attribute selectors override them. Low -> high activity. */
@@ -61,7 +76,8 @@ jobs:
             [fill="#40c463"] { fill: #b01fff !important; }
             [fill="#30a14e"] { fill: #f92aad !important; }
             [fill="#216e39"] { fill: #36f9f6 !important; }
-            /* Languages bar: kill the white track and near-white segments */
+            /* Languages bar: recolour near-white segments (the bar's own mask is
+               kept white by the rule above, or the whole bar disappears) */
             [fill="white"]   { fill: #0d0015 !important; }
             [fill="#ededed"] { fill: #6e4f8e !important; }
             [fill="#d1d5da"] { fill: #6e4f8e !important; }
