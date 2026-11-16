@@ -20,6 +20,8 @@ Usage:
     python3 .github/scripts/build_images.py <folder-with-the-extracted-packages>
 """
 
+import math
+import random
 import sys
 from html import escape
 from pathlib import Path
@@ -153,14 +155,21 @@ LEFT = 56
 TYPE_MS, HOLD_MS, DELETE_MS, BLINK_MS = 55, 1800, 32, 530
 
 
-def stars() -> str:
-    """The site's deterministic starfield (Hero.tsx STARS_REG / STARS_BRIGHT)."""
+def inside(x: float, y: float, rects) -> bool:
+    return any(x0 <= x <= x1 and y0 <= y <= y1 for x0, y0, x1, y1 in rects)
+
+
+def stars(avoid=()) -> str:
+    """The site's deterministic starfield (Hero.tsx STARS_REG / STARS_BRIGHT),
+    leaving out any star that would land on the name or the text under it."""
     out = []
     for i in range(48):
         x, y = (i * 137.508) % 100, (i * 97.314) % 50
         size = 3 if i % 5 == 0 else 2 if i % 3 == 0 else 1.5
         op = 0.45 + ((i * 71) % 37) / 100
         dur, delay = 4 + (i % 9) * 0.4, (i * 0.47) % 5.5
+        if inside(x * HW / 100, y * HORIZON / 100, avoid):
+            continue
         out.append(f'<g opacity="{op:.2f}"><circle class="star" cx="{fmt(x * HW / 100)}" '
                    f'cy="{fmt(y * HORIZON / 100)}" r="{size / 2}" '
                    f'style="animation-duration:{dur:.1f}s;animation-delay:{delay:.1f}s"/></g>')
@@ -169,10 +178,75 @@ def stars() -> str:
         size = 3.5 + (i % 3)
         op = 0.75 + ((i * 31) % 20) / 100
         dur, delay = 5 + (i % 4) * 0.7, (i * 1.3) % 4
+        if inside(x * HW / 100, y * HORIZON / 100, avoid):
+            continue
         out.append(f'<g opacity="{op:.2f}"><circle class="star" cx="{fmt(x * HW / 100)}" '
                    f'cy="{fmt(y * HORIZON / 100)}" r="{size / 2}" filter="url(#starGlow)" '
                    f'style="animation-duration:{dur:.1f}s;animation-delay:{delay:.1f}s"/></g>')
     return "\n".join(out)
+
+
+CITY = ["#36f9f6", "#ff6ec7", "#ffd6f5", "#b98cff"]  # lit window colours
+
+
+def skyline(avoid=(), tallest: float = 120, spread: float = 0.24) -> str:
+    """A neon city on the horizon, behind the pines, like the Stats card's
+    calendar city seen from the street: dark violet towers with pink rims and
+    lit windows, tallest near the sun glow on the right, a few cyan towers with
+    beacons. No tower rises into the text above it."""
+    rng = random.Random(1984)
+    back, front = [], []
+
+    def ceiling(x0, x1):
+        # Keep clear of the text, with extra room past the ends of its lines.
+        tops = [y1 + 16 for rx0, ry0, rx1, y1 in avoid if x0 < rx1 + 50 and x1 > rx0 - 10]
+        return max(tops) if tops else 0
+
+    def envelope(x):
+        return 0.3 + 0.7 * math.exp(-((x / HW - 0.74) / spread) ** 2)
+
+    # Back layer: wide, dim blocks for depth.
+    x = -10
+    while x < HW:
+        w = rng.uniform(26, 50)
+        h = tallest * 0.75 * envelope(x) * rng.uniform(0.5, 1.0)
+        top = max(HORIZON - h, ceiling(x, x + w))
+        if HORIZON - top > 6:
+            back.append(f'<rect x="{fmt(x)}" y="{fmt(top)}" width="{fmt(w)}" height="{fmt(HORIZON - top)}"/>')
+        x += w + rng.uniform(-6, 2)
+
+    # Front layer: towers with rims and windows. The two tallest become cyan
+    # "peak" towers with beacons, like the peak days in the Stats calendar.
+    towers, x = [], -4
+    while x < HW:
+        w = rng.uniform(14, 30)
+        h = tallest * envelope(x + w / 2) * rng.uniform(0.35, 1.0)
+        top = max(HORIZON - h, ceiling(x, x + w))
+        if HORIZON - top >= 10:
+            towers.append((x, w, top, rng.random()))
+        x += w + rng.uniform(1, 6)
+    heroes = set(sorted(range(len(towers)), key=lambda i: towers[i][2])[:2])
+    for i, (x, w, top, seed) in enumerate(towers):
+        wrng = random.Random(seed)
+        hero = i in heroes
+        rim = CYAN if hero else PINK
+        front.append(f'<rect x="{fmt(x)}" y="{fmt(top)}" width="{fmt(w)}" height="{fmt(HORIZON - top)}" fill="url(#cityFill)"/>'
+                     f'<rect x="{fmt(x)}" y="{fmt(top)}" width="{fmt(w)}" height="1.2" fill="{rim}" fill-opacity="{0.9 if hero else 0.55}"/>')
+        if hero:
+            front.append(f'<rect x="{fmt(x + w / 2 - 0.5)}" y="{fmt(top - 12)}" width="1" height="12" fill="{CYAN}" fill-opacity="0.7"/>'
+                         f'<circle cx="{fmt(x + w / 2)}" cy="{fmt(top - 13)}" r="1.8" fill="{CYAN}" filter="url(#starGlow)"/>')
+        wy = top + 6
+        while wy < HORIZON - 8:
+            wx = x + 3.5
+            while wx < x + w - 4:
+                if wrng.random() < (0.42 if hero else 0.3):
+                    col = CYAN if hero and wrng.random() < 0.7 else wrng.choice(CITY)
+                    blink = ' class="wb" style="animation-delay:-%.1fs"' % wrng.uniform(0, 7) if wrng.random() < 0.06 else ""
+                    front.append(f'<rect x="{fmt(wx)}" y="{fmt(wy)}" width="2.2" height="3" fill="{col}" fill-opacity="0.8"{blink}/>')
+                wx += 5.5
+            wy += 7
+    return (f'<g fill="#1c0a33" opacity="0.7">{"".join(back)}</g>\n'
+            f'<g>{"".join(front)}</g>')
 
 
 def tree_layer(count: int, seed: int, max_h: float, min_h: float):
@@ -335,7 +409,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
         tag_lines = f.sans.wrap(TAGLINE, tag_size, HW - 2 * LEFT)
         tag_y = term_top + term_size * 1.9 + 40
         loc_y = tag_y + (len(tag_lines) - 1) * tag_lead + 32
-        HORIZON = round(loc_y + 62)
+        HORIZON = round(loc_y + 120)  # room for the skyline under the text
         HH = HORIZON + 96
         tagline = " ".join(f.sans.path(line, tag_size, LEFT, tag_y + i * tag_lead)[0]
                            for i, line in enumerate(tag_lines))
@@ -345,6 +419,26 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
         tagline, _ = f.sans.path(TAGLINE, 20, LEFT, 347)
         term, loc = terminal(f, 255), location(f, 381)
     grid_svg, grid_css = grid()
+
+    # Where the text sits, so stars stay off it and towers stay below it.
+    pad = 14
+    if text:
+        name_w = max(f.display.width(n, name_size, tracking) for n in NAME)
+        if phone:
+            t_top, t_size, tags, t_lead, t_y, l_y, l_size = term_top, term_size, tag_lines, tag_lead, tag_y, loc_y, 13
+            t_w = f.mono.width("  " + max(LINES, key=len), t_size) + 30
+        else:
+            t_top, t_size, tags, t_lead, t_y, l_y, l_size = 255, 20, [TAGLINE], 0, 347, 381, 15
+            t_w = f.mono.width(PROMPT + "  " + max(LINES, key=len), t_size) + 30
+        l_w = f.mono.width(f"{LOCATION[0]} · " + LOCATION[1], l_size) + 24
+        rects = [(LEFT, top, LEFT + name_w, baseline + name_size),
+                 (LEFT, t_top, LEFT + t_w, t_top + t_size * 1.9)]
+        rects += [(LEFT, t_y + i * t_lead - 18, LEFT + f.sans.width(line, 18 if phone else 20), t_y + i * t_lead + 5)
+                  for i, line in enumerate(tags)]
+        rects.append((LEFT, l_y - l_size, LEFT + l_w, l_y + 4))
+        avoid = [(x0 - pad, y0 - pad, x1 + pad, y1 + pad) for x0, y0, x1, y1 in rects]
+    else:
+        avoid = []
 
     # The site's .gradient-text is 135deg across the full-width heading box.
     box_w, box_h = HW - 2 * LEFT, 2 * name_size
@@ -361,7 +455,9 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 .horizon{{animation:pulse 5s ease-in-out infinite}}
 {grid_css}
 .hs{{display:none}}
-@media (prefers-reduced-motion: reduce){{.star,.horizon,.h{{animation:none}}.h{{display:none}}.hs{{display:inline}}}}
+@keyframes winblink{{0%,100%{{opacity:.8}}50%{{opacity:.1}}}}
+.wb{{animation:winblink 7s ease-in-out infinite}}
+@media (prefers-reduced-motion: reduce){{.star,.horizon,.h,.wb{{animation:none}}.h{{display:none}}.hs{{display:inline}}}}
 </style>
 <defs>
   <clipPath id="panel"><rect width="{HW}" height="{HH}" rx="16"/></clipPath>
@@ -390,6 +486,8 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
     <stop offset="0" stop-color="{PINK}"/><stop offset="0.5" stop-color="{PURPLE}"/><stop offset="1" stop-color="{CYAN}"/>
   </linearGradient>
   <filter id="blur28" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
+  <linearGradient id="cityFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2a0f4d"/><stop offset="1" stop-color="#12041f"/></linearGradient>
   <filter id="lineGlow" x="-5%" y="-800%" width="110%" height="1700%"><feGaussianBlur stdDeviation="8"/></filter>
   <filter id="starGlow" x="-200%" y="-200%" width="500%" height="500%">
     <feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -398,12 +496,13 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 <g clip-path="url(#panel)">
 <rect width="{HW}" height="{HH}" fill="{BG}"/>
 <rect width="{HW}" height="{HH}" fill="url(#skyGlow)"/>
-{stars()}
+{stars(avoid)}
 <ellipse cx="{fmt(HW * 0.68)}" cy="{HORIZON - 30}" rx="{fmt(HW * 0.33)}" ry="170" fill="url(#aura)" filter="url(#blur28)"/>
 <g clip-path="url(#floor)" stroke="{CYAN}" stroke-opacity="0.35" stroke-width="1">
 {grid_svg}
 </g>
 <rect y="{HORIZON}" width="{HW}" height="{HH - HORIZON}" fill="url(#floorFade)"/>
+{skyline(avoid, 100, 0.34) if phone else skyline(avoid, 115)}
 {treeline()}
 <g class="horizon">
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
