@@ -568,29 +568,40 @@ def treeline(avoid=(), clear=None) -> str:
     rng = random.Random(42)
     sig = []
     for i, (x, h, w) in enumerate(front):
-        if h < 18 or rng.random() < 0.35:
+        if h < 14 or rng.random() < 0.15:
             continue
         _, _, boughs = silicon_fir(x, h, w, HORIZON)
         y0, bough = rng.choice(boughs[len(boughs) // 2:])
-        dur = rng.uniform(5.5, 9.0)
+        dur = rng.uniform(3.5, 6.0)
         sig.append(f'<path class="sig" d="M{fmt(x)},{fmt(bus_y)} V{fmt(y0)} {bough}" pathLength="100" '
                    f'style="animation-duration:{dur:.1f}s;animation-delay:-{rng.uniform(0, dur):.1f}s"/>')
-    out.append(f'<g fill="none" stroke="#e9fdff" stroke-width="2" stroke-linecap="round" '
+    out.append(f'<g fill="none" stroke="#e9fdff" stroke-width="3.2" stroke-linecap="round" '
                f'filter="url(#starGlow)">{"".join(sig)}</g>')
 
-    # One small chip at the foot of a tree: a nod to the Silicon Forest's fabs.
-    pick = [t for t in front if t[1] > 30 and (not clear or t[0] < clear[0] - 40)]
+    # One CPU at the foot of a tree: a nod to the Silicon Forest's fabs. A
+    # square package with pins on all four sides, a die in the middle and a
+    # pink pin-1 dot, wired to the tree's trunk.
+    left_side = [t for t in front if t[1] > 22 and (not clear or t[0] < clear[0] - 10) and t[0] > 40]
+    pick = left_side or [t for t in front if t[1] > 22 and t[0] > 40]
     if pick:
         x, _, _ = pick[len(pick) // 2]
-        cx, cy, cw, ch = x - 14, HORIZON - 7, 10, 6
-        pins = "".join(f'<line x1="{fmt(cx + 1.6 + i * 2.2)}" y1="{fmt(cy - 1.4)}" x2="{fmt(cx + 1.6 + i * 2.2)}" '
-                       f'y2="{fmt(cy)}"/><line x1="{fmt(cx + 1.6 + i * 2.2)}" y1="{fmt(cy + ch)}" '
-                       f'x2="{fmt(cx + 1.6 + i * 2.2)}" y2="{fmt(cy + ch + 1.4)}"/>' for i in range(4))
-        out.append(f'<g stroke="{CYAN}" stroke-width="0.6">{pins}</g>'
-                   f'<rect x="{fmt(cx)}" y="{fmt(cy)}" width="{cw}" height="{ch}" rx="0.8" fill="#0a0414" '
-                   f'stroke="{CYAN}" stroke-width="0.7"/>'
-                   f'<circle cx="{fmt(cx + 1.8)}" cy="{fmt(cy + 1.6)}" r="0.7" fill="{PINK}"/>'
-                   f'<path d="M{fmt(cx + cw)},{fmt(cy + ch / 2)} H{fmt(x)}" stroke="{CYAN}" stroke-width="0.6" fill="none"/>')
+        size = 13
+        cx, cy = x - 9 - size, HORIZON - size - 3
+        pins = []
+        for i in range(4):
+            o = 2.4 + i * 2.75
+            pins += [f"M{fmt(cx + o)},{fmt(cy - 1.8)} v1.8", f"M{fmt(cx + o)},{fmt(cy + size)} v1.8",
+                     f"M{fmt(cx - 1.8)},{fmt(cy + o)} h1.8", f"M{fmt(cx + size)},{fmt(cy + o)} h1.8"]
+        out.append(f'<path d="{" ".join(pins)}" stroke="{CYAN}" stroke-width="0.8" fill="none"/>'
+                   f'<rect x="{fmt(cx)}" y="{fmt(cy)}" width="{size}" height="{size}" rx="1" fill="#0a0414" '
+                   f'stroke="{CYAN}" stroke-width="0.9" filter="url(#treeGlow)" opacity="0.6"/>'
+                   f'<rect x="{fmt(cx)}" y="{fmt(cy)}" width="{size}" height="{size}" rx="1" fill="#0a0414" '
+                   f'stroke="{CYAN}" stroke-width="0.9"/>'
+                   f'<rect x="{fmt(cx + 3.5)}" y="{fmt(cy + 3.5)}" width="{size - 7}" height="{size - 7}" rx="0.5" '
+                   f'fill="{PURPLE}" fill-opacity="0.35" stroke="{PINK}" stroke-width="0.6"/>'
+                   f'<circle cx="{fmt(cx + 1.9)}" cy="{fmt(cy + 1.9)}" r="0.75" fill="{PINK}"/>'
+                   f'<path d="M{fmt(cx + size + 1.8)},{fmt(cy + size / 2)} H{fmt(x)}" stroke="{CYAN}" '
+                   f'stroke-width="0.7" fill="none"/>')
     return "\n".join(out)
 
 
@@ -803,8 +814,8 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 {grid_css}
 {CAR_CSS if HEADER_CAR else ""}
 .hs{{display:none}}
-@keyframes sig{{0%{{stroke-dashoffset:14}}22%{{stroke-dashoffset:-106}}100%{{stroke-dashoffset:-106}}}}
-.sig{{stroke-dasharray:8 200;stroke-dashoffset:14;animation:sig 7s linear infinite}}
+@keyframes sig{{0%{{stroke-dashoffset:22}}30%{{stroke-dashoffset:-112}}100%{{stroke-dashoffset:-112}}}}
+.sig{{stroke-dasharray:12 220;stroke-dashoffset:22;animation:sig 5s linear infinite}}
 @keyframes winblink{{0%,100%{{opacity:.8}}50%{{opacity:.1}}}}
 .wb{{animation:winblink 7s ease-in-out infinite}}
 @keyframes beacon{{0%,100%{{opacity:1}}50%{{opacity:.25}}}}
