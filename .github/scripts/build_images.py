@@ -469,10 +469,23 @@ def pine(x: float, h: float, w: float, base: float) -> str:
     return " ".join(f"{fmt(px)},{fmt(py)}" for px, py in pts)
 
 
-def treeline() -> str:
-    back = "".join(f'<polygon points="{pine(x, h, w, HORIZON)}"/>' for x, h, w in tree_layer(48, 13, 52, 26))
-    front = "".join(f'<polygon points="{pine(x, h, w, HORIZON)}"/>' for x, h, w in tree_layer(34, 29, 68, 34))
-    return f'<g fill="#16002a" opacity="0.85">{back}</g>\n<g fill="#08000f">{front}</g>'
+def treeline(avoid=()) -> str:
+    def capped(layer):
+        for x, h, w in layer:
+            # Keep tree tops clear of any text above them.
+            under = [y1 for x0, y0, x1, y1 in avoid if x0 - 10 < x < x1 + 10]
+            if under:
+                room = HORIZON - max(under) - 6
+                if room < h:
+                    h, w = max(room, 8), max(room, 8) * 0.55
+            yield x, h, w
+    back = "".join(f'<polygon points="{pine(x, h, w, HORIZON)}"/>' for x, h, w in capped(tree_layer(48, 13, 52, 26)))
+    front = "".join(f'<polygon points="{pine(x, h, w, HORIZON)}"/>' for x, h, w in capped(tree_layer(34, 29, 68, 34)))
+    # Lit from the city: violet back row, plum front row with a faint lavender
+    # rim, so the treeline reads against the dark sky.
+    return (f'<g fill="url(#treeBack)" opacity="0.9">{back}</g>\n'
+            f'<g fill="url(#treeFront)" stroke="#b98cff" stroke-opacity="0.35" stroke-width="0.8" '
+            f'stroke-linejoin="round">{front}</g>')
 
 
 HEADER_CAR = False  # a modern electric roadster driving into the grid, seen from behind
@@ -748,6 +761,10 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
     <stop offset="0" stop-color="{PINK}"/><stop offset="0.5" stop-color="{PURPLE}"/><stop offset="1" stop-color="{CYAN}"/>
   </linearGradient>
   <filter id="blur28" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
+  <linearGradient id="treeBack" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#4a1d7a"/><stop offset="1" stop-color="#2a0f4d"/></linearGradient>
+  <linearGradient id="treeFront" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3b1463"/><stop offset="1" stop-color="#1c0833"/></linearGradient>
   <linearGradient id="carBody" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0d0015"/></linearGradient>
   <linearGradient id="carGlass" x1="0" y1="0" x2="1" y2="1">
@@ -783,7 +800,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 </g>
 <rect y="{HORIZON}" width="{HW}" height="{HH - HORIZON}" fill="url(#floorFade)"/>
 {(portland((HW - SCENE_W * 0.72) / 2, 0.72) if phone else portland(598, 0.92)) if HEADER_SKYLINE else ""}
-{treeline()}
+{treeline(avoid)}
 <g class="horizon">
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)"/>
