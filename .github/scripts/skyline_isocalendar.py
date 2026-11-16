@@ -200,13 +200,16 @@ def iso_car(corner, cols, rows) -> tuple[str, str]:
     files = [ASSETS / f"roadster-iso-{k}.png" for k in range(n)]
     if n > 1 and all(f.exists() for f in files):
         # Wheel frames shown in turn, so the wheels roll as the car drives.
-        image = ""
+        # A CSS animation, not SMIL: Safari drops SMIL-animated images when
+        # the SVG is opened on its own.
+        dur = 0.07 * n
+        image = (f"<style>@keyframes mws-wheel{{0%{{opacity:1}}{100 / n:.3f}%{{opacity:0}}100%{{opacity:0}}}}"
+                 f".mws-w{{opacity:0;animation:mws-wheel {dur:.2f}s steps(1,end) infinite}}"
+                 f"@media (prefers-reduced-motion: reduce){{.mws-w{{animation:none}}.mws-w0{{opacity:1}}}}</style>")
         for k, f in enumerate(files):
-            vals = ";".join("1" if j == k else "0" for j in range(n))
             b64 = base64.b64encode(f.read_bytes()).decode()
-            image += (f'<image href="data:image/png;base64,{b64}" {geom} opacity="{1 if k == 0 else 0}">'
-                      f'<animate attributeName="opacity" calcMode="discrete" values="{vals}" '
-                      f'dur="{0.07 * n:.2f}s" repeatCount="indefinite"/></image>')
+            image += (f'<image class="mws-w mws-w{k}" href="data:image/png;base64,{b64}" {geom} '
+                      f'style="animation-delay:-{dur - 0.07 * k:.2f}s"/>')
     else:
         image = f'<image href="data:image/png;base64,{data}" {geom}/>'
 
