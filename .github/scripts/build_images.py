@@ -338,8 +338,11 @@ PORTLAND = [
     (243, 16, 54, "setback", ""), (261, 20, 42, "rect", ""), (283, 16, 30, "rect", ""),
     (301, 22, 20, "rect", ""),
 ]
-HOOD = [(-1, 0), (-0.62, 0.36), (-0.4, 0.55), (-0.2, 0.8), (-0.07, 0.95), (0, 1), (0.06, 0.93),
-        (0.16, 0.84), (0.3, 0.66), (0.5, 0.45), (0.75, 0.22), (1, 0)]  # Mt Hood, unit half-width
+# Mt Hood, unit half-width: broad shoulders, slightly concave flanks and a
+# softened summit.
+HOOD = [(-1, 0), (-0.7, 0.16), (-0.5, 0.31), (-0.32, 0.5), (-0.18, 0.7), (-0.09, 0.86),
+        (-0.03, 0.96), (0.03, 1), (0.1, 0.95), (0.2, 0.82), (0.34, 0.63), (0.52, 0.42),
+        (0.74, 0.2), (1, 0)]
 
 
 def portland(x0: float, scale: float, hood_x: float, hood_w: float, hood_h: float) -> str:
@@ -705,7 +708,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 {grid_svg}
 </g>
 <rect y="{HORIZON}" width="{HW}" height="{HH - HORIZON}" fill="url(#floorFade)"/>
-{(portland(52, 0.72, 340, 100, 104) if phone else portland(600, 1.0, 858, 118, 170)) if HEADER_SKYLINE else ""}
+{(portland(52, 0.72, 345, 112, 70) if phone else portland(600, 1.0, 850, 145, 112)) if HEADER_SKYLINE else ""}
 {treeline()}
 <g class="horizon">
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
