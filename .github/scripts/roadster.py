@@ -44,30 +44,32 @@ def lerp(a, b, t):
 
 
 def half_width(x):
-    w = 0.95 + 0.03 * smooth(x / 0.35)                        # rear face to haunch
-    w -= 0.05 * smooth((x - 1.3) / 1.0)                       # haunch to waist
-    w -= 0.10 * smooth((x - 3.4) / 0.9)                       # nose taper
+    w = 0.97 + 0.03 * smooth(x / 0.3)                         # wide rear haunches
+    w -= 0.07 * smooth((x - 1.4) / 0.9)                       # haunch to waist
+    w -= 0.08 * min(1.0, max(0.0, (x - 3.2) / 1.1))           # straight-edged nose taper
     return w
 
 
 def shoulder(x):
     """The crease along the side: rising from the nose towards the rear."""
+    # Flat planes, like an 80s wedge: one straight line from the haunch to
+    # the front axle, a steeper one down to a low, sharp nose.
     if x <= WHEELS[1]:
-        return lerp(0.86, 0.81, smooth(x / WHEELS[1]))
-    return lerp(0.81, 0.6, smooth((x - WHEELS[1]) / (LENGTH - WHEELS[1])))
+        return lerp(0.84, 0.74, x / WHEELS[1])
+    return lerp(0.74, 0.5, (x - WHEELS[1]) / (LENGTH - WHEELS[1]))
 
 
 def roof(x):
     """Canopy centreline height; None where there is no glass."""
-    if 0.55 <= x <= 2.0:
-        return lerp(1.0, 1.18, smooth((x - 0.55) / 1.45) ** 0.8)
-    if 2.0 < x <= 3.0:
-        return lerp(1.18, shoulder(3.0) + 0.1, smooth((x - 2.0) / 1.0) ** 1.2)
+    if 0.55 <= x <= 1.9:
+        return lerp(0.98, 1.1, (x - 0.55) / 1.35)
+    if 1.9 < x <= 3.25:                                      # long, raked windscreen
+        return lerp(1.1, shoulder(3.25) + 0.08, (x - 1.9) / 1.35)
     return None
 
 
 def glass_half(x):
-    return 0.34 + 0.36 * min(1.0, max(0.0, (x - 0.55) / 1.95))     # straight edges, narrowing rearwards
+    return 0.34 + 0.38 * min(1.0, max(0.0, (x - 0.55) / 2.1))      # straight edges, narrowing rearwards
 
 
 def arch_lift(x):
@@ -75,8 +77,8 @@ def arch_lift(x):
     lift = 0.0
     for c in WHEELS:
         d = abs(x - c)
-        if d < 0.44:
-            lift = max(lift, 0.36 + math.sqrt(0.44 ** 2 - d * d))
+        if d < 0.5:                                  # squared-off 80s arch: flat top, sloped sides
+            lift = max(lift, 0.74 if d < 0.27 else lerp(0.74, 0.3, (d - 0.27) / 0.23))
     return lift
 
 
@@ -115,6 +117,18 @@ class Mesh:
         self.tris, self.mats = [], []
 
         self.norms = []
+        self.lines = []          # (points, colour, width in pixels at 1x)
+
+    def line(self, pts, colour, width=1.2):
+        self.lines.append(([np.asarray(p, dtype=float) for p in pts], colour, width))
+
+    def prism(self, bottom, top, mat):
+        n = len(bottom)
+        for i in range(n):
+            j = (i + 1) % n
+            self.quad(bottom[i], bottom[j], top[j], top[i], mat)
+        self.fan(top, mat)
+        self.fan(bottom, mat)
 
     def tri(self, a, b, c, mat, normals=None):
         self.tris.append((a, b, c))
@@ -135,7 +149,7 @@ def build() -> Mesh:
     m = Mesh()
     xs = sorted(set([0.0, 0.015, 0.04] + list(np.linspace(0.08, LENGTH - 0.08, 60))
                     + [LENGTH - 0.04, LENGTH - 0.015, LENGTH]
-                    + [c + d for c in WHEELS for d in np.linspace(-0.44, 0.44, 13)]))
+                    + [c + d for c in WHEELS for d in (-0.5, -0.4, -0.27, -0.2, 0, 0.2, 0.27, 0.4, 0.5)]))
     rings, ring_mats = [], []
     for x in xs:
         half, mt = section(x)
@@ -166,6 +180,43 @@ def build() -> Mesh:
     m.fan(rings[0], "body", np.array([0.0, 0.0, 0.5]))
     m.fan(rings[-1], "trim", np.array([LENGTH, 0.0, 0.4]))
 
+    # Neon edges along the creases: pink on the body, cyan round the glass.
+    n = len(rings[0])
+    for j in (3, n - 4):                                     # shoulder creases
+        m.line([r[j] for r in rings], NEON_PINK, 1.3)
+    cab = [i for i, x in enumerate(xs) if roof(x) is not None]
+    for j in (5, n - 6):                                     # glass edges
+        m.line([rings[i][j] for i in cab], NEON_CYAN, 1.1)
+    m.line([rings[cab[-1]][j] for j in range(5, n - 5)], NEON_CYAN, 1.1)   # windscreen base
+    m.line([rings[cab[0]][j] for j in range(5, n - 5)], NEON_CYAN, 1.1)    # rear glass edge
+    m.line(rings[0][2:n - 2], NEON_PINK, 1.3)                # rear face outline
+    for c in WHEELS:                                         # arch outlines
+        arch = [i for i, x in enumerate(xs) if abs(x - c) <= 0.5]
+        for j in (2, n - 3):
+            m.line([rings[i][j] for i in arch], NEON_PINK, 1.1)
+
+    # A big rear wing on two struts, as on the 80s wedge and the track roadster.
+    wy, xl, xt = 0.98, 0.42, -0.04                           # half span, leading and trailing edge
+    zl, zt, th = 1.12, 1.18, 0.035
+    bottom = [np.array(p) for p in ((xt, -wy, zt), (xl, -wy, zl), (xl, wy, zl), (xt, wy, zt))]
+    top = [p + np.array([0, 0, th]) for p in bottom]
+    m.prism(bottom, top, "body")
+    for s in (-1, 1):
+        ep = [np.array(p) for p in ((xt - 0.02, s * wy, zt - 0.1), (xl + 0.04, s * wy, zl - 0.08),
+                                    (xl + 0.04, s * wy, zl + 0.08), (xt - 0.02, s * wy, zt + 0.1))]
+        m.prism(ep, [p + np.array([0, s * 0.02, 0]) for p in ep], "body")
+        m.line(ep + [ep[0]], NEON_PINK, 1.1)
+        deck = section(0.2)[0][7][1] + 0.01
+        sb = [np.array(p) for p in ((0.12, s * 0.42 - 0.02, deck), (0.3, s * 0.42 - 0.02, deck),
+                                    (0.3, s * 0.42 + 0.02, deck), (0.12, s * 0.42 + 0.02, deck))]
+        st = [np.array(p) for p in ((0.1, s * 0.42 - 0.02, zt - 0.01), (0.26, s * 0.42 - 0.02, zl + 0.02),
+                                    (0.26, s * 0.42 + 0.02, zl + 0.02), (0.1, s * 0.42 + 0.02, zt - 0.01))]
+        m.prism(sb, st, "trim")
+    m.line([top[0], top[3]], NEON_PINK, 1.3)                 # trailing edge
+    m.line([top[1], top[2]], NEON_PINK, 1.1)                 # leading edge
+    m.quad(np.array([xt - 0.004, -wy * 0.96, zt + 0.004]), np.array([xt - 0.004, wy * 0.96, zt + 0.004]),
+           np.array([xt - 0.004, wy * 0.96, zt + th - 0.004]), np.array([xt - 0.004, -wy * 0.96, zt + th - 0.004]), "light")
+
     # Rear face details, just behind the cap.
     w0 = half_width(0.0)
     X = -0.006
@@ -192,6 +243,8 @@ def build() -> Mesh:
         for k in range(20):
             m.quad(ring_o[k], ring_o[(k + 1) % 20], ring_i[(k + 1) % 20], ring_i[k], "pipe")
         m.fan(ring_i, "hole")
+    pl = [np.array([X - 0.004, y, z]) for y, z in ((-0.17, 0.47), (0.17, 0.47), (0.17, 0.58), (-0.17, 0.58))]
+    m.line(pl + [pl[0]], NEON_CYAN, 0.9)
     for fy in (-0.72, -0.6, 0.6, 0.72):             # diffuser fins
         m.quad(np.array([X - 0.004, fy - 0.012, 0.14]), np.array([X - 0.004, fy + 0.012, 0.14]),
                np.array([X - 0.004, fy + 0.012, 0.36]), np.array([X - 0.004, fy - 0.012, 0.36]), "fin")
@@ -245,24 +298,25 @@ def hexrgb(h):
     return np.array([int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)])
 
 
-BASE = {"body": hexrgb("#e2e0ea"), "trim": hexrgb("#14111c"), "glass": hexrgb("#2a1b16"),
-        "tyre": hexrgb("#0b0a0f"), "rim": hexrgb("#1c1a24"), "spoke": hexrgb("#b9b5c6"),
-        "plate": hexrgb("#d9d4e6"), "pipe": hexrgb("#ffb35c"), "hole": hexrgb("#08060c"),
+NEON_PINK, NEON_CYAN = "#ff4fc8", "#36f9f6"
+BASE = {"body": hexrgb("#1d0a33"), "trim": hexrgb("#0a0712"), "glass": hexrgb("#07040f"),
+        "tyre": hexrgb("#0b0a0f"), "rim": hexrgb("#14101e"), "spoke": hexrgb("#8c7fb2"),
+        "plate": hexrgb("#2c2142"), "pipe": hexrgb("#ffb35c"), "hole": hexrgb("#08060c"),
         "fin": hexrgb("#221d2c"), "light": hexrgb("#ff2a4a"), "core": hexrgb("#ffd6de")}
 EMISSIVE = {"light", "pipe", "core"}
-REFLECT = {"body": 0.28, "trim": 0.12, "glass": 0.16, "tyre": 0.04, "rim": 0.1, "spoke": 0.35,
+REFLECT = {"body": 0.4, "trim": 0.1, "glass": 0.32, "tyre": 0.04, "rim": 0.1, "spoke": 0.35,
            "plate": 0.1, "fin": 0.1, "hole": 0.0}
-SKY_TOP, SKY_MID, CITY, GRID = hexrgb("#9a86ff"), hexrgb("#f070c4"), hexrgb("#c9b4ec"), hexrgb("#36f9f6")
+SKY_TOP, SKY_MID, CITY, GRID = hexrgb("#5a24c8"), hexrgb("#f92aad"), hexrgb("#b01fff"), hexrgb("#36f9f6")
 KEY = np.array([-0.45, 0.45, 0.77]) / np.linalg.norm([-0.45, 0.45, 0.77])
 
 
 def env(n):
     z = n[2]
     if z >= 0.25:
-        return lerp(SKY_MID, SKY_TOP, smooth((z - 0.25) / 0.75)) * 0.9 + 0.1
+        return lerp(SKY_MID, SKY_TOP, smooth((z - 0.25) / 0.75))
     if z >= -0.15:
-        return lerp(CITY * 0.8, SKY_MID, smooth((z + 0.15) / 0.4))
-    return lerp(GRID * 0.55, CITY * 0.5, smooth((z + 1) / 0.85))
+        return lerp(CITY * 0.5, SKY_MID * 0.85, smooth((z + 0.15) / 0.4))
+    return lerp(GRID * 0.7, CITY * 0.5, smooth((z + 1) / 0.85))
 
 
 def shade(mat, n, view):
@@ -276,14 +330,14 @@ def shade(mat, n, view):
     h = KEY + view
     h = h / np.linalg.norm(h)
     sp = max(0.0, float(n @ h))
-    shine = {"body": (0.45, 50), "glass": (0.55, 90), "spoke": (0.4, 40)}.get(mat)
+    shine = {"body": (0.5, 45), "glass": (0.6, 80), "spoke": (0.4, 40)}.get(mat)
     if shine:
         col = col + shine[0] * sp ** shine[1]
     return np.clip(col, 0, 1), 0.0
 
 
 # ── Rasteriser ─────────────────────────────────────────────────────────────
-def render(mesh, project, view, px_per_unit, pad=10, ss=3, bloom=True):
+def render(mesh, project, view, px_per_unit, pad=10, ss=3, bloom=True, depth_tol=0.06):
     """project(p) -> (sx, sy, depth) with smaller depth nearer. Returns an
     RGBA image and (x0, y0, scale): the image's top-left in projected units
     and units per pixel."""
@@ -352,14 +406,36 @@ def render(mesh, project, view, px_per_unit, pad=10, ss=3, bloom=True):
         alpha[y0:y1, x0:x1][win] = 1.0
         g = glow[y0:y1, x0:x1]
         g[win] = col * emit
-    # Lights that end up hidden must not glow.
+    # Neon edges: drawn where they're not hidden behind the body, and bloomed.
+    for pts, colour, width in mesh.lines:
+        col = hexrgb(colour)
+        rad = max(1.0, width * W * 0.0022)          # widths are relative to the car's size
+        r = int(math.ceil(rad))
+        oyy, oxx = np.mgrid[-r:r + 1, -r:r + 1]
+        disc = (oxx ** 2 + oyy ** 2) <= rad * rad
+        for p0, p1 in zip(pts, pts[1:]):
+            a, b = np.array(project(p0)), np.array(project(p1))
+            steps = int(max(abs(b[0] - a[0]), abs(b[1] - a[1])) * s / max(rad * 0.6, 0.5)) + 1
+            for t in np.linspace(0, 1, steps + 1):
+                q = a + (b - a) * t
+                cx, cy = int((q[0] - ox) * s), int((q[1] - oy) * s)
+                if not (r <= cx < W - r and r <= cy < H - r):
+                    continue
+                zl = zbuf[cy - r:cy + r + 1, cx - r:cx + r + 1]
+                vis = disc & (q[2] <= zl + depth_tol)
+                if not vis.any():
+                    continue
+                rgb[cy - r:cy + r + 1, cx - r:cx + r + 1][vis] = col
+                alpha[cy - r:cy + r + 1, cx - r:cx + r + 1][vis] = 1.0
+                glow[cy - r:cy + r + 1, cx - r:cx + r + 1][vis] = col
     img = np.dstack([rgb, alpha])
     im = Image.fromarray((img * 255).astype(np.uint8), "RGBA")
     im = im.resize((W // ss, H // ss), Image.LANCZOS)
     if bloom and glow.any():
         gim = Image.fromarray((np.clip(glow, 0, 1) * 255).astype(np.uint8), "RGB").resize((W // ss, H // ss), Image.LANCZOS)
-        g1 = np.asarray(gim.filter(ImageFilter.GaussianBlur(px_per_unit * 0.05)), dtype=float) / 255
-        g2 = np.asarray(gim.filter(ImageFilter.GaussianBlur(px_per_unit * 0.16)), dtype=float) / 255
+        wf = W // ss                                  # glow sized to the image, so it fades inside the padding
+        g1 = np.asarray(gim.filter(ImageFilter.GaussianBlur(max(0.6, wf * 0.004))), dtype=float) / 255
+        g2 = np.asarray(gim.filter(ImageFilter.GaussianBlur(max(1.0, wf * 0.012))), dtype=float) / 255
         bloom_rgb = np.clip(g1 * 0.9 + g2 * 1.1, 0, 1)
         base = np.asarray(im, dtype=float) / 255
         a = base[:, :, 3:4]
