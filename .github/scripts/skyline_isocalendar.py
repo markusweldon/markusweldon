@@ -109,7 +109,7 @@ def side_defs():
 
 
 # Optional effects; set either to False to switch it off.
-CAR = False         # a roadster driving along a road in front of the city
+CAR = True          # a roadster driving along a road in front of the city
 REFLECTION = False  # buildings mirrored into the grid floor, like a wet street
 HORIZON = False     # a pink-to-cyan line and glow behind the far end of the city
 HORIZON_GAP = 1.6    # clear space between the horizon and the tallest tower under it

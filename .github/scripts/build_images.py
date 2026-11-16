@@ -506,7 +506,7 @@ def treeline(avoid=()) -> str:
             f'stroke-linejoin="round">{front}</g>')
 
 
-HEADER_CAR = False  # a modern electric roadster driving into the grid, seen from behind
+HEADER_CAR = True  # a modern electric roadster driving into the grid, seen from behind
 
 
 def car(cx: float, ground: float, width: float) -> str:
