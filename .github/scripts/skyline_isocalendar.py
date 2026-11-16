@@ -23,10 +23,13 @@ Usage: skyline_isocalendar.py <in.svg> <out.svg>
 If the calendar can't be found, the input is copied unchanged and a warning
 is printed, so the card still publishes.
 """
+import base64
+import json
 import math
 import random
 import re
 import sys
+from pathlib import Path
 import xml.etree.ElementTree as ET
 
 SIZE = 6  # the plugin's full tower height
@@ -162,145 +165,37 @@ def tower(col, h, peak, seed, windows):
     return "".join(parts)
 
 
-def _mix(c1, c2, t):
-    t = max(0.0, min(1.0, t))
-    a = [int(c1[i:i + 2], 16) for i in (1, 3, 5)]
-    b = [int(c2[i:i + 2], 16) for i in (1, 3, 5)]
-    return "#" + "".join(f"{round(x + (y - x) * t):02x}" for x, y in zip(a, b))
+ASSETS = Path(__file__).resolve().parent / "assets"
 
 
 def iso_car(corner, cols, rows) -> tuple[str, str]:
-    """The header's roadster as a small shaded 3D model in the calendar's
-    projection: a long low nose rising to wide rear haunches, a bubble
-    canopy, and on the tail (facing the viewer) the full-width red light
-    bar, a plate and a diffuser. It drives along a road in front of the
-    city towards the oldest weeks, headlights ahead, pink streaks behind.
-    Returns (svg, css)."""
-    L, W = 2.4, 1.24             # length (along weeks) and width (along days)
+    """The header's roadster, rendered by roadster.py from the same 3D model in
+    this calendar's isometric projection and embedded as a PNG. It drives
+    along a road in front of the city towards the oldest weeks, tail to the
+    viewer, with headlight beams ahead and pink streaks behind.
+    Returns (svg, css); an empty svg if the render isn't there."""
+    png, meta_file = ASSETS / "roadster-iso.png", ASSETS / "roadster.json"
+    if not png.exists() or not meta_file.exists():
+        return "", ""
+    meta = json.loads(meta_file.read_text())["iso"]
+    data = base64.b64encode(png.read_bytes()).decode()
     road = rows + 1.9            # day-axis centre of the road
-    view = (1.0, 1.0, 2.0)       # towards the viewer in (week, day, height)
-    light = (0.35, 0.35, 0.87)
+    L = 2.4                      # car length in weeks (4.3 m at 0.558 per metre)
+    ox, oy = corner(0, road)     # the car's nose on the road centreline
 
-    def proj(a, y, z):
+    def p(a, y):
         x, yy = corner(a, road + y)
-        return x, yy - z
+        return f"{fmt(x)},{fmt(yy)}"
 
-    def sub(u, v):
-        return [u[i] - v[i] for i in range(3)]
-
-    def cross(u, v):
-        return [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]]
-
-    def dot(u, v):
-        return sum(u[i] * v[i] for i in range(3))
-
-    def unit(u):
-        n = dot(u, u) ** 0.5 or 1.0
-        return [c / n for c in u]
-
-    def smooth(t):
-        t = max(0.0, min(1.0, t))
-        return t * t * (3 - 2 * t)
-
-    # Body cross-sections along the car; t = 0 is the nose (smallest week).
-    def body(t):
-        w = W / 2 * (0.74 + 0.2 * smooth(t / 0.45) + 0.08 * smooth((t - 0.55) / 0.3))
-        hb = 0.4 + 0.46 * smooth(t / 0.75)         # shoulder height, rising to the haunches
-        ht = hb + 0.08
-        sq = 0.78 if t == 0 else 1.0                # a rounder, lower nose
-        return [(-0.9 * w, 0.14), (-w, 0.32 * sq), (-0.97 * w, hb * sq), (-0.6 * w, ht * sq),
-                (0.6 * w, ht * sq), (0.97 * w, hb * sq), (w, 0.32 * sq), (0.9 * w, 0.14)], hb, ht
-
-    def canopy(t):
-        _, hb, ht = body(t)
-        c = 0.5 * max(0.0, 1 - ((t - 0.55) / 0.3) ** 2)
-        w = W / 2 * 0.44 * (1 - 0.25 * max(0.0, (t - 0.55) / 0.3))
-        return [(-w, ht), (-0.72 * w, ht + 0.72 * c), (-0.3 * w, ht + c), (0.3 * w, ht + c),
-                (0.72 * w, ht + 0.72 * c), (w, ht)]
-
-    faces = []  # (points3d, kind)
-
-    def loft(stations, section, kind, closed):
-        rings = [[(t * L, y, z) for y, z in section(t)] for t in stations]
-        n = len(rings[0])
-        for r0, r1 in zip(rings, rings[1:]):
-            for j in range(n if closed else n - 1):
-                k = (j + 1) % n
-                faces.append(([r0[j], r1[j], r1[k], r0[k]], kind))
-        return rings
-
-    rings = loft([0, 0.06, 0.16, 0.3, 0.48, 0.66, 0.82, 0.94, 1.0], lambda t: body(t)[0], "body", True)
-    faces.append((list(reversed(rings[0])), "body"))
-    faces.append((rings[-1], "tail"))
-    crings = loft([0.25, 0.36, 0.48, 0.6, 0.72, 0.85], canopy, "glass", False)
-    faces.append((crings[-1], "glassend"))
-
-    out = []
-    vis = []
-    for pts, kind in faces:
-        n = unit(cross(sub(pts[1], pts[0]), sub(pts[-1], pts[0])))
-        cen = [sum(p[i] for p in pts) / len(pts) for i in range(3)]
-        axis = [cen[0], 0.0, 0.35 if kind in ("body", "tail") else 0.8]
-        if dot(n, sub(cen, axis)) < 0:
-            n = [-c for c in n]
-        if kind == "tail":
-            n = [1.0, 0.0, 0.0]
-        if dot(n, view) <= 0.02:
-            continue
-        vis.append((dot(cen, view), pts, kind, n))
-    for _, pts, kind, n in sorted(vis, key=lambda v: v[0]):
-        lit = 0.25 + 0.75 * max(0.0, dot(n, light))
-        if kind == "body":
-            col = _mix("#0e0320", "#6a2bb0", lit)
-        elif kind == "tail":
-            col = "#1a0733"
-        elif kind == "glassend":
-            col = "#0a0418"
-        else:
-            col = _mix("#05020e", "#2e7fa3", lit * 0.9)
-        pp = " ".join(f"{fmt(x)},{fmt(y)}" for x, y in (proj(*q) for q in pts))
-        out.append(f'<polygon points="{pp}" fill="{col}" stroke="{col}" stroke-width="0.02" stroke-linejoin="round"/>')
-
-    def ln(q0, q1, col, w, op=1.0, extra=""):
-        (x0, y0), (x1, y1) = proj(*q0), proj(*q1)
-        return (f'<line x1="{fmt(x0)}" y1="{fmt(y0)}" x2="{fmt(x1)}" y2="{fmt(y1)}" stroke="{col}" '
-                f'stroke-opacity="{op}" stroke-width="{w}" stroke-linecap="round"{extra}/>')
-
-    # Character lines: the shoulder crease on the near side, the canopy edge.
-    ring_pts = [r[5] for r in rings]
-    out.append(f'<polyline points="{" ".join(f"{fmt(x)},{fmt(y)}" for x, y in (proj(*q) for q in ring_pts))}" '
-               f'fill="none" stroke="#e3c8ff" stroke-opacity="0.55" stroke-width="0.035"/>')
-    top_edge = [r[4] for r in rings]
-    out.append(f'<polyline points="{" ".join(f"{fmt(x)},{fmt(y)}" for x, y in (proj(*q) for q in top_edge))}" '
-               f'fill="none" stroke="#f92aad" stroke-opacity="0.55" stroke-width="0.03"/>')
-    cedge = [r[3] for r in crings]
-    out.append(f'<polyline points="{" ".join(f"{fmt(x)},{fmt(y)}" for x, y in (proj(*q) for q in cedge))}" '
-               f'fill="none" stroke="#36f9f6" stroke-opacity="0.75" stroke-width="0.035"/>')
-    # Tail: diffuser, plate and the full-width light bar that wraps the corners.
-    _, hb, _ = body(1.0)
-    w = W / 2 * 1.04
-    zl = hb * 0.84
-    out.append(ln((L, -0.8 * w, 0.2), (L, 0.8 * w, 0.2), "#05000a", 0.09))
-    out.append(ln((L, -0.13, 0.36), (L, 0.13, 0.36), "#e8dcff", 0.09, 0.25))
-    out.append(ln((L - 0.1, -0.97 * w, zl), (L, -0.93 * w, zl), "#ff1f4f", 0.12, 1, ' filter="url(#mws-peak)"'))
-    out.append(ln((L, -0.93 * w, zl), (L, 0.93 * w, zl), "#ff1f4f", 0.12, 1, ' filter="url(#mws-peak)"'))
-    out.append(ln((L, 0.93 * w, zl), (L - 0.1, 0.97 * w, zl), "#ff1f4f", 0.12, 1, ' filter="url(#mws-peak)"'))
-    out.append(ln((L, -0.9 * w, zl), (L, 0.9 * w, zl), "#ffd0dc", 0.035))
-    # Wheels on the near side, under arches.
-    for aw in (0.5, L - 0.5):
-        pts = []
-        for i in range(18):
-            th = 2 * math.pi * i / 18
-            pts.append(proj(aw + 0.27 * math.cos(th), W / 2 * 1.0, 0.36 + 0.36 * math.sin(th)))
-        out.append(f'<polygon points="{" ".join(f"{fmt(x)},{fmt(y)}" for x, y in pts)}" fill="#07020e" '
-                   f'stroke="#b98cff" stroke-opacity="0.6" stroke-width="0.03"/>')
-
-    floor = [
-        f'<polygon points="{" ".join(f"{fmt(x)},{fmt(y)}" for x, y in (proj(*q) for q in [(0, -0.45, 0), (-2.4, -0.85, 0), (-2.4, 0.85, 0), (0, 0.45, 0)]))}" fill="url(#mws-beam)"/>',
-        ln((L, -0.42, 0.45), (L + 4, -0.42, 0.1), "url(#mws-trail)", 0.08),
-        ln((L, 0.42, 0.45), (L + 4, 0.42, 0.1), "url(#mws-trail)", 0.08),
-        f'<polygon points="{" ".join(f"{fmt(x)},{fmt(y)}" for x, y in (proj(*q) for q in [(-0.1, -0.7, 0), (L + 0.1, -0.7, 0), (L + 0.1, 0.7, 0), (-0.1, 0.7, 0)]))}" fill="#000" fill-opacity="0.45"/>',
-    ]
+    floor = (
+        f'<polygon points="{p(0, -0.45)} {p(-2.4, -0.85)} {p(-2.4, 0.85)} {p(0, 0.45)}" fill="url(#mws-beam)"/>'
+        f'<polygon points="{p(-0.1, -0.62)} {p(L + 0.1, -0.62)} {p(L + 0.1, 0.62)} {p(-0.1, 0.62)}" fill="#000" fill-opacity="0.45"/>'
+        + "".join(f'<line x1="{p(L, y).split(",")[0]}" y1="{fmt(float(p(L, y).split(",")[1]) - 0.4)}" '
+                  f'x2="{p(L + 4, y).split(",")[0]}" y2="{fmt(float(p(L + 4, y).split(",")[1]) - 0.1)}" '
+                  f'stroke="url(#mws-trail)" stroke-width="0.08" stroke-linecap="round"/>' for y in (-0.42, 0.42))
+    )
+    image = (f'<image href="data:image/png;base64,{data}" x="{fmt(ox + meta["x"])}" y="{fmt(oy + meta["y"])}" '
+             f'width="{fmt(meta["w"])}" height="{fmt(meta["h"])}"/>')
 
     def off(a):
         return corner(a, 0)[0] - corner(0, 0)[0], corner(a, 0)[1] - corner(0, 0)[1]
@@ -310,7 +205,7 @@ def iso_car(corner, cols, rows) -> tuple[str, str]:
            f"100%{{transform:translate({fmt(ex)}px,{fmt(ey)}px);opacity:0}}}}"
            f".mws-car{{animation:mws-drive 14s linear infinite}}"
            f"@media (prefers-reduced-motion: reduce){{.mws-car{{animation:none;transform:translate({fmt(mx)}px,{fmt(my)}px)}}}}")
-    return f'<g class="mws-car">{"".join(floor)}{"".join(out)}</g>', css
+    return f'<g class="mws-car">{floor}{image}</g>', css
 
 
 def restyle(svg):
@@ -462,9 +357,9 @@ def restyle(svg):
         body, car_css = iso_car(corner, cols, rows)
         car_svg = f"""<style>{car_css}</style>
 <defs>
-  <linearGradient id="mws-beam" gradientUnits="userSpaceOnUse" x1="{fmt(corner(0, 0)[0])}" y1="0" x2="{fmt(corner(-2.4, 0)[0])}" y2="0">
+  <linearGradient id="mws-beam" gradientUnits="userSpaceOnUse" x1="{fmt(corner(0, rows + 1.9)[0])}" y1="0" x2="{fmt(corner(-2.4, rows + 1.9)[0])}" y2="0">
     <stop offset="0" stop-color="#8afcfa" stop-opacity="0.32"/><stop offset="1" stop-color="#36f9f6" stop-opacity="0"/></linearGradient>
-  <linearGradient id="mws-trail" gradientUnits="userSpaceOnUse" x1="{fmt(corner(2.6, 0)[0])}" y1="0" x2="{fmt(corner(6.6, 0)[0])}" y2="0">
+  <linearGradient id="mws-trail" gradientUnits="userSpaceOnUse" x1="{fmt(corner(2.4, rows + 1.9)[0])}" y1="0" x2="{fmt(corner(6.4, rows + 1.9)[0])}" y2="0">
     <stop offset="0" stop-color="#ff2e6e" stop-opacity="0.95"/><stop offset="1" stop-color="#f92aad" stop-opacity="0"/></linearGradient>
   <linearGradient id="mws-carside" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#4a1d7a"/><stop offset="1" stop-color="#1a0630"/></linearGradient>

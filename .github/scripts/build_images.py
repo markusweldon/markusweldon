@@ -509,80 +509,19 @@ def treeline(avoid=()) -> str:
 HEADER_CAR = False  # a modern electric roadster driving into the grid, seen from behind
 
 
-def car(cx: float, ground: float, k: float = 1.0) -> str:
-    """A modern electric roadster from behind, in neon: curved lower body with
-    faceted haunches, wing mirrors, a dark glass panel narrowing up the rear
-    deck between two vents, a full-width light bar that wraps the corners, a
-    plain plate, four pipes in a finned diffuser, and tyres with tread. It
-    drifts between lanes while the grid rolls past, so it reads as driving
-    towards the skyline. No badges or lettering."""
-    def P(*pts):
-        return " ".join(f"{fmt(x * k)},{fmt(y * k)}" for x, y in pts)
-
-    def d(cmds):
-        out = []
-        for c in cmds:
-            op, *nums = c
-            out.append(op + " ".join(f"{fmt(n * k)}" for n in nums))
-        return " ".join(out)
-
-    def line(x1, y1, x2, y2, col, w, op=1.0, extra=""):
-        return (f'<line x1="{fmt(x1 * k)}" y1="{fmt(y1 * k)}" x2="{fmt(x2 * k)}" y2="{fmt(y2 * k)}" '
-                f'stroke="{col}" stroke-opacity="{op}" stroke-width="{fmt(w * k)}" stroke-linecap="round"{extra}/>')
-
-    lower = d([("M", -43, 0), ("L", 43, 0), ("Q", 48, 0, 47.6, -4.5), ("L", 46.6, -14.5),
-               ("Q", 46.2, -16.6, 44, -16.8), ("L", -44, -16.8), ("Q", -46.2, -16.6, -46.6, -14.5),
-               ("L", -47.6, -4.5), ("Q", -48, 0, -43, 0), ("Z",)])
-    left = d([("M", -46.4, -16.6), ("C", -46.6, -20, -44.5, -22, -41, -23.6), ("L", -15, -41),
-              ("L", -21, -23.2), ("Z",)])
-    right = d([("M", 46.4, -16.6), ("C", 46.6, -20, 44.5, -22, 41, -23.6), ("L", 15, -41),
-               ("L", 21, -23.2), ("Z",)])
-    deck = P((-21, -23.2), (-15, -41), (15, -41), (21, -23.2))
-    glass = P((-19, -24.6), (-13.8, -39.5), (13.8, -39.5), (19, -24.6))
-    vent_l = P((-38, -24.5), (-34, -27), (-21.5, -37.5), (-24.5, -35.2))
-    vent_r = P((38, -24.5), (34, -27), (21.5, -37.5), (24.5, -35.2))
-    mirror_l = P((-41.5, -23.6), (-50.5, -26.8), (-51.2, -23.6), (-43, -21.4))
-    mirror_r = P((41.5, -23.6), (50.5, -26.8), (51.2, -23.6), (43, -21.4))
-
-    def tyre(x0):
-        tread = "".join(line(x0 + 1.5, y, x0 + 10.5, y, "#3a2a55", 0.45, 0.8) for y in (-8, -5, -2))
-        return (f'<rect x="{fmt(x0 * k)}" y="{fmt(-11 * k)}" width="{fmt(12 * k)}" height="{fmt(13.5 * k)}" '
-                f'rx="{fmt(3 * k)}" fill="#0a0414" stroke="#2a1840" stroke-width="{fmt(0.5 * k)}"/>{tread}')
-
-    pipes = "".join(f'<circle cx="{fmt(x * k)}" cy="{fmt(-3.6 * k)}" r="{fmt(1.75 * k)}" fill="#08000f" '
-                    f'stroke="#ffb36b" stroke-width="{fmt(0.7 * k)}" filter="url(#starGlow)"/>'
-                    f'<circle cx="{fmt(x * k)}" cy="{fmt(-3.6 * k)}" r="{fmt(0.7 * k)}" fill="#ff7a3d" fill-opacity="0.6"/>'
-                    for x in (-13.5, -4.5, 4.5, 13.5))
-    fins = "".join(line(x, -1.8, x * 1.1, 1.3, PURPLE, 0.7, 0.85) for x in (-32, -27, -22, 22, 27, 32))
-    bar_glow = (line(-45.5, -14, 45.5, -14, "#ff1f4f", 5, 1, ' filter="url(#tailGlow)"')
-                + line(-46.4, -14, -47.1, -10.5, "#ff1f4f", 3.4, 1, ' filter="url(#tailGlow)"')
-                + line(46.4, -14, 47.1, -10.5, "#ff1f4f", 3.4, 1, ' filter="url(#tailGlow)"'))
-    bar = (line(-45, -14, 45, -14, "#ff3d63", 1.8) + line(-42, -14, 42, -14, "#ffd0dc", 0.55)
-           + line(-45.8, -14, -46.6, -10.8, "#ff3d63", 1.4) + line(45.8, -14, 46.6, -10.8, "#ff3d63", 1.4))
+def car(cx: float, ground: float, width: float) -> str:
+    """The roadster from behind, rendered by roadster.py (the same 3D model
+    the Stats card's calendar uses), embedded as a PNG so it shows inside
+    GitHub's image proxy. A pink glow sits on the grid under it."""
+    import base64
+    png = IMAGES / "roadster-rear.png"
+    data = base64.b64encode(png.read_bytes()).decode()
+    from PIL import Image as _Image
+    with _Image.open(png) as im:
+        h = width * im.height / im.width
     return f"""<g transform="translate({fmt(cx)} {fmt(ground)})">
-<ellipse cx="0" cy="{fmt(2 * k)}" rx="{fmt(74 * k)}" ry="{fmt(9 * k)}" fill="{PINK}" fill-opacity="0.35" filter="url(#carGlow)"/>
-<ellipse cx="0" cy="{fmt(1.5 * k)}" rx="{fmt(48 * k)}" ry="{fmt(2.6 * k)}" fill="#000" fill-opacity="0.6"/>
-<g class="car">
-{tyre(-49.5)}{tyre(37.5)}
-<polygon points="{mirror_l}" fill="#1a0630" stroke="#b98cff" stroke-opacity="0.7" stroke-width="{fmt(0.6 * k)}" stroke-linejoin="round"/>
-<polygon points="{mirror_r}" fill="#1a0630" stroke="#b98cff" stroke-opacity="0.7" stroke-width="{fmt(0.6 * k)}" stroke-linejoin="round"/>
-<path d="{lower}" fill="url(#carBody)" stroke="#b98cff" stroke-opacity="0.75" stroke-width="{fmt(0.9 * k)}"/>
-<path d="{left}" fill="url(#carHaunchL)" stroke="#b98cff" stroke-opacity="0.75" stroke-width="{fmt(0.8 * k)}" stroke-linejoin="round"/>
-<path d="{right}" fill="url(#carHaunchR)" stroke="#b98cff" stroke-opacity="0.75" stroke-width="{fmt(0.8 * k)}" stroke-linejoin="round"/>
-{line(-44.5, -21.5, -20.5, -23.6, "#e8dcff", 0.5, 0.35)}{line(44.5, -21.5, 20.5, -23.6, "#e8dcff", 0.5, 0.25)}
-<polygon points="{deck}" fill="#0d0015" stroke="{CYAN}" stroke-width="{fmt(0.9 * k)}" stroke-linejoin="round"/>
-<polygon points="{glass}" fill="url(#carGlass)"/>
-{line(-9, -38, -14.5, -27, "#ffffff", 1.4, 0.12)}{line(-4.5, -38, -9, -28.5, "#ffffff", 0.7, 0.1)}
-<polygon points="{vent_l}" fill="#05000a" stroke="{CYAN}" stroke-opacity="0.7" stroke-width="{fmt(0.6 * k)}"/>
-<polygon points="{vent_r}" fill="#05000a" stroke="{CYAN}" stroke-opacity="0.7" stroke-width="{fmt(0.6 * k)}"/>
-{line(-35.5, -27, -24, -36.4, "#36f9f6", 0.35, 0.35)}{line(35.5, -27, 24, -36.4, "#36f9f6", 0.35, 0.35)}
-{line(-44, -9.2, 44, -9.2, "#b98cff", 0.45, 0.3)}
-{bar_glow}{bar}
-<rect x="{fmt(-7.5 * k)}" y="{fmt(-12 * k)}" width="{fmt(15 * k)}" height="{fmt(5 * k)}" rx="{fmt(0.8 * k)}" fill="#e8dcff" fill-opacity="0.12" stroke="{CYAN}" stroke-opacity="0.75" stroke-width="{fmt(0.6 * k)}"/>
-<path d="{d([("M", -36, -1.2), ("L", 36, -1.2), ("L", 33, -6.2), ("L", -33, -6.2), ("Z",)])}" fill="#05000a" stroke="{PURPLE}" stroke-opacity="0.6" stroke-width="{fmt(0.5 * k)}"/>
-{pipes}
-{fins}
-</g>
+<ellipse cx="0" cy="-2" rx="{fmt(width * 0.62)}" ry="{fmt(width * 0.07)}" fill="{PINK}" fill-opacity="0.4" filter="url(#carGlow)"/>
+<g class="car"><image href="data:image/png;base64,{data}" x="{fmt(-width / 2)}" y="{fmt(-h)}" width="{fmt(width)}" height="{fmt(h)}"/></g>
 </g>"""
 
 
@@ -857,7 +796,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)"/>
 </g>
-{f'<g class="carwrap">{car(HW / 2, HH - 10, 1.1 if phone else 1.4)}</g>' if HEADER_CAR else ""}
+{f'<g class="carwrap">{car(HW / 2, HH - 4, 104 if phone else 128)}</g>' if HEADER_CAR else ""}
 {words}
 </g>
 <rect x="0.5" y="0.5" width="{HW - 1}" height="{HH - 1}" rx="15.5" fill="none" stroke="url(#border)" stroke-opacity="0.45"/>"""
