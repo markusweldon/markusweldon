@@ -9,7 +9,7 @@ emissive red light bar. Writes two transparent PNGs of the same car:
 
   images/roadster-rear.webp                the header view, from behind,
                                            embedded by build_images.py
-  .github/scripts/assets/roadster-iso.png  the Stats card calendar view and
+  .github/scripts/assets/roadster-iso*.webp the Stats card calendar view (four wheel frames) and
   .github/scripts/assets/roadster.json     its placement, embedded by
                                            skyline_isocalendar.py
 
@@ -144,35 +144,65 @@ def crop(path, scale=1.0):
     return box, im.size
 
 
-def finish_rear(raw, out, width=460):
-    """Make the header car from the raw render: a faint neon outline traced
-    round its silhouette (pink on the left fading to cyan on the right, with a
-    soft glow, like the scene's line art), then saved as a compact WebP."""
+def neon_outline(im, pad=6, rim=3, glow=2.2):
+    """A faint neon rim traced round the car's silhouette -- pink on the left
+    fading to cyan on the right, with a soft glow, like the scenes' line art.
+    rim is the grow filter size (3 = a 1 px rim). Returns the padded image."""
     import numpy as np
     from PIL import Image, ImageFilter
-    im = Image.open(raw).convert("RGBA")
-    if im.width != width:
-        im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
-    pad = 6
     canvas = Image.new("RGBA", (im.width + 2 * pad, im.height + 2 * pad))
     canvas.alpha_composite(im, (pad, pad))
     a = np.asarray(canvas.getchannel("A"), dtype=float) / 255
     solid = Image.fromarray(((a > 0.5) * 255).astype(np.uint8))
-    grown = np.asarray(solid.filter(ImageFilter.MaxFilter(3)), dtype=float) / 255
-    edge = np.clip(grown - (a > 0.5), 0, 1)                       # a 1 px rim just outside the car
+    grown = np.asarray(solid.filter(ImageFilter.MaxFilter(rim)), dtype=float) / 255
+    edge = np.clip(grown - (a > 0.5), 0, 1)                       # a rim just outside the car
     h, w = edge.shape
     t = np.linspace(0, 1, w)[None, :, None]
     colour = (1 - t) * np.array([249, 42, 173]) + t * np.array([54, 249, 246])
-    glow = np.asarray(Image.fromarray((edge * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(2.2)),
+    blur = np.asarray(Image.fromarray((edge * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(glow)),
                       dtype=float) / 255
-    line_a = np.clip(edge * 0.85 + glow * 0.9, 0, 1)[..., None]
+    line_a = np.clip(edge * 0.85 + blur * 0.9, 0, 1)[..., None]
     base = np.asarray(canvas, dtype=float) / 255
     ba = base[..., 3:4]
     out_a = line_a + ba * (1 - line_a)
     rgb = (colour / 255 * line_a + base[..., :3] * ba * (1 - line_a)) / np.maximum(out_a, 1e-6)
-    res = Image.fromarray((np.dstack([np.clip(rgb, 0, 1), out_a]) * 255).astype(np.uint8), "RGBA")
-    # High-quality WebP keeps full colour and alpha at a fraction of the PNG's size.
-    res.save(out, "WEBP", quality=92, alpha_quality=95, method=6)
+    return Image.fromarray((np.dstack([np.clip(rgb, 0, 1), out_a]) * 255).astype(np.uint8), "RGBA")
+
+
+def save_webp(im, out):
+    """High-quality WebP keeps full colour and alpha at a fraction of the PNG's size."""
+    im.save(out, "WEBP", quality=92, alpha_quality=95, method=6)
+
+
+def finish_rear(raw, out, width=460):
+    """The header car: the raw render at header size, outlined, as WebP."""
+    from PIL import Image
+    im = Image.open(raw).convert("RGBA")
+    if im.width != width:
+        im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
+    save_webp(neon_outline(im), out)
+
+
+def finish_iso():
+    """The calendar car: each raw wheel frame outlined and saved as WebP, with
+    the placement in roadster.json grown to cover the padding. The rim is
+    thicker than the header's because this car is drawn far smaller."""
+    from PIL import Image
+    meta_file = ASSETS / "roadster.json"
+    meta = json.loads(meta_file.read_text())
+    raw = meta["iso_raw"]
+    pad = 5
+    frames = []
+    for k in range(raw["frames"]):
+        im = Image.open(ASSETS / f"roadster-iso-raw-{k}.png").convert("RGBA")
+        out = neon_outline(im, pad=pad, rim=5, glow=1.6)
+        save_webp(out, ASSETS / f"roadster-iso-{k}.webp")
+        frames.append(out)
+    save_webp(frames[0], ASSETS / "roadster-iso.webp")
+    upp = raw["w"] / im.width
+    meta["iso"] = {"x": raw["x"] - pad * upp, "y": raw["y"] - pad * upp,
+                   "w": raw["w"] + 2 * pad * upp, "h": raw["h"] + 2 * pad * upp, "frames": raw["frames"]}
+    meta_file.write_text(json.dumps(meta, indent=1))
 
 
 def main(model):
@@ -204,11 +234,10 @@ def main(model):
     sc.render.resolution_x, sc.render.resolution_y = W, H
     pa, p0 = project(sc, cam, (1, 0, 0)), project(sc, cam, (0, 0, 0))
     assert pa[0] > p0[0] and pa[1] > p0[1], "the rear must point to the lower right"
-    iso = ASSETS / "roadster-iso.png"
     frames = []
     for k in range(WHEEL_FRAMES):                  # the same view with the wheels a little further round
         turn_wheels(math.radians(60 / WHEEL_FRAMES * k))
-        f = ASSETS / f"roadster-iso-{k}.png"
+        f = ASSETS / f"roadster-iso-raw-{k}.png"
         render(sc, f, W, H)
         frames.append(f)
     turn_wheels(0.0)
@@ -231,17 +260,17 @@ def main(model):
         im = im.crop(box)
         im = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
         im.save(f, optimize=True)
-        if k == 0:
-            im.save(iso, optimize=True)
-    meta = {"iso": {"x": (box[0] - nose[0]) * upp, "y": (box[1] - nose[1]) * upp,
-                    "w": size[0] * upp, "h": size[1] * upp, "frames": WHEEL_FRAMES}}
+    meta = {"iso_raw": {"x": (box[0] - nose[0]) * upp, "y": (box[1] - nose[1]) * upp,
+                        "w": size[0] * upp, "h": size[1] * upp, "frames": WHEEL_FRAMES}}
     (ASSETS / "roadster.json").write_text(json.dumps(meta, indent=1))
-    print("rear", Image.open(rear).size, "iso", im.size, meta)
+    finish_iso()
+    print("rear", Image.open(rear).size, "iso", im.size, json.loads((ASSETS / "roadster.json").read_text()))
 
 
 if __name__ == "__main__":
-    if sys.argv[1:] == ["--finish"]:                  # redo the header car's outline and compression only
+    if sys.argv[1:] == ["--finish"]:                  # redo both cars' outline and compression only
         finish_rear(ASSETS / "roadster-rear-raw.png", ROOT / "images" / "roadster-rear.webp")
+        finish_iso()
     elif len(sys.argv) == 2:
         main(Path(sys.argv[1]).resolve())
     else:

@@ -174,7 +174,7 @@ def iso_car(corner, cols, rows) -> tuple[str, str]:
     along a road in front of the city towards the oldest weeks, tail to the
     viewer, with headlight beams ahead and pink streaks behind.
     Returns (svg, css); an empty svg if the render isn't there."""
-    png, meta_file = ASSETS / "roadster-iso.png", ASSETS / "roadster.json"
+    png, meta_file = ASSETS / "roadster-iso.webp", ASSETS / "roadster.json"
     if not png.exists() or not meta_file.exists():
         return "", ""
     meta = json.loads(meta_file.read_text())["iso"]
@@ -197,7 +197,7 @@ def iso_car(corner, cols, rows) -> tuple[str, str]:
     geom = (f'x="{fmt(ox + meta["x"])}" y="{fmt(oy + meta["y"])}" '
             f'width="{fmt(meta["w"])}" height="{fmt(meta["h"])}"')
     n = meta.get("frames", 0)
-    files = [ASSETS / f"roadster-iso-{k}.png" for k in range(n)]
+    files = [ASSETS / f"roadster-iso-{k}.webp" for k in range(n)]
     if n > 1 and all(f.exists() for f in files):
         # Wheel frames shown in turn, so the wheels roll as the car drives.
         # A CSS animation, not SMIL: Safari drops SMIL-animated images when
@@ -208,10 +208,10 @@ def iso_car(corner, cols, rows) -> tuple[str, str]:
                  f"@media (prefers-reduced-motion: reduce){{.mws-w{{animation:none}}.mws-w0{{opacity:1}}}}</style>")
         for k, f in enumerate(files):
             b64 = base64.b64encode(f.read_bytes()).decode()
-            image += (f'<image class="mws-w mws-w{k}" href="data:image/png;base64,{b64}" {geom} '
+            image += (f'<image class="mws-w mws-w{k}" href="data:image/webp;base64,{b64}" {geom} '
                       f'style="animation-delay:-{dur - 0.04 * k:.2f}s"/>')
     else:
-        image = f'<image href="data:image/png;base64,{data}" {geom}/>'
+        image = f'<image href="data:image/webp;base64,{data}" {geom}/>'
 
     def off(a):
         return corner(a, 0)[0] - corner(0, 0)[0], corner(a, 0)[1] - corner(0, 0)[1]
