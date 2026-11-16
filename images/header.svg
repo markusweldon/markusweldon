@@ -9,7 +9,9 @@
 .hs{display:none}
 @keyframes winblink{0%,100%{opacity:.8}50%{opacity:.1}}
 .wb{animation:winblink 7s ease-in-out infinite}
-@media (prefers-reduced-motion: reduce){.star,.horizon,.h,.wb{animation:none}.h{display:none}.hs{display:inline}}
+@keyframes beacon{0%,100%{opacity:1}50%{opacity:.25}}
+.beacon{animation:beacon 2.4s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.star,.horizon,.h,.wb,.beacon{animation:none}.h{display:none}.hs{display:inline}}
 </style>
 <defs>
   <clipPath id="panel"><rect width="1000" height="549" rx="16"/></clipPath>
@@ -38,6 +40,11 @@
     <stop offset="0" stop-color="#f92aad"/><stop offset="0.5" stop-color="#b01fff"/><stop offset="1" stop-color="#36f9f6"/>
   </linearGradient>
   <filter id="blur28" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
+  <linearGradient id="citySil" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0a0012"/></linearGradient>
+  <radialGradient id="cityHaze" cx="0.5" cy="1" r="0.75">
+    <stop offset="0" stop-color="#f92aad" stop-opacity="0.55"/><stop offset="0.45" stop-color="#b01fff" stop-opacity="0.25"/>
+    <stop offset="1" stop-color="#7b2fff" stop-opacity="0"/></radialGradient>
   <linearGradient id="cityFill" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2a0f4d"/><stop offset="1" stop-color="#12041f"/></linearGradient>
   <filter id="lineGlow" x="-5%" y="-800%" width="110%" height="1700%"><feGaussianBlur stdDeviation="8"/></filter>

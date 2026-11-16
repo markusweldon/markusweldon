@@ -250,6 +250,83 @@ def skyline(avoid=(), tallest: float = 120, spread: float = 0.24) -> str:
             f'<g>{"".join(front)}</g>')
 
 
+def skyline_neon(avoid=(), tallest: float = 150, centre: float = 0.82, spread: float = 0.2) -> str:
+    """An outrun-style city: one dark silhouette backlit by a pink haze, its
+    whole rooftop line traced in a glowing pink-to-cyan neon line, with
+    spires, stepped tops and antennas, and only a few lit window strips."""
+    rng = random.Random(77)
+    width = int(HW) + 1
+    prof = [0.0] * width  # skyline height above the horizon at each x
+
+    def ceiling(x0, x1):
+        tops = [HORIZON - (y1 + 16) for rx0, ry0, rx1, y1 in avoid if x0 < rx1 + 50 and x1 > rx0 - 10]
+        return min(tops) if tops else tallest * 2
+
+    def envelope(x):
+        return 0.12 + 0.88 * math.exp(-((x / HW - centre) / spread) ** 2)
+
+    strips, antennas = [], []
+    x = 0.0
+    while x < HW:
+        w = rng.uniform(12, 34)
+        h = min(tallest * envelope(x + w / 2) * rng.uniform(0.45, 1.0), ceiling(x, x + w))
+        if h < 4:
+            x += w
+            continue
+        if h < 22:  # no stubby buildings: the city fades out instead
+            x += w + rng.uniform(2, 8)
+            continue
+        kind = rng.random()
+        for px in range(max(0, int(x)), min(width, int(x + w))):
+            t = (px - x) / w
+            hh = h
+            if kind < 0.3 and h > tallest * 0.45:       # crown: two setbacks
+                hh = h if 0.38 < t < 0.62 else h * 0.9 if 0.2 < t < 0.8 else h * 0.78
+            elif kind < 0.55:                            # one setback
+                hh = h if 0.25 < t < 0.75 else h * 0.84
+            prof[px] = max(prof[px], hh)
+        if h > tallest * 0.55 and rng.random() < 0.45:
+            antennas.append((x + w * rng.uniform(0.3, 0.7), h))
+        if h > tallest * 0.4 and rng.random() < 0.5:   # a lit strip up the face
+            sx = x + w * rng.uniform(0.25, 0.75)
+            strips.append((sx, h * rng.uniform(0.35, 0.8), rng.choice([CYAN, PINK, "#b98cff"])))
+        x += w + rng.uniform(-4, 3)
+
+    # Trace the rooftop line across the city, keeping only the corners.
+    lit = [px for px in range(width) if prof[px] > 0]
+    if not lit:
+        return ""
+    x0, x1 = lit[0], lit[-1] + 1
+    pts = [(x0, HORIZON)]
+    for px in range(x0, x1):
+        y = HORIZON - prof[px]
+        if pts[-1][1] != y:
+            pts.append((px, pts[-1][1]))
+            pts.append((px, y))
+    pts.append((x1, pts[-1][1]))
+    pts.append((x1, HORIZON))
+    outline = " ".join(f"{fmt(px)},{fmt(py)}" for px, py in pts[1:-1])
+    shape = "M" + " L".join(f"{fmt(px)},{fmt(py)}" for px, py in pts) + " Z"
+    peak = max(range(width), key=lambda i: prof[i])
+
+    parts = [
+        f'<linearGradient id="cityNeon" gradientUnits="userSpaceOnUse" x1="{x0}" y1="0" x2="{x1}" y2="0">'
+        f'<stop offset="0" stop-color="{PINK}" stop-opacity="0"/><stop offset="0.2" stop-color="{PINK}"/>'
+        f'<stop offset="0.7" stop-color="#ff6ec7"/><stop offset="1" stop-color="{CYAN}"/></linearGradient>',
+        f'<ellipse cx="{fmt(peak)}" cy="{HORIZON}" rx="{fmt(HW * 0.3)}" ry="{fmt(tallest * 1.1)}" fill="url(#cityHaze)" filter="url(#blur28)"/>',
+        f'<path d="{shape}" fill="url(#citySil)"/>',
+    ]
+    for sx, sh, col in strips:
+        parts.append(f'<rect x="{fmt(sx)}" y="{fmt(HORIZON - sh)}" width="1.4" height="{fmt(sh - 4)}" fill="{col}" '
+                     f'fill-opacity="0.55" filter="url(#starGlow)"/>')
+    for ax, ah in antennas:
+        parts.append(f'<rect x="{fmt(ax - 0.5)}" y="{fmt(HORIZON - ah - 14)}" width="1" height="14" fill="#ff9de2" fill-opacity="0.8"/>'
+                     f'<circle class="beacon" cx="{fmt(ax)}" cy="{fmt(HORIZON - ah - 15)}" r="1.6" fill="{PINK}" filter="url(#starGlow)"/>')
+    parts.append(f'<polyline points="{outline}" fill="none" stroke="url(#cityNeon)" stroke-width="3" stroke-opacity="0.7" filter="url(#lineGlow)"/>')
+    parts.append(f'<polyline points="{outline}" fill="none" stroke="url(#cityNeon)" stroke-width="1.3" stroke-linejoin="round"/>')
+    return "\n".join(parts)
+
+
 def tree_layer(count: int, seed: int, max_h: float, min_h: float):
     """Hero.tsx treeLayer(): pines thin out toward the centre."""
     for i in range(count):
@@ -458,7 +535,9 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 .hs{{display:none}}
 @keyframes winblink{{0%,100%{{opacity:.8}}50%{{opacity:.1}}}}
 .wb{{animation:winblink 7s ease-in-out infinite}}
-@media (prefers-reduced-motion: reduce){{.star,.horizon,.h,.wb{{animation:none}}.h{{display:none}}.hs{{display:inline}}}}
+@keyframes beacon{{0%,100%{{opacity:1}}50%{{opacity:.25}}}}
+.beacon{{animation:beacon 2.4s ease-in-out infinite}}
+@media (prefers-reduced-motion: reduce){{.star,.horizon,.h,.wb,.beacon{{animation:none}}.h{{display:none}}.hs{{display:inline}}}}
 </style>
 <defs>
   <clipPath id="panel"><rect width="{HW}" height="{HH}" rx="16"/></clipPath>
@@ -487,6 +566,11 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
     <stop offset="0" stop-color="{PINK}"/><stop offset="0.5" stop-color="{PURPLE}"/><stop offset="1" stop-color="{CYAN}"/>
   </linearGradient>
   <filter id="blur28" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
+  <linearGradient id="citySil" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0a0012"/></linearGradient>
+  <radialGradient id="cityHaze" cx="0.5" cy="1" r="0.75">
+    <stop offset="0" stop-color="{PINK}" stop-opacity="0.55"/><stop offset="0.45" stop-color="{PURPLE}" stop-opacity="0.25"/>
+    <stop offset="1" stop-color="{VIOLET}" stop-opacity="0"/></radialGradient>
   <linearGradient id="cityFill" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2a0f4d"/><stop offset="1" stop-color="#12041f"/></linearGradient>
   <filter id="lineGlow" x="-5%" y="-800%" width="110%" height="1700%"><feGaussianBlur stdDeviation="8"/></filter>
@@ -503,7 +587,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 {grid_svg}
 </g>
 <rect y="{HORIZON}" width="{HW}" height="{HH - HORIZON}" fill="url(#floorFade)"/>
-{(skyline(avoid, 100, 0.34) if phone else skyline(avoid, 115)) if HEADER_SKYLINE else ""}
+{(skyline_neon(avoid, 120, 0.72, 0.3) if phone else skyline_neon(avoid)) if HEADER_SKYLINE else ""}
 {treeline()}
 <g class="horizon">
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
