@@ -169,7 +169,7 @@ ASSETS = Path(__file__).resolve().parent / "assets"
 
 
 def iso_car(corner, cols, rows) -> tuple[str, str]:
-    """The header's roadster, rendered by roadster.py from the same 3D model in
+    """The header's roadster, rendered by render_roadster.py from the same 3D model in
     this calendar's isometric projection and embedded as a PNG. It drives
     along a road in front of the city towards the oldest weeks, tail to the
     viewer, with headlight beams ahead and pink streaks behind.

@@ -510,7 +510,7 @@ HEADER_CAR = False  # a modern electric roadster driving into the grid, seen fro
 
 
 def car(cx: float, ground: float, width: float) -> str:
-    """The roadster from behind, rendered by roadster.py (the same 3D model
+    """The roadster from behind, rendered by render_roadster.py (the same 3D model
     the Stats card's calendar uses), embedded as a PNG so it shows inside
     GitHub's image proxy. A pink glow sits on the grid under it."""
     import base64
