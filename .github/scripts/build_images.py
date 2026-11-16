@@ -347,7 +347,7 @@ HOOD = [(-1, 0), (-0.7, 0.16), (-0.5, 0.31), (-0.32, 0.5), (-0.18, 0.7), (-0.09,
 
 # Mt Hood's place in the scene, in the same design units as PORTLAND: centred
 # behind the right of downtown, its peak just under the tallest tower.
-HOOD_AT, HOOD_HALF, HOOD_HIGH = 320, 122, 106
+HOOD_AT, HOOD_HALF, HOOD_HIGH = 292, 150, 64     # low and broad: far off, behind the city
 SCENE_W = HOOD_AT + HOOD_HALF  # the scene's full width, city plus mountain
 
 
@@ -429,16 +429,54 @@ def portland(x0: float, scale: float) -> str:
     snow = [(left_u, snow_v)] + top + [(right_u, snow_v)] + jag[1:-1]
     snow_d = "M" + " L".join(f"{fmt(hood_x + u * hood_w)},{fmt(HORIZON - v * hood_h)}" for u, v in snow) + " Z"
 
+    # A dimmer row of towers behind downtown, for depth.
+    rng = random.Random(503)
+    back, bx = [], 4.0
+    while bx < 296:
+        bw = rng.uniform(10, 20)
+        mid = bx + bw / 2
+        env = 0.35 + 0.65 * math.exp(-((mid - 170) / 95) ** 2)
+        bh = rng.uniform(0.55, 1.0) * 92 * env
+        back.append(f'<rect x="{fmt(x0 + bx * scale)}" y="{fmt(HORIZON - bh * scale)}" width="{fmt(bw * scale)}" '
+                    f'height="{fmt(bh * scale)}"/>')
+        bx += bw + rng.uniform(1, 4)
+
+    # Lit windows and the edges between buildings, so each tower reads.
+    wins, edges = [], []
+    wcols = [CYAN, PINK, "#c9b4ff", "#ffd6f5"]
+    for bx, bw, bh, shape, name in PORTLAND:
+        X, W, H = x0 + bx * scale, bw * scale, bh * scale
+        edges.append(f"M{fmt(X)},{fmt(HORIZON)} V{fmt(HORIZON - H * 0.9)} M{fmt(X + W)},{fmt(HORIZON)} V{fmt(HORIZON - H * 0.9)}")
+        top = HORIZON - H * (0.78 if shape in ("pill", "pyramid", "chamfer", "spire") else 0.9)
+        gx, gy = 3.4 * scale, 4.6 * scale
+        y = top + gy * 0.5
+        while y < HORIZON - 3 * scale:
+            xx = X + 2.0 * scale
+            while xx < X + W - 2.4 * scale:
+                if rng.random() < 0.38:
+                    wins.append(f'<rect x="{fmt(xx)}" y="{fmt(y)}" width="{fmt(1.3 * scale)}" height="{fmt(1.8 * scale)}" '
+                                f'fill="{rng.choice(wcols)}" fill-opacity="{rng.uniform(0.35, 0.8):.2f}"/>')
+                xx += gx
+            y += gy
+
     parts = [
         f'<linearGradient id="pdxNeon" gradientUnits="userSpaceOnUse" x1="{c0}" y1="0" x2="{c1}" y2="0">'
-        f'<stop offset="0" stop-color="{PINK}" stop-opacity="0.2"/><stop offset="0.25" stop-color="{PINK}"/>'
-        f'<stop offset="0.7" stop-color="#ff6ec7"/><stop offset="1" stop-color="{CYAN}"/></linearGradient>',
-        f'<ellipse cx="{fmt(hood_x)}" cy="{HORIZON}" rx="{fmt(hood_w * 1.5)}" ry="{fmt(hood_h * 1.05)}" fill="url(#cityHaze)" filter="url(#blur28)"/>',
-        f'<path d="{hood_d}" fill="url(#hoodFill)"/>',
-        f'<path d="{snow_d}" fill="url(#hoodSnow)"/>',
-        f'<polyline points="{hood_line}" fill="none" stroke="#b98cff" stroke-width="2.4" stroke-opacity="0.5" filter="url(#lineGlow)"/>',
-        f'<polyline points="{hood_line}" fill="none" stroke="#d9c6ff" stroke-width="1" stroke-opacity="0.85" stroke-linejoin="round"/>',
+        f'<stop offset="0" stop-color="{PINK}" stop-opacity="0"/><stop offset="0.18" stop-color="{PINK}"/>'
+        f'<stop offset="0.7" stop-color="#ff6ec7"/><stop offset="0.9" stop-color="{CYAN}"/>'
+        f'<stop offset="1" stop-color="{CYAN}" stop-opacity="0"/></linearGradient>',
+        # Hood: far behind, so fainter and hazier than the city.
+        f'<ellipse cx="{fmt(hood_x)}" cy="{HORIZON}" rx="{fmt(hood_w * 1.3)}" ry="{fmt(hood_h * 1.2)}" fill="url(#cityHaze)" '
+        f'filter="url(#blur28)" opacity="0.6"/>',
+        f'<g opacity="0.6">'
+        f'<path d="{hood_d}" fill="url(#hoodFill)"/>'
+        f'<path d="{snow_d}" fill="url(#hoodSnow)" opacity="0.8"/>'
+        f'<polyline points="{hood_line}" fill="none" stroke="#b98cff" stroke-width="2" stroke-opacity="0.35" filter="url(#lineGlow)"/>'
+        f'<polyline points="{hood_line}" fill="none" stroke="#d9c6ff" stroke-width="0.8" stroke-opacity="0.6" stroke-linejoin="round"/>'
+        f'</g>',
+        f'<g fill="#1d0a36" opacity="0.85">{"".join(back)}</g>',
         f'<path d="{city}" fill="url(#citySil)"/>',
+        f'<path d="{" ".join(edges)}" stroke="{PINK}" stroke-opacity="0.22" stroke-width="{fmt(0.7 * scale)}" fill="none"/>',
+        f'<g>{"".join(wins)}</g>',
     ]
     for sx, sh, col in strips:
         parts.append(f'<rect x="{fmt(sx)}" y="{fmt(HORIZON - sh)}" width="1.4" height="{fmt(sh - 4)}" fill="{col}" '
@@ -568,29 +606,40 @@ def treeline(avoid=(), clear=None) -> str:
     rng = random.Random(42)
     sig = []
     for i, (x, h, w) in enumerate(front):
-        if h < 18 or rng.random() < 0.35:
+        if h < 14 or rng.random() < 0.15:
             continue
         _, _, boughs = silicon_fir(x, h, w, HORIZON)
         y0, bough = rng.choice(boughs[len(boughs) // 2:])
-        dur = rng.uniform(5.5, 9.0)
+        dur = rng.uniform(3.5, 6.0)
         sig.append(f'<path class="sig" d="M{fmt(x)},{fmt(bus_y)} V{fmt(y0)} {bough}" pathLength="100" '
                    f'style="animation-duration:{dur:.1f}s;animation-delay:-{rng.uniform(0, dur):.1f}s"/>')
-    out.append(f'<g fill="none" stroke="#e9fdff" stroke-width="2" stroke-linecap="round" '
+    out.append(f'<g fill="none" stroke="#e9fdff" stroke-width="3.2" stroke-linecap="round" '
                f'filter="url(#starGlow)">{"".join(sig)}</g>')
 
-    # One small chip at the foot of a tree: a nod to the Silicon Forest's fabs.
-    pick = [t for t in front if t[1] > 30 and (not clear or t[0] < clear[0] - 40)]
+    # One CPU at the foot of a tree: a nod to the Silicon Forest's fabs. A
+    # square package with pins on all four sides, a die in the middle and a
+    # pink pin-1 dot, wired to the tree's trunk.
+    left_side = [t for t in front if t[1] > 22 and (not clear or t[0] < clear[0] - 10) and t[0] > 40]
+    pick = left_side or [t for t in front if t[1] > 22 and t[0] > 40]
     if pick:
         x, _, _ = pick[len(pick) // 2]
-        cx, cy, cw, ch = x - 14, HORIZON - 7, 10, 6
-        pins = "".join(f'<line x1="{fmt(cx + 1.6 + i * 2.2)}" y1="{fmt(cy - 1.4)}" x2="{fmt(cx + 1.6 + i * 2.2)}" '
-                       f'y2="{fmt(cy)}"/><line x1="{fmt(cx + 1.6 + i * 2.2)}" y1="{fmt(cy + ch)}" '
-                       f'x2="{fmt(cx + 1.6 + i * 2.2)}" y2="{fmt(cy + ch + 1.4)}"/>' for i in range(4))
-        out.append(f'<g stroke="{CYAN}" stroke-width="0.6">{pins}</g>'
-                   f'<rect x="{fmt(cx)}" y="{fmt(cy)}" width="{cw}" height="{ch}" rx="0.8" fill="#0a0414" '
-                   f'stroke="{CYAN}" stroke-width="0.7"/>'
-                   f'<circle cx="{fmt(cx + 1.8)}" cy="{fmt(cy + 1.6)}" r="0.7" fill="{PINK}"/>'
-                   f'<path d="M{fmt(cx + cw)},{fmt(cy + ch / 2)} H{fmt(x)}" stroke="{CYAN}" stroke-width="0.6" fill="none"/>')
+        size = 13
+        cx, cy = x - 9 - size, HORIZON - size - 3
+        pins = []
+        for i in range(4):
+            o = 2.4 + i * 2.75
+            pins += [f"M{fmt(cx + o)},{fmt(cy - 1.8)} v1.8", f"M{fmt(cx + o)},{fmt(cy + size)} v1.8",
+                     f"M{fmt(cx - 1.8)},{fmt(cy + o)} h1.8", f"M{fmt(cx + size)},{fmt(cy + o)} h1.8"]
+        out.append(f'<path d="{" ".join(pins)}" stroke="{CYAN}" stroke-width="0.8" fill="none"/>'
+                   f'<rect x="{fmt(cx)}" y="{fmt(cy)}" width="{size}" height="{size}" rx="1" fill="#0a0414" '
+                   f'stroke="{CYAN}" stroke-width="0.9" filter="url(#treeGlow)" opacity="0.6"/>'
+                   f'<rect x="{fmt(cx)}" y="{fmt(cy)}" width="{size}" height="{size}" rx="1" fill="#0a0414" '
+                   f'stroke="{CYAN}" stroke-width="0.9"/>'
+                   f'<rect x="{fmt(cx + 3.5)}" y="{fmt(cy + 3.5)}" width="{size - 7}" height="{size - 7}" rx="0.5" '
+                   f'fill="{PURPLE}" fill-opacity="0.35" stroke="{PINK}" stroke-width="0.6"/>'
+                   f'<circle cx="{fmt(cx + 1.9)}" cy="{fmt(cy + 1.9)}" r="0.75" fill="{PINK}"/>'
+                   f'<path d="M{fmt(cx + size + 1.8)},{fmt(cy + size / 2)} H{fmt(x)}" stroke="{CYAN}" '
+                   f'stroke-width="0.7" fill="none"/>')
     return "\n".join(out)
 
 
@@ -803,8 +852,8 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 {grid_css}
 {CAR_CSS if HEADER_CAR else ""}
 .hs{{display:none}}
-@keyframes sig{{0%{{stroke-dashoffset:14}}22%{{stroke-dashoffset:-106}}100%{{stroke-dashoffset:-106}}}}
-.sig{{stroke-dasharray:8 200;stroke-dashoffset:14;animation:sig 7s linear infinite}}
+@keyframes sig{{0%{{stroke-dashoffset:22}}30%{{stroke-dashoffset:-112}}100%{{stroke-dashoffset:-112}}}}
+.sig{{stroke-dasharray:12 220;stroke-dashoffset:22;animation:sig 5s linear infinite}}
 @keyframes winblink{{0%,100%{{opacity:.8}}50%{{opacity:.1}}}}
 .wb{{animation:winblink 7s ease-in-out infinite}}
 @keyframes beacon{{0%,100%{{opacity:1}}50%{{opacity:.25}}}}
