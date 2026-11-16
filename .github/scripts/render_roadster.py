@@ -7,7 +7,7 @@ black glass and is lit in the markusweldon.com palette: a hot-pink key from
 one side, a cyan rim from the other, a violet glow from above, and an
 emissive red light bar. Writes two transparent PNGs of the same car:
 
-  images/roadster-rear.png                 the header view, from behind,
+  images/roadster-rear.webp                the header view, from behind,
                                            embedded by build_images.py
   .github/scripts/assets/roadster-iso.png  the Stats card calendar view and
   .github/scripts/assets/roadster.json     its placement, embedded by
@@ -16,6 +16,7 @@ emissive red light bar. Writes two transparent PNGs of the same car:
 Usage:
     pip install bpy        (Blender as a Python module)
     python3 .github/scripts/render_roadster.py <model.glb>
+    python3 .github/scripts/render_roadster.py --finish   (outline + compress only)
 """
 import json
 import math
@@ -143,6 +144,37 @@ def crop(path, scale=1.0):
     return box, im.size
 
 
+def finish_rear(raw, out, width=460):
+    """Make the header car from the raw render: a faint neon outline traced
+    round its silhouette (pink on the left fading to cyan on the right, with a
+    soft glow, like the scene's line art), then saved as a compact WebP."""
+    import numpy as np
+    from PIL import Image, ImageFilter
+    im = Image.open(raw).convert("RGBA")
+    if im.width != width:
+        im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
+    pad = 6
+    canvas = Image.new("RGBA", (im.width + 2 * pad, im.height + 2 * pad))
+    canvas.alpha_composite(im, (pad, pad))
+    a = np.asarray(canvas.getchannel("A"), dtype=float) / 255
+    solid = Image.fromarray(((a > 0.5) * 255).astype(np.uint8))
+    grown = np.asarray(solid.filter(ImageFilter.MaxFilter(3)), dtype=float) / 255
+    edge = np.clip(grown - (a > 0.5), 0, 1)                       # a 1 px rim just outside the car
+    h, w = edge.shape
+    t = np.linspace(0, 1, w)[None, :, None]
+    colour = (1 - t) * np.array([249, 42, 173]) + t * np.array([54, 249, 246])
+    glow = np.asarray(Image.fromarray((edge * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(2.2)),
+                      dtype=float) / 255
+    line_a = np.clip(edge * 0.85 + glow * 0.9, 0, 1)[..., None]
+    base = np.asarray(canvas, dtype=float) / 255
+    ba = base[..., 3:4]
+    out_a = line_a + ba * (1 - line_a)
+    rgb = (colour / 255 * line_a + base[..., :3] * ba * (1 - line_a)) / np.maximum(out_a, 1e-6)
+    res = Image.fromarray((np.dstack([np.clip(rgb, 0, 1), out_a]) * 255).astype(np.uint8), "RGBA")
+    # High-quality WebP keeps full colour and alpha at a fraction of the PNG's size.
+    res.save(out, "WEBP", quality=92, alpha_quality=95, method=6)
+
+
 def main(model):
     sc = setup(model)
     (ROOT / "images").mkdir(exist_ok=True)
@@ -150,13 +182,14 @@ def main(model):
 
     # Header: from behind (+X is the rear), a little above, matching the grid.
     camera(sc, (11.5, 0.0, 2.7), (0.0, 0.0, 0.55), lens=70)
-    rear = ROOT / "images" / "roadster-rear.png"
-    render(sc, rear, 1400, 900)
-    crop(rear)
+    raw = ASSETS / "roadster-rear-raw.png"           # kept, so the finish can be redone without Blender
+    render(sc, raw, 1400, 900)
+    crop(raw)
     from PIL import Image
-    im = Image.open(rear)
-    if im.width != 460:
-        im.resize((460, round(im.height * 460 / im.width)), Image.LANCZOS).save(rear, optimize=True)
+    im = Image.open(raw)
+    im.resize((460, round(im.height * 460 / im.width)), Image.LANCZOS).save(raw, optimize=True)
+    rear = ROOT / "images" / "roadster-rear.webp"
+    finish_rear(raw, rear)
 
     # Calendar: orthographic, at the calendar's angle. The car drives towards
     # the older weeks (-a), so its rear (+X) points along +a, towards the
@@ -207,6 +240,9 @@ def main(model):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if sys.argv[1:] == ["--finish"]:                  # redo the header car's outline and compression only
+        finish_rear(ASSETS / "roadster-rear-raw.png", ROOT / "images" / "roadster-rear.webp")
+    elif len(sys.argv) == 2:
+        main(Path(sys.argv[1]).resolve())
+    else:
         sys.exit(__doc__)
-    main(Path(sys.argv[1]).resolve())
