@@ -61,9 +61,11 @@ jobs:
             svg.bar { margin: 0 0 12px 32px; width: calc(100% - 64px); }
             mask#languages-bar rect { fill: #fff !important; }
             .row.fill-width { margin: 0 0 4px 27px; }
-            .row.fill-width section { flex: 0 0 auto !important; width: 25%; }
+            .row.fill-width section { flex: 0 0 auto !important; width: calc(25% - 8px); }
             .field.language.details { justify-content: flex-start !important; margin-bottom: 4px; }
-            .field.language.details > * { flex: 0 0 auto !important; }
+            /* No "*" selectors here: the metrics action passes this CSS through a
+               shell, which expands "*" into a file list and breaks the rule. */
+            .field.language.details > .field, .field.language.details > small { flex: 0 0 auto !important; }
             .field.language.details > .field { width: 118px; }
             .field.language.details small { margin-left: 0; }
             .field.language.details .field svg { margin-left: 0 !important; }
