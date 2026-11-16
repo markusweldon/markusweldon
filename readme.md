@@ -1,6 +1,6 @@
 <div align="center">
 
-<picture><source media="(max-width: 640px)" srcset="images/header-phone.svg?v=6"><img src="images/header.svg?v=6" width="100%" alt="Markus Weldon. A terminal types: Principal Solutions Engineer · Securing Agentic AI Development · AppSec · Cloud · Cybersecurity · Enterprise GTM · Technical Pre-Sales · Ship Faster With AI, Securely. Helping enterprises adopt AI-assisted development securely. Brit builder, Lake Oswego, Oregon."></picture>
+<picture><source media="(max-width: 640px)" srcset="images/header-phone.svg?v=7"><img src="images/header.svg?v=7" width="100%" alt="Markus Weldon. A terminal types: Principal Solutions Engineer · Securing Agentic AI Development · AppSec · Cloud · Cybersecurity · Enterprise GTM · Technical Pre-Sales · Ship Faster With AI, Securely. Helping enterprises adopt AI-assisted development securely. Brit builder, Lake Oswego, Oregon."></picture>
 
 <a href="https://markusweldon.com"><img src="images/btn-website.svg" alt="Website: markusweldon.com"></a>
 <a href="https://github.com/markusweldon"><img src="images/btn-github.svg" alt="Follow @markusweldon on GitHub"></a>
@@ -71,7 +71,7 @@
 
 ### 📊 Stats
 
-<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg?v=7" width="100%">
+<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg?v=8" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
@@ -105,5 +105,7 @@
 ### 💻 Workspace
 
 <img src="images/workspace-vscode.png" width="49%" alt="VS Code with SynthWave '84 syntax colours in the markusweldon.com palette, open on routes/index.js from Snyk's nodejs-goof demo app with Snyk findings underlined"> <img src="images/workspace-warp.png" width="49%" alt="Warp terminal running neofetch on an M2 Pro MacBook Pro, over a synthwave starfield, treeline and neon grid">
+
+<sub>Car model: "Tesla roadster" by Delta Xeon on Sketchfab, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></sub>
 
 </div>
