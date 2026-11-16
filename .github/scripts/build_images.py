@@ -347,7 +347,7 @@ HOOD = [(-1, 0), (-0.7, 0.16), (-0.5, 0.31), (-0.32, 0.5), (-0.18, 0.7), (-0.09,
 
 # Mt Hood's place in the scene, in the same design units as PORTLAND: centred
 # behind the right of downtown, its peak just under the tallest tower.
-HOOD_AT, HOOD_HALF, HOOD_HIGH = 250, 145, 112
+HOOD_AT, HOOD_HALF, HOOD_HIGH = 290, 135, 112
 SCENE_W = HOOD_AT + HOOD_HALF  # the scene's full width, city plus mountain
 
 
@@ -716,7 +716,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 {grid_svg}
 </g>
 <rect y="{HORIZON}" width="{HW}" height="{HH - HORIZON}" fill="url(#floorFade)"/>
-{(portland((HW - SCENE_W * 0.72) / 2, 0.72) if phone else portland(600, 1.0)) if HEADER_SKYLINE else ""}
+{(portland((HW - SCENE_W * 0.72) / 2, 0.72) if phone else portland(590, 1.0)) if HEADER_SKYLINE else ""}
 {treeline()}
 <g class="horizon">
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>

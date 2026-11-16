@@ -1,6 +1,6 @@
 <div align="center">
 
-<picture><source media="(max-width: 640px)" srcset="images/header-phone.svg?v=2"><img src="images/header.svg?v=2" width="100%" alt="Markus Weldon. A terminal types: Principal Solutions Engineer · Securing Agentic AI Development · AppSec · Cloud · Cybersecurity · Enterprise GTM · Technical Pre-Sales · Ship Faster With AI, Securely. Helping enterprises adopt AI-assisted development securely. Brit builder, Lake Oswego, Oregon."></picture>
+<picture><source media="(max-width: 640px)" srcset="images/header-phone.svg?v=3"><img src="images/header.svg?v=3" width="100%" alt="Markus Weldon. A terminal types: Principal Solutions Engineer · Securing Agentic AI Development · AppSec · Cloud · Cybersecurity · Enterprise GTM · Technical Pre-Sales · Ship Faster With AI, Securely. Helping enterprises adopt AI-assisted development securely. Brit builder, Lake Oswego, Oregon."></picture>
 
 <a href="https://markusweldon.com"><img src="images/btn-website.svg" alt="Website: markusweldon.com"></a>
 <a href="https://github.com/markusweldon"><img src="images/btn-github.svg" alt="Follow @markusweldon on GitHub"></a>
