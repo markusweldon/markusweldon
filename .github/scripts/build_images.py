@@ -475,40 +475,52 @@ def treeline() -> str:
     return f'<g fill="#16002a" opacity="0.85">{back}</g>\n<g fill="#08000f">{front}</g>'
 
 
-HEADER_CAR = False  # an 80s wedge supercar driving into the grid, seen from behind
+HEADER_CAR = False  # a modern electric roadster driving into the grid, seen from behind
 
 
 def car(cx: float, ground: float, k: float = 1.0) -> str:
-    """A generic 80s wedge supercar from behind: low body, rear wing on
-    struts, a full-width glowing tail-light bar and fat tyres, with a pink
-    glow on the grid under it. It drifts between lanes while the grid rolls
-    past, so it reads as driving towards the skyline."""
+    """A modern electric roadster from behind, in neon: a wide, low body with
+    faceted haunches, a dark glass panel narrowing up the rear deck between
+    two vent slots, one thin full-width light bar, a plain plate, four round
+    pipes over a finned diffuser, and a pink glow on the grid under it. It
+    drifts between lanes while the grid rolls past, so it reads as driving
+    towards the skyline. No badges or lettering."""
     def poly(pts):
         return " ".join(f"{fmt(x * k)},{fmt(y * k)}" for x, y in pts)
-    body = poly([(-44, -6), (-42, -17), (-34, -21), (34, -21), (42, -17), (44, -6), (40, 0), (-40, 0)])
-    deck = poly([(-34, -21), (-24, -27), (24, -27), (34, -21)])
-    cabin = poly([(-17, -27), (-11, -36), (11, -36), (17, -27)])
-    glass = poly([(-13.5, -28.5), (-9.5, -34.5), (9.5, -34.5), (13.5, -28.5)])
-    segs = "".join(f'<rect x="{fmt(x * k)}" y="{fmt(-16 * k)}" width="{fmt(0.8 * k)}" height="{fmt(5 * k)}" fill="#12041f" opacity="0.7"/>'
-                   for x in (-32, -24, -16, 16, 24, 32))
+
+    def line(x1, y1, x2, y2, col, w, op=1.0):
+        return (f'<line x1="{fmt(x1 * k)}" y1="{fmt(y1 * k)}" x2="{fmt(x2 * k)}" y2="{fmt(y2 * k)}" '
+                f'stroke="{col}" stroke-opacity="{op}" stroke-width="{fmt(w * k)}" stroke-linecap="round"/>')
+
+    lower = poly([(-47, -4), (-46, -16), (46, -16), (47, -4), (42, 0), (-42, 0)])
+    left = poly([(-46, -16), (-44, -21), (-15, -41), (-21, -23)])
+    right = poly([(46, -16), (44, -21), (15, -41), (21, -23)])
+    deck = poly([(-21, -23), (-15, -41), (15, -41), (21, -23)])
+    glass = poly([(-19, -24.5), (-13.8, -39.5), (13.8, -39.5), (19, -24.5)])
+    vent_l = poly([(-38, -24), (-34, -26.5), (-21, -37.5), (-24.5, -35)])
+    vent_r = poly([(38, -24), (34, -26.5), (21, -37.5), (24.5, -35)])
+    pipes = "".join(f'<circle cx="{fmt(x * k)}" cy="{fmt(-3.4 * k)}" r="{fmt(1.7 * k)}" fill="#08000f" '
+                    f'stroke="#ffb36b" stroke-width="{fmt(0.7 * k)}" filter="url(#starGlow)"/>' for x in (-13.5, -4.5, 4.5, 13.5))
+    fins = "".join(line(x, -2, x * 1.12, 1.2, PURPLE, 0.7, 0.8) for x in (-30, -24, 24, 30))
     return f"""<g transform="translate({fmt(cx)} {fmt(ground)})">
-<ellipse cx="0" cy="{fmt(2 * k)}" rx="{fmt(70 * k)}" ry="{fmt(9 * k)}" fill="{PINK}" fill-opacity="0.35" filter="url(#carGlow)"/>
+<ellipse cx="0" cy="{fmt(2 * k)}" rx="{fmt(72 * k)}" ry="{fmt(9 * k)}" fill="{PINK}" fill-opacity="0.35" filter="url(#carGlow)"/>
 <g class="car">
-<rect x="{fmt(-46 * k)}" y="{fmt(-9 * k)}" width="{fmt(15 * k)}" height="{fmt(11 * k)}" rx="{fmt(2 * k)}" fill="#06000c"/>
-<rect x="{fmt(31 * k)}" y="{fmt(-9 * k)}" width="{fmt(15 * k)}" height="{fmt(11 * k)}" rx="{fmt(2 * k)}" fill="#06000c"/>
-<polygon points="{body}" fill="url(#carBody)" stroke="{PINK}" stroke-width="{fmt(1.1 * k)}" stroke-linejoin="round"/>
-<polygon points="{deck}" fill="#1d0838" stroke="{PINK}" stroke-opacity="0.7" stroke-width="{fmt(0.9 * k)}" stroke-linejoin="round"/>
-<polygon points="{cabin}" fill="#0d0015" stroke="{CYAN}" stroke-width="{fmt(1 * k)}" stroke-linejoin="round"/>
+<rect x="{fmt(-49 * k)}" y="{fmt(-11 * k)}" width="{fmt(12 * k)}" height="{fmt(13 * k)}" rx="{fmt(2.5 * k)}" fill="#06000c"/>
+<rect x="{fmt(37 * k)}" y="{fmt(-11 * k)}" width="{fmt(12 * k)}" height="{fmt(13 * k)}" rx="{fmt(2.5 * k)}" fill="#06000c"/>
+<polygon points="{lower}" fill="url(#carBody)" stroke="#b98cff" stroke-opacity="0.75" stroke-width="{fmt(0.9 * k)}" stroke-linejoin="round"/>
+<polygon points="{left}" fill="#33105a" stroke="#b98cff" stroke-opacity="0.75" stroke-width="{fmt(0.8 * k)}" stroke-linejoin="round"/>
+<polygon points="{right}" fill="#1a0630" stroke="#b98cff" stroke-opacity="0.75" stroke-width="{fmt(0.8 * k)}" stroke-linejoin="round"/>
+<polygon points="{deck}" fill="#0d0015" stroke="{CYAN}" stroke-width="{fmt(0.9 * k)}" stroke-linejoin="round"/>
 <polygon points="{glass}" fill="url(#carGlass)"/>
-<rect x="{fmt(-40 * k)}" y="{fmt(-16.5 * k)}" width="{fmt(80 * k)}" height="{fmt(6 * k)}" rx="{fmt(1.2 * k)}" fill="#ff2e6e" filter="url(#tailGlow)"/>
-<rect x="{fmt(-40 * k)}" y="{fmt(-16.5 * k)}" width="{fmt(31 * k)}" height="{fmt(6 * k)}" rx="{fmt(1.2 * k)}" fill="url(#tailLight)"/>
-<rect x="{fmt(9 * k)}" y="{fmt(-16.5 * k)}" width="{fmt(31 * k)}" height="{fmt(6 * k)}" rx="{fmt(1.2 * k)}" fill="url(#tailLight)"/>
-<rect x="{fmt(-8 * k)}" y="{fmt(-16 * k)}" width="{fmt(16 * k)}" height="{fmt(5 * k)}" rx="{fmt(0.8 * k)}" fill="#0d0015" stroke="{CYAN}" stroke-opacity="0.7" stroke-width="{fmt(0.6 * k)}"/>
-{segs}
-<rect x="{fmt(-30 * k)}" y="{fmt(-6 * k)}" width="{fmt(60 * k)}" height="{fmt(2.4 * k)}" fill="#08000f" stroke="{PURPLE}" stroke-opacity="0.6" stroke-width="{fmt(0.6 * k)}"/>
-<rect x="{fmt(-27 * k)}" y="{fmt(-35 * k)}" width="{fmt(1.8 * k)}" height="{fmt(9.5 * k)}" fill="{PINK}" fill-opacity="0.8"/>
-<rect x="{fmt(25.2 * k)}" y="{fmt(-35 * k)}" width="{fmt(1.8 * k)}" height="{fmt(9.5 * k)}" fill="{PINK}" fill-opacity="0.8"/>
-<rect x="{fmt(-38 * k)}" y="{fmt(-38 * k)}" width="{fmt(76 * k)}" height="{fmt(3.4 * k)}" rx="{fmt(1 * k)}" fill="#1d0838" stroke="{PINK}" stroke-width="{fmt(1 * k)}"/>
+<polygon points="{vent_l}" fill="#05000a" stroke="{CYAN}" stroke-opacity="0.7" stroke-width="{fmt(0.6 * k)}"/>
+<polygon points="{vent_r}" fill="#05000a" stroke="{CYAN}" stroke-opacity="0.7" stroke-width="{fmt(0.6 * k)}"/>
+{line(-45, -14, 45, -14, "#ff1f4f", 5, 1).replace('/>', ' filter="url(#tailGlow)"/>')}
+{line(-44, -14, 44, -14, "#ff3d63", 1.8)}
+{line(-42, -14, 42, -14, "#ffd0dc", 0.6)}
+<rect x="{fmt(-7.5 * k)}" y="{fmt(-11.5 * k)}" width="{fmt(15 * k)}" height="{fmt(5 * k)}" rx="{fmt(0.8 * k)}" fill="#e8dcff" fill-opacity="0.12" stroke="{CYAN}" stroke-opacity="0.75" stroke-width="{fmt(0.6 * k)}"/>
+
+{pipes}
+{fins}
 </g>
 </g>"""
 
