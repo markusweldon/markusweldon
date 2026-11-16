@@ -62,22 +62,26 @@ def shoulder(x):
 
 def roof(x):
     """Canopy centreline height; None where there is no glass."""
-    if 0.55 <= x <= 1.9:
-        return lerp(0.98, 1.1, (x - 0.55) / 1.35)
-    if 1.9 < x <= 3.25:                                      # long, raked windscreen
-        return lerp(1.1, shoulder(3.25) + 0.08, (x - 1.9) / 1.35)
-    return None
+    if not 0.55 <= x <= 3.25:
+        return None
+    # One smooth arc from the windscreen base, over the roof, down to the
+    # rear glass edge: highest a little behind the middle.
+    if x >= 2.0:
+        t = (x - 2.0) / 1.25
+        return lerp(1.12, shoulder(3.25) + 0.08, t ** 1.6)
+    t = (2.0 - x) / 1.45
+    return lerp(1.12, 1.0, t ** 1.8)
 
 
-def fin(x):
-    """The pointed sail fins either side of the rear glass: rising from the
-    deck's trailing edge to a sharp peak where the glass ends, then fading
-    into the glass edge further forward."""
-    if x <= 0.1 or x >= 1.9:
+HAUNCH_END = 1.55   # behind this, the cabin's sides are body-coloured haunches; ahead, side windows
+
+
+def crest(x):
+    """How far the haunches' inner edge stands above the glass beside it, so
+    the rear glass sits slightly recessed between them."""
+    if x >= HAUNCH_END:
         return 0.0
-    if x <= 0.55:
-        return 0.2 * (x - 0.1) / 0.45
-    return 0.2 * (1.9 - x) / 1.35
+    return 0.035 * smooth((HAUNCH_END - x) / 0.5)
 
 
 def glass_half(x):
@@ -109,21 +113,25 @@ def section(x):
     pts.append([0.88 * w, zd])                      # top of the side wall
     r = roof(x)
     g = glass_half(x)
-    f = fin(x)
-    if r is None:                                   # hood / flat rear deck
-        top = zd - 0.04 if x > 3 else zd + 0.03     # the hood sits between the fenders
-        pts += [[g, top + f], [(0.88 - 1.6 * f) * g, top], [0.45 * g, top + 0.003], [0.0, top + 0.005]]
+    if r is None:
+        top = zd - 0.04 if x > 3 else zd + 0.03     # the hood sits between the fenders; flat rear deck
+        rise = 0.0
+        if x < 0.55:                                # haunches ramp up from the deck to the glass
+            rise = (roof(0.55) - 0.03 + crest(0.55) - top) * smooth((x - 0.08) / 0.47)
+        pts += [[g, top + rise], [0.86 * g, top], [0.45 * g, top + 0.003], [0.0, top + 0.005]]
         cabin = False
+        side = "body"
     else:
-        # Flat, sharp-edged glass: a short steep edge, then a flat roof. At
-        # the rear the fins rise above it, so the glass sits down between them.
-        ze = zd + 0.07
-        pts += [[g, ze + f], [(0.93 - 1.6 * f) * g, r - 0.035], [0.5 * g, r - 0.004], [0.0, r]]
+        # One dark glass canopy, gently curved across: its edge meets the
+        # haunch crest at the rear and the side windows further forward.
+        c = crest(x)
+        pts += [[g, r - 0.03 + c], [0.86 * g, r - 0.03 + (0.012 if c == 0 else 0.0)],
+                [0.45 * g, r - 0.003], [0.0, r]]
         cabin = True
+        side = "glass" if x >= HAUNCH_END else "body"
     # The face from the glass edge point inward is glass, except where a fin
     # rises: there it's body, and the glass starts at the fin's inner foot.
-    edge = "body" if (f > 0.02 or not cabin) else "glass"
-    mats = ["trim", "body", "body", "body", "body", edge] + (["glass"] * 2 if cabin else ["body"] * 2)
+    mats = ["trim", "body", "body", "body", side] + (["glass"] * 3 if cabin else ["body"] * 3)
     return [(-y, z) for y, z in pts], mats
 
 
@@ -166,7 +174,7 @@ def build() -> Mesh:
     xs = sorted(set([0.0, 0.015, 0.04] + list(np.linspace(0.08, LENGTH - 0.08, 60))
                     + [LENGTH - 0.04, LENGTH - 0.015, LENGTH]
                     + [c + d for c in WHEELS for d in (-0.5, -0.4, -0.27, -0.2, 0, 0.2, 0.27, 0.4, 0.5)]
-                    + [0.1, 0.55, 0.551, 3.25, 3.251]))
+                    + [0.08, 0.55, 0.551, 1.55, 3.25, 3.251]))
     rings, ring_mats = [], []
     for x in xs:
         half, mt = section(x)
@@ -196,19 +204,24 @@ def build() -> Mesh:
         m.quad(r0[-1], r1[-1], r1[0], r0[0], "trim")
     m.fan(rings[0], "body", np.array([0.0, 0.0, 0.5]))
     m.fan(rings[-1], "trim", np.array([LENGTH, 0.0, 0.4]))
+    nose = rings[-1]
+    zn = max(p[2] for p in nose)
+    m.line([p for p in nose if p[2] > zn - 0.09], NEON_CYAN, 1.0)        # light strip across the nose
+    wn = half_width(LENGTH - 0.12)
+    for sgn in (-1, 1):                                                   # slim corner headlights
+        hx, hz = LENGTH - 0.12, shoulder(LENGTH - 0.12) - 0.02
+        m.quad(np.array([hx - 0.15, sgn * (wn + 0.004), hz - 0.02]), np.array([hx + 0.08, sgn * (wn * 0.97 + 0.004), hz - 0.035]),
+               np.array([hx + 0.08, sgn * (wn * 0.97 + 0.004), hz - 0.005]), np.array([hx - 0.15, sgn * (wn + 0.004), hz + 0.01]), "head")
 
     # Neon edges along the creases: pink on the body, cyan round the glass.
     n = len(rings[0])
     for j in (3, n - 4):                                     # shoulder creases
         m.line([r[j] for r in rings], NEON_PINK, 1.3)
     cab = [i for i, x in enumerate(xs) if roof(x) is not None]
-    for j in (6, n - 7):                                     # glass edges
-        m.line([rings[i][j] for i in cab], NEON_CYAN, 1.1)
-    m.line([rings[cab[-1]][j] for j in range(6, n - 6)], NEON_CYAN, 1.1)   # windscreen base
-    m.line([rings[cab[0]][j] for j in range(6, n - 6)], NEON_CYAN, 1.1)    # rear glass edge
-    finned = [i for i, x in enumerate(xs) if fin(x) > 0.0]
-    for j in (5, n - 6):                                     # fin crests
-        m.line([rings[i][j] for i in finned], NEON_PINK, 1.1)
+    for j in (5, n - 6):                                     # roof and haunch edges
+        m.line([rings[i][j] for i in cab], NEON_CYAN, 1.0)
+        m.line([rings[i][j] for i, x in enumerate(xs) if x <= 0.56], NEON_PINK, 1.0)
+    m.line([rings[cab[-1]][j] for j in range(4, n - 4)], NEON_CYAN, 1.0)   # windscreen base
     m.line(rings[0][2:n - 2], NEON_PINK, 1.3)                # rear face outline
     for c in WHEELS:                                         # arch outlines
         arch = [i for i, x in enumerate(xs) if abs(x - c) <= 0.5]
@@ -250,9 +263,9 @@ def finish(m):
     # Rear face details, just behind the cap.
     w0 = half_width(0.0)
     X = -0.006
+    zb = shoulder(0.0) - 0.035                      # light bar along the top edge
     m.quad(np.array([X, -0.82 * w0, 0.14]), np.array([X, 0.82 * w0, 0.14]),
-           np.array([X, 0.965 * w0, 0.42]), np.array([X, -0.965 * w0, 0.42]), "trim")
-    zb = shoulder(0.0) - 0.05
+           np.array([X, 0.985 * w0, zb - 0.045]), np.array([X, -0.985 * w0, zb - 0.045]), "trim")
     m.quad(np.array([X, -0.985 * w0, zb - 0.019]), np.array([X, 0.985 * w0, zb - 0.019]),
            np.array([X, 0.985 * w0, zb + 0.019]), np.array([X, -0.985 * w0, zb + 0.019]), "light")
     m.quad(np.array([X - 0.001, -0.95 * w0, zb - 0.004]), np.array([X - 0.001, 0.95 * w0, zb - 0.004]),
@@ -262,8 +275,8 @@ def finish(m):
                np.array([0.12, s * 0.996 * half_width(0.12), zb + 0.013]), np.array([X, s * 0.985 * w0, zb + 0.013]), "light")
         m.quad(np.array([0.2, s * 1.0 * half_width(0.2), 0.52]), np.array([0.3, s * 1.0 * half_width(0.3), 0.52]),
                np.array([0.3, s * 1.0 * half_width(0.3), 0.55]), np.array([0.2, s * 1.0 * half_width(0.2), 0.55]), "light")
-    m.quad(np.array([X - 0.002, -0.17, 0.47]), np.array([X - 0.002, 0.17, 0.47]),
-           np.array([X - 0.002, 0.17, 0.58]), np.array([X - 0.002, -0.17, 0.58]), "plate")
+    m.quad(np.array([X - 0.002, -0.17, 0.5]), np.array([X - 0.002, 0.17, 0.5]),
+           np.array([X - 0.002, 0.17, 0.61]), np.array([X - 0.002, -0.17, 0.61]), "plate")
     for py in (-0.39, -0.13, 0.13, 0.39):           # four round pipes
         ring_o, ring_i = [], []
         for k in range(20):
@@ -273,7 +286,10 @@ def finish(m):
         for k in range(20):
             m.quad(ring_o[k], ring_o[(k + 1) % 20], ring_i[(k + 1) % 20], ring_i[k], "pipe")
         m.fan(ring_i, "hole")
-    pl = [np.array([X - 0.004, y, z]) for y, z in ((-0.17, 0.47), (0.17, 0.47), (0.17, 0.58), (-0.17, 0.58))]
+    pl = [np.array([X - 0.004, y, z]) for y, z in ((-0.17, 0.5), (0.17, 0.5), (0.17, 0.61), (-0.17, 0.61))]
+    # Diffuser box: a cyan-edged frame round the pipes, as in the rear photo.
+    box = [np.array([X - 0.004, y, z]) for y, z in ((-0.5, 0.15), (0.5, 0.15), (0.5, 0.36), (-0.5, 0.36))]
+    m.line(box + [box[0]], NEON_PURPLE, 0.8)
     m.line(pl + [pl[0]], NEON_CYAN, 0.9)
     for fy in (-0.72, -0.6, 0.6, 0.72):             # diffuser fins
         m.quad(np.array([X - 0.004, fy - 0.012, 0.14]), np.array([X - 0.004, fy + 0.012, 0.14]),
@@ -328,13 +344,13 @@ def hexrgb(h):
     return np.array([int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)])
 
 
-NEON_PINK, NEON_CYAN = "#ff4fc8", "#36f9f6"
-BASE = {"body": hexrgb("#1d0a33"), "trim": hexrgb("#0a0712"), "glass": hexrgb("#07040f"),
+NEON_PINK, NEON_CYAN, NEON_PURPLE = "#ff4fc8", "#36f9f6", "#b01fff"
+BASE = {"body": hexrgb("#1d0a33"), "trim": hexrgb("#0a0712"), "glass": hexrgb("#120b08"),
         "tyre": hexrgb("#0b0a0f"), "rim": hexrgb("#14101e"), "spoke": hexrgb("#8c7fb2"),
         "plate": hexrgb("#2c2142"), "pipe": hexrgb("#ffb35c"), "hole": hexrgb("#08060c"),
-        "fin": hexrgb("#221d2c"), "light": hexrgb("#ff2a4a"), "core": hexrgb("#ffd6de")}
-EMISSIVE = {"light", "pipe", "core"}
-REFLECT = {"body": 0.4, "trim": 0.1, "glass": 0.32, "tyre": 0.04, "rim": 0.1, "spoke": 0.35,
+        "fin": hexrgb("#221d2c"), "light": hexrgb("#ff2a4a"), "core": hexrgb("#ffd6de"), "head": hexrgb("#e8fdff")}
+EMISSIVE = {"light", "pipe", "core", "head"}
+REFLECT = {"body": 0.4, "trim": 0.1, "glass": 0.1, "tyre": 0.04, "rim": 0.1, "spoke": 0.35,
            "plate": 0.1, "fin": 0.1, "hole": 0.0}
 SKY_TOP, SKY_MID, CITY, GRID = hexrgb("#5a24c8"), hexrgb("#f92aad"), hexrgb("#b01fff"), hexrgb("#36f9f6")
 KEY = np.array([-0.45, 0.45, 0.77]) / np.linalg.norm([-0.45, 0.45, 0.77])
@@ -360,7 +376,7 @@ def shade(mat, n, view):
     h = KEY + view
     h = h / np.linalg.norm(h)
     sp = max(0.0, float(n @ h))
-    shine = {"body": (0.5, 45), "glass": (0.6, 80), "spoke": (0.4, 40)}.get(mat)
+    shine = {"body": (0.5, 45), "glass": (0.28, 30), "spoke": (0.4, 40)}.get(mat)
     if shine:
         col = col + shine[0] * sp ** shine[1]
     return np.clip(col, 0, 1), 0.0
@@ -398,7 +414,7 @@ def render(mesh, project, view, px_per_unit, pad=10, ss=3, bloom=True, depth_tol
             if n @ (cen - np.array([cen[0], 0.0, 0.5])) < 0:   # point it outwards
                 n = -n
             back = n @ view < 0
-            if mat in ("light", "core", "plate", "pipe", "hole", "fin") and back:
+            if mat in ("light", "core", "head", "plate", "pipe", "hole", "fin") and back:
                 n, back = -n, False
         col, emit = shade(mat, n, view)
         cols = None
@@ -424,7 +440,7 @@ def render(mesh, project, view, px_per_unit, pad=10, ss=3, bloom=True, depth_tol
         if not inside.any():
             continue
         depth = w0 * z[0] + w1 * z[1] + w2 * z[2]
-        if mat in ("light", "core", "plate", "pipe", "hole", "fin", "spoke"):
+        if mat in ("light", "core", "head", "plate", "pipe", "hole", "fin", "spoke"):
             depth = depth - 1e-3                      # decals win against their panel
         zb = zbuf[y0:y1, x0:x1]
         win = inside & (depth < zb)
