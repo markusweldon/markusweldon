@@ -12,7 +12,7 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 👨‍💻 About
+### About
 
 <div align="left">
 
@@ -31,9 +31,9 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 🛠️ Featured Work
+### Featured Work
 
-**🛡️ Security tooling for the agentic-AI era**
+**Security tooling for the agentic-AI era**
 
 <a href="https://github.com/markusweldon/cverdict"><img src="images/card-cverdict.svg" width="400" alt="CVErdict: CVE Verdict - cuts through the noise of the CVE program surge to show which new vulnerabilities need attention and why."></a>
 <a href="https://github.com/markusweldon/openfix"><img src="images/card-openfix.svg" width="400" alt="OpenFix: turns scanner findings into verified fixes with any model. Each patch is proven by a rescan, your tests and a regression test, then lands as a draft PR."></a>
@@ -51,7 +51,16 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### ⚡ Activity
+### Stats
+
+<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg?v=11" width="100%">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
+  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
+</picture>
+
+### Activity
 
 <img alt="Recent GitHub contribution activity" src="https://raw.githubusercontent.com/markusweldon/markusweldon/activity/activity-graph.svg?v=2" width="100%">
 
@@ -60,7 +69,7 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 🔥 Streaks
+### Streaks
 
 <img alt="GitHub contribution streak stats" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/streak-stats.svg?v=2" width="100%">
 
@@ -69,16 +78,7 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 📊 Stats
-
-<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg?v=10" width="100%">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
-  <img src="images/synthwave-divider-light.svg" width="100%" alt="">
-</picture>
-
-### 🎯 Focus Areas
+### Focus Areas
 
 <picture><source media="(max-width: 640px)" srcset="images/focus-agentic-ai-security-wide.svg"><img src="images/focus-agentic-ai-security.svg" alt="Agentic AI Security: security for AI agents, MCP servers and AI-native apps, from runtime orchestration to evaluation loops."></picture>
 <picture><source media="(max-width: 640px)" srcset="images/focus-secure-ai-development-wide.svg"><img src="images/focus-secure-ai-development.svg" alt="Securing AI-Driven Development: secure-at-inception guardrails in AI coding assistants, IDEs and CI/CD, so AI-written code ships secure."></picture>
@@ -89,7 +89,7 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 🧰 Stack
+### Stack
 
 <img src="images/stack-ai-security.svg" width="400" alt="AI and Security: Claude Code, MCP, Snyk, OWASP">
 <img src="images/stack-languages.svg" width="400" alt="Languages: Python, TypeScript, JavaScript">
@@ -102,7 +102,7 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### 💻 Workspace
+### Workspace
 
 <img src="images/workspace-vscode.png" width="49%" alt="VS Code with SynthWave '84 syntax colours in the markusweldon.com palette, open on routes/index.js from Snyk's nodejs-goof demo app with Snyk findings underlined"> <img src="images/workspace-warp.png" width="49%" alt="Warp terminal running neofetch on an M2 Pro MacBook Pro, over a synthwave starfield, treeline and neon grid">
 
