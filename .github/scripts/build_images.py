@@ -486,11 +486,12 @@ def pine(x: float, h: float, w: float, base: float) -> str:
     return " ".join(f"{fmt(px)},{fmt(py)}" for px, py in pts)
 
 
-def silicon_fir(x: float, h: float, w: float, base: float) -> tuple[str, str]:
+def silicon_fir(x: float, h: float, w: float, base: float) -> tuple[str, str, list]:
     """A "Silicon Forest" fir drawn as a circuit board: a trunk trace with
     stacked boughs that leave it and droop down and out at 45 degrees, like a
     fir's branches, then run flat for a short stub to a solder pad. The pads
-    trace the fir's triangle; a pad caps the top. Returns (traces, pads)."""
+    trace the fir's triangle; a pad caps the top. Returns (traces, pads,
+    boughs), boughs being (y where it leaves the trunk, its path from there)."""
     rng = random.Random(round(x * 7.3 + h))
     trunk = h * 0.1
     crown = h - trunk
@@ -498,6 +499,7 @@ def silicon_fir(x: float, h: float, w: float, base: float) -> tuple[str, str]:
     tiers = max(3, min(8, int(h // 7)))
     traces = [f"M{fmt(x)},{fmt(base)} V{fmt(top + 1.4)}"]
     pads = [(x, top + 0.9, 1.25)]
+    boughs = []
     for i in range(tiers):
         t = (i + 1) / tiers
         tip_y = top + crown * t                     # bough tips sit on the fir's outline
@@ -508,9 +510,12 @@ def silicon_fir(x: float, h: float, w: float, base: float) -> tuple[str, str]:
             stub = min(2.2, r * 0.25)
             x1 = x + side * (r - stub)
             # Leaves the trunk higher up, droops at 45 degrees, then a flat stub.
-            traces.append(f"M{fmt(x)},{fmt(tip_y - (r - stub))} L{fmt(x1)},{fmt(tip_y)} H{fmt(x + side * r)}")
+            bough = f"L{fmt(x1)},{fmt(tip_y)} H{fmt(x + side * r)}"
+            traces.append(f"M{fmt(x)},{fmt(tip_y - (r - stub))} {bough}")
+            boughs.append((tip_y - (r - stub), bough))
             pads.append((x + side * r, tip_y, 0.85))
-    return " ".join(traces), "".join(f'<circle cx="{fmt(px)}" cy="{fmt(py)}" r="{r}"/>' for px, py, r in pads)
+    return (" ".join(traces), "".join(f'<circle cx="{fmt(px)}" cy="{fmt(py)}" r="{r}"/>' for px, py, r in pads),
+            boughs)
 
 
 def treeline(avoid=(), clear=None) -> str:
@@ -532,7 +537,7 @@ def treeline(avoid=(), clear=None) -> str:
     def layer(trees, colour, width, opacity, glow):
         paths, pads, firs = [], [], []
         for x, h, w in trees:
-            p, d = silicon_fir(x, h, w, HORIZON)
+            p, d, _ = silicon_fir(x, h, w, HORIZON)
             paths.append(p)
             pads.append(d)
             firs.append(f'<polygon points="{pine(x, h, w * 1.05, HORIZON)}"/>')
@@ -542,12 +547,51 @@ def treeline(avoid=(), clear=None) -> str:
                 f'<path d="{d}" fill="none" stroke="{colour}" stroke-width="{width * 2.6}" stroke-opacity="0.35" '
                 f'stroke-linecap="round" stroke-linejoin="round" filter="url(#{glow})"/>'
                 f'<path d="{d}" fill="none" stroke="{colour}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round"/>'
-                f'<g fill="{BG}" stroke="{colour}" stroke-width="{width * 0.9}">{"".join(pads)}</g></g>')
+                f'<g fill="{BG}" stroke="{PINK}" stroke-width="{width * 0.9}">{"".join(pads)}</g></g>')
 
     back = list(keep(tree_layer(30, 13, 56, 24)))
     front = list(keep(tree_layer(22, 29, 74, 30)))
-    return (layer(back, PURPLE, 0.8, 0.55, "treeGlow") + "\n"
-            + layer(front, CYAN, 1.0, 0.9, "treeGlow"))
+    out = [layer(back, PURPLE, 0.8, 0.55, "treeGlow"), layer(front, CYAN, 1.0, 0.9, "treeGlow")]
+
+    # A ground bus wiring the front row together, one run each side of the city.
+    bus_y = HORIZON - 2.5
+    groups = [[x for x, _, _ in front if not clear or x < clear[0]],
+              [x for x, _, _ in front if clear and x > clear[1]]]
+    bus = []
+    for xs in groups:
+        if len(xs) > 1:
+            bus.append(f'<line x1="{fmt(min(xs) - 6)}" y1="{fmt(bus_y)}" x2="{fmt(max(xs) + 6)}" y2="{fmt(bus_y)}"/>')
+            bus += [f'<circle cx="{fmt(x)}" cy="{fmt(bus_y)}" r="0.9" fill="{CYAN}"/>' for x in xs]
+    out.append(f'<g stroke="{CYAN}" stroke-width="0.7" stroke-opacity="0.55">{"".join(bus)}</g>')
+
+    # Signals: short bright dashes that run up a trunk and out along a bough.
+    rng = random.Random(42)
+    sig = []
+    for i, (x, h, w) in enumerate(front):
+        if h < 18 or rng.random() < 0.35:
+            continue
+        _, _, boughs = silicon_fir(x, h, w, HORIZON)
+        y0, bough = rng.choice(boughs[len(boughs) // 2:])
+        dur = rng.uniform(5.5, 9.0)
+        sig.append(f'<path class="sig" d="M{fmt(x)},{fmt(bus_y)} V{fmt(y0)} {bough}" pathLength="100" '
+                   f'style="animation-duration:{dur:.1f}s;animation-delay:-{rng.uniform(0, dur):.1f}s"/>')
+    out.append(f'<g fill="none" stroke="#e9fdff" stroke-width="2" stroke-linecap="round" '
+               f'filter="url(#starGlow)">{"".join(sig)}</g>')
+
+    # One small chip at the foot of a tree: a nod to the Silicon Forest's fabs.
+    pick = [t for t in front if t[1] > 30 and (not clear or t[0] < clear[0] - 40)]
+    if pick:
+        x, _, _ = pick[len(pick) // 2]
+        cx, cy, cw, ch = x - 14, HORIZON - 7, 10, 6
+        pins = "".join(f'<line x1="{fmt(cx + 1.6 + i * 2.2)}" y1="{fmt(cy - 1.4)}" x2="{fmt(cx + 1.6 + i * 2.2)}" '
+                       f'y2="{fmt(cy)}"/><line x1="{fmt(cx + 1.6 + i * 2.2)}" y1="{fmt(cy + ch)}" '
+                       f'x2="{fmt(cx + 1.6 + i * 2.2)}" y2="{fmt(cy + ch + 1.4)}"/>' for i in range(4))
+        out.append(f'<g stroke="{CYAN}" stroke-width="0.6">{pins}</g>'
+                   f'<rect x="{fmt(cx)}" y="{fmt(cy)}" width="{cw}" height="{ch}" rx="0.8" fill="#0a0414" '
+                   f'stroke="{CYAN}" stroke-width="0.7"/>'
+                   f'<circle cx="{fmt(cx + 1.8)}" cy="{fmt(cy + 1.6)}" r="0.7" fill="{PINK}"/>'
+                   f'<path d="M{fmt(cx + cw)},{fmt(cy + ch / 2)} H{fmt(x)}" stroke="{CYAN}" stroke-width="0.6" fill="none"/>')
+    return "\n".join(out)
 
 
 HEADER_CAR = True  # a modern electric roadster driving into the grid, seen from behind
@@ -759,11 +803,13 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 {grid_css}
 {CAR_CSS if HEADER_CAR else ""}
 .hs{{display:none}}
+@keyframes sig{{0%{{stroke-dashoffset:14}}22%{{stroke-dashoffset:-106}}100%{{stroke-dashoffset:-106}}}}
+.sig{{stroke-dasharray:8 200;stroke-dashoffset:14;animation:sig 7s linear infinite}}
 @keyframes winblink{{0%,100%{{opacity:.8}}50%{{opacity:.1}}}}
 .wb{{animation:winblink 7s ease-in-out infinite}}
 @keyframes beacon{{0%,100%{{opacity:1}}50%{{opacity:.25}}}}
 .beacon{{animation:beacon 2.4s ease-in-out infinite}}
-@media (prefers-reduced-motion: reduce){{.star,.horizon,.h,.wb,.beacon,.carwrap,.car{{animation:none}}.h{{display:none}}.hs{{display:inline}}}}
+@media (prefers-reduced-motion: reduce){{.star,.horizon,.h,.wb,.beacon,.carwrap,.car,.sig{{animation:none}}.h{{display:none}}.hs{{display:inline}}}}
 </style>
 <defs>
   <clipPath id="panel"><rect width="{HW}" height="{HH}" rx="16"/></clipPath>
