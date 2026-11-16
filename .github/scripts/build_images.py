@@ -1114,7 +1114,7 @@ FOCUS = [
      "Partnering with CISOs and platform leaders on AI security programs, from "
      "asset visibility to agentic defense."),
 ]
-FW, FPAD = 270, 22
+FW, FPAD = 270 - 2 * CARD_GAP, 22  # with its margin, each card still takes 270px
 
 
 def focus_cards(f: Fonts, wide: bool = False) -> dict[str, str]:
@@ -1154,7 +1154,7 @@ def focus_cards(f: Fonts, wide: bool = False) -> dict[str, str]:
             d, _ = f.sans.path(line, 13.5, pad, desc_y + i * 21)
             out.append(f'<path d="{d}" fill="{TEXT_2}"/>')
         name = f"focus-{slug}-wide.svg" if wide else f"focus-{slug}.svg"
-        cards[name] = svg(w, h, "\n".join(out), title)
+        cards[name] = svg(w, h, "\n".join(out), title, margin=CARD_GAP)
     return cards
 
 
