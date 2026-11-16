@@ -475,6 +475,50 @@ def treeline() -> str:
     return f'<g fill="#16002a" opacity="0.85">{back}</g>\n<g fill="#08000f">{front}</g>'
 
 
+HEADER_CAR = False  # an 80s wedge supercar driving into the grid, seen from behind
+
+
+def car(cx: float, ground: float, k: float = 1.0) -> str:
+    """A generic 80s wedge supercar from behind: low body, rear wing on
+    struts, a full-width glowing tail-light bar and fat tyres, with a pink
+    glow on the grid under it. It drifts between lanes while the grid rolls
+    past, so it reads as driving towards the skyline."""
+    def poly(pts):
+        return " ".join(f"{fmt(x * k)},{fmt(y * k)}" for x, y in pts)
+    body = poly([(-44, -6), (-42, -17), (-34, -21), (34, -21), (42, -17), (44, -6), (40, 0), (-40, 0)])
+    deck = poly([(-34, -21), (-24, -27), (24, -27), (34, -21)])
+    cabin = poly([(-17, -27), (-11, -36), (11, -36), (17, -27)])
+    glass = poly([(-13.5, -28.5), (-9.5, -34.5), (9.5, -34.5), (13.5, -28.5)])
+    segs = "".join(f'<rect x="{fmt(x * k)}" y="{fmt(-16 * k)}" width="{fmt(0.8 * k)}" height="{fmt(5 * k)}" fill="#12041f" opacity="0.7"/>'
+                   for x in (-32, -24, -16, 16, 24, 32))
+    return f"""<g transform="translate({fmt(cx)} {fmt(ground)})">
+<ellipse cx="0" cy="{fmt(2 * k)}" rx="{fmt(70 * k)}" ry="{fmt(9 * k)}" fill="{PINK}" fill-opacity="0.35" filter="url(#carGlow)"/>
+<g class="car">
+<rect x="{fmt(-46 * k)}" y="{fmt(-9 * k)}" width="{fmt(15 * k)}" height="{fmt(11 * k)}" rx="{fmt(2 * k)}" fill="#06000c"/>
+<rect x="{fmt(31 * k)}" y="{fmt(-9 * k)}" width="{fmt(15 * k)}" height="{fmt(11 * k)}" rx="{fmt(2 * k)}" fill="#06000c"/>
+<polygon points="{body}" fill="url(#carBody)" stroke="{PINK}" stroke-width="{fmt(1.1 * k)}" stroke-linejoin="round"/>
+<polygon points="{deck}" fill="#1d0838" stroke="{PINK}" stroke-opacity="0.7" stroke-width="{fmt(0.9 * k)}" stroke-linejoin="round"/>
+<polygon points="{cabin}" fill="#0d0015" stroke="{CYAN}" stroke-width="{fmt(1 * k)}" stroke-linejoin="round"/>
+<polygon points="{glass}" fill="url(#carGlass)"/>
+<rect x="{fmt(-40 * k)}" y="{fmt(-16.5 * k)}" width="{fmt(80 * k)}" height="{fmt(6 * k)}" rx="{fmt(1.2 * k)}" fill="#ff2e6e" filter="url(#tailGlow)"/>
+<rect x="{fmt(-40 * k)}" y="{fmt(-16.5 * k)}" width="{fmt(31 * k)}" height="{fmt(6 * k)}" rx="{fmt(1.2 * k)}" fill="url(#tailLight)"/>
+<rect x="{fmt(9 * k)}" y="{fmt(-16.5 * k)}" width="{fmt(31 * k)}" height="{fmt(6 * k)}" rx="{fmt(1.2 * k)}" fill="url(#tailLight)"/>
+<rect x="{fmt(-8 * k)}" y="{fmt(-16 * k)}" width="{fmt(16 * k)}" height="{fmt(5 * k)}" rx="{fmt(0.8 * k)}" fill="#0d0015" stroke="{CYAN}" stroke-opacity="0.7" stroke-width="{fmt(0.6 * k)}"/>
+{segs}
+<rect x="{fmt(-30 * k)}" y="{fmt(-6 * k)}" width="{fmt(60 * k)}" height="{fmt(2.4 * k)}" fill="#08000f" stroke="{PURPLE}" stroke-opacity="0.6" stroke-width="{fmt(0.6 * k)}"/>
+<rect x="{fmt(-27 * k)}" y="{fmt(-35 * k)}" width="{fmt(1.8 * k)}" height="{fmt(9.5 * k)}" fill="{PINK}" fill-opacity="0.8"/>
+<rect x="{fmt(25.2 * k)}" y="{fmt(-35 * k)}" width="{fmt(1.8 * k)}" height="{fmt(9.5 * k)}" fill="{PINK}" fill-opacity="0.8"/>
+<rect x="{fmt(-38 * k)}" y="{fmt(-38 * k)}" width="{fmt(76 * k)}" height="{fmt(3.4 * k)}" rx="{fmt(1 * k)}" fill="#1d0838" stroke="{PINK}" stroke-width="{fmt(1 * k)}"/>
+</g>
+</g>"""
+
+
+CAR_CSS = ("@keyframes drift{0%,100%{transform:translateX(-26px)}50%{transform:translateX(26px)}}"
+           ".carwrap{animation:drift 9s ease-in-out infinite}"
+           "@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-0.8px)}}"
+           ".car{animation:bob .35s ease-in-out infinite}")
+
+
 def grid() -> tuple[str, str]:
     """Cyan perspective floor; horizontal lines roll toward the viewer."""
     parts = []
@@ -657,12 +701,13 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 @keyframes pulse{{0%,100%{{opacity:.55}}50%{{opacity:1}}}}
 .horizon{{animation:pulse 5s ease-in-out infinite}}
 {grid_css}
+{CAR_CSS if HEADER_CAR else ""}
 .hs{{display:none}}
 @keyframes winblink{{0%,100%{{opacity:.8}}50%{{opacity:.1}}}}
 .wb{{animation:winblink 7s ease-in-out infinite}}
 @keyframes beacon{{0%,100%{{opacity:1}}50%{{opacity:.25}}}}
 .beacon{{animation:beacon 2.4s ease-in-out infinite}}
-@media (prefers-reduced-motion: reduce){{.star,.horizon,.h,.wb,.beacon{{animation:none}}.h{{display:none}}.hs{{display:inline}}}}
+@media (prefers-reduced-motion: reduce){{.star,.horizon,.h,.wb,.beacon,.carwrap,.car{{animation:none}}.h{{display:none}}.hs{{display:inline}}}}
 </style>
 <defs>
   <clipPath id="panel"><rect width="{HW}" height="{HH}" rx="16"/></clipPath>
@@ -691,6 +736,15 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
     <stop offset="0" stop-color="{PINK}"/><stop offset="0.5" stop-color="{PURPLE}"/><stop offset="1" stop-color="{CYAN}"/>
   </linearGradient>
   <filter id="blur28" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
+  <linearGradient id="carBody" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0d0015"/></linearGradient>
+  <linearGradient id="carGlass" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="{CYAN}" stop-opacity="0.45"/><stop offset="0.5" stop-color="{VIOLET}" stop-opacity="0.25"/>
+    <stop offset="1" stop-color="{PINK}" stop-opacity="0.35"/></linearGradient>
+  <linearGradient id="tailLight" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#ff2e6e"/><stop offset="0.5" stop-color="#ff7ab0"/><stop offset="1" stop-color="#ff2e6e"/></linearGradient>
+  <filter id="tailGlow" x="-20%" y="-300%" width="140%" height="700%"><feGaussianBlur stdDeviation="3.5"/></filter>
+  <filter id="carGlow" x="-30%" y="-200%" width="160%" height="500%"><feGaussianBlur stdDeviation="7"/></filter>
   <linearGradient id="citySil" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0a0012"/></linearGradient>
   <linearGradient id="hoodFill" x1="0" y1="0" x2="0" y2="1">
@@ -722,6 +776,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)"/>
 </g>
+{f'<g class="carwrap">{car(HW / 2, HH - 10, 1.1 if phone else 1.4)}</g>' if HEADER_CAR else ""}
 {words}
 </g>
 <rect x="0.5" y="0.5" width="{HW - 1}" height="{HH - 1}" rx="15.5" fill="none" stroke="url(#border)" stroke-opacity="0.45"/>"""

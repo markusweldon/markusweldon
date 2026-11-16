@@ -71,7 +71,7 @@
 
 ### 📊 Stats
 
-<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg?v=5" width="100%">
+<img alt="Most-used languages and a synthwave isometric contribution calendar" src="https://raw.githubusercontent.com/markusweldon/markusweldon/metrics/github-metrics.svg?v=6" width="100%">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
