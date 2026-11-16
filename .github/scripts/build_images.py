@@ -708,14 +708,14 @@ def car(cx: float, ground: float, width: float) -> str:
     the Stats card's calendar uses), embedded as a PNG so it shows inside
     GitHub's image proxy. A pink glow sits on the grid under it."""
     import base64
-    png = IMAGES / "roadster-rear.png"
+    png = IMAGES / "roadster-rear.webp"
     data = base64.b64encode(png.read_bytes()).decode()
     from PIL import Image as _Image
     with _Image.open(png) as im:
         h = width * im.height / im.width
     return f"""<g transform="translate({fmt(cx)} {fmt(ground)})">
 <ellipse cx="0" cy="-2" rx="{fmt(width * 0.62)}" ry="{fmt(width * 0.07)}" fill="{PINK}" fill-opacity="0.4" filter="url(#carGlow)"/>
-<g class="car"><image href="data:image/png;base64,{data}" x="{fmt(-width / 2)}" y="{fmt(-h)}" width="{fmt(width)}" height="{fmt(h)}"/></g>
+<g class="car"><image href="data:image/webp;base64,{data}" x="{fmt(-width / 2)}" y="{fmt(-h)}" width="{fmt(width)}" height="{fmt(h)}"/></g>
 </g>"""
 
 
