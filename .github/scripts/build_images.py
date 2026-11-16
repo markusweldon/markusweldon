@@ -513,6 +513,40 @@ def portland(x0: float, scale: float) -> str:
     return "\n".join(parts)
 
 
+HEADER_BRIDGE = False  # the Fremont Bridge in front of downtown; preview only
+
+
+def fremont(x0: float, scale: float) -> str:
+    """The Fremont Bridge in neon: a long, shallow tied steel arch over a
+    flat deck, with vertical hangers, on two piers, spanning the front of
+    the west side of downtown."""
+    a, b = x0 - 8 * scale, x0 + 196 * scale           # arch ends
+    deck = HORIZON - 15 * scale
+    rise = 30 * scale
+    n = 36
+    def arch(t, lift=0.0):
+        x = a + (b - a) * t
+        return x, deck - (rise + lift) * 4 * t * (1 - t)
+    top = [arch(i / n, 3.2) for i in range(n + 1)]     # the arch's upper and lower chords
+    low = [arch(i / n) for i in range(n + 1)]
+    def pl(pts):
+        return " ".join(f"{fmt(x)},{fmt(y)}" for x, y in pts)
+    hangers = " ".join(f"M{fmt(x)},{fmt(y)} V{fmt(deck)}" for x, y in low[2:-2:2])
+    braces = " ".join(f"M{fmt(top[i][0])},{fmt(top[i][1])} L{fmt(low[i + 1][0])},{fmt(low[i + 1][1])}" for i in range(0, n, 2))
+    approach = 34 * scale
+    return (f'<g>'
+            f'<rect x="{fmt(a - approach)}" y="{fmt(deck)}" width="{fmt(b - a + 2 * approach)}" height="{fmt(2.4 * scale)}" fill="#0d0015"/>'
+            f'<path d="M{fmt(a)},{fmt(deck)} V{HORIZON} M{fmt(b)},{fmt(deck)} V{HORIZON}" stroke="#2a0f4d" stroke-width="{fmt(4 * scale)}"/>'
+            f'<path d="{hangers}" stroke="{PINK}" stroke-opacity="0.85" stroke-width="{fmt(0.9 * scale)}" fill="none"/>'
+            f'<path d="{braces}" stroke="{CYAN}" stroke-opacity="0.6" stroke-width="{fmt(0.7 * scale)}" fill="none"/>'
+            f'<polyline points="{pl(top)}" fill="none" stroke="{CYAN}" stroke-width="{fmt(3 * scale)}" stroke-opacity="0.45" filter="url(#lineGlow)"/>'
+            f'<polyline points="{pl(top)}" fill="none" stroke="{CYAN}" stroke-width="{fmt(1.1 * scale)}"/>'
+            f'<polyline points="{pl(low)}" fill="none" stroke="{CYAN}" stroke-width="{fmt(0.8 * scale)}" stroke-opacity="0.8"/>'
+            f'<line x1="{fmt(a - approach)}" y1="{fmt(deck)}" x2="{fmt(b + approach)}" y2="{fmt(deck)}" stroke="{PINK}" '
+            f'stroke-width="{fmt(1.8 * scale)}" filter="url(#starGlow)"/>'
+            f'</g>')
+
+
 def tree_layer(count: int, seed: int, max_h: float, min_h: float):
     """Hero.tsx treeLayer(): pines thin out toward the centre."""
     for i in range(count):
@@ -954,6 +988,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 </g>
 <rect y="{HORIZON}" width="{HW}" height="{HH - HORIZON}" fill="url(#floorFade)"/>
 {(portland(*city) if HEADER_SKYLINE else "")}
+{(fremont(*city) if HEADER_SKYLINE and HEADER_BRIDGE else "")}
 {treeline(avoid, scene_x)}
 <g class="horizon">
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
