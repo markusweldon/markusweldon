@@ -162,74 +162,87 @@ def tower(col, h, peak, seed, windows):
 
 
 def iso_car(corner, cols, rows) -> tuple[str, str]:
-    """A small roadster in the calendar's isometric projection, driving along
-    a road just in front of the city (towards the newest weeks), with cyan
-    headlight beams on the floor and a pink light trail. Returns (svg, css)."""
-    road = rows + 2.3            # day-axis position of the road, in front of the city
-    L, W = 3.4, 1.7              # car length (along weeks) and width (along days)
+    """The header's roadster in the calendar's isometric projection, driving
+    along a road in front of the city towards the oldest weeks, so its rear
+    faces the viewer: faceted haunches, a dark glass panel between two
+    vents, the full-width red light bar, a plain plate and a diffuser, with
+    cyan headlight beams ahead and pink tail-light streaks behind.
+    Returns (svg, css)."""
+    road = rows + 1.9            # day-axis position of the road, in front of the city
+    L, W = 2.5, 1.3              # length (along weeks) and width (along days)
+    a0, a1 = 0.0, L              # a0 is the nose (driving towards smaller a)
+    b0, b1 = road - W / 2, road + W / 2
+    hn, hr, hc = 0.22, 0.5, 0.82  # nose height, rear deck height, canopy top
 
     def p(a, b, z=0.0):
         x, y = corner(a, b)
         return x, y - z
 
     def poly(pts, **attrs):
-        a = " ".join(f'{k.replace("_", "-")}="{v}"' for k, v in attrs.items())
-        return f'<polygon points="{" ".join(f"{fmt(x)},{fmt(y)}" for x, y in pts)}" {a}/>'
+        at = " ".join(f'{k.replace("_", "-")}="{v}"' for k, v in attrs.items())
+        return f'<polygon points="{" ".join(f"{fmt(x)},{fmt(y)}" for x, y in pts)}" {at}/>'
 
-    a0, b0, b1 = 0.0, road - W / 2, road + W / 2
-    a1 = a0 + L
-    h1, h2 = 0.62, 1.15          # body top, cabin top
-    parts = []
-    # Floor: headlight beams ahead, pink trail behind, shadow under.
-    parts.append(poly([p(a1, b0 + 0.3), p(a1 + 3.2, b0 - 0.35), p(a1 + 3.2, b1 + 0.35), p(a1, b1 - 0.3)],
-                      fill="url(#mws-beam)"))
-    for bb in (b0 + 0.25, b1 - 0.25):  # tail-light streaks
-        q0, q1 = p(a0, bb, 0.4), p(a0 - 7, bb, 0.15)
-        parts.append(f'<line x1="{fmt(q0[0])}" y1="{fmt(q0[1])}" x2="{fmt(q1[0])}" y2="{fmt(q1[1])}" '
-                     f'stroke="url(#mws-trail)" stroke-width="0.16" stroke-linecap="round"/>')
-    parts.append(poly([p(a0 - 0.1, b0 - 0.1), p(a1 + 0.1, b0 - 0.1), p(a1 + 0.1, b1 + 0.1), p(a0 - 0.1, b1 + 0.1)],
-                      fill="#000", fill_opacity="0.45"))
-    # Body: the two visible sides (+days side, front) and the top.
-    side = [p(a0, b1), p(a1, b1), p(a1, b1, h1), p(a0 + 0.15, b1, h1)]
-    front = [p(a1, b0), p(a1, b1), p(a1, b1, h1), p(a1, b0, h1 * 0.9)]
-    top = [p(a0 + 0.15, b0, h1), p(a1, b0, h1 * 0.9), p(a1, b1, h1), p(a0 + 0.15, b1, h1)]
-    parts.append(poly(side, fill="url(#mws-carside)", stroke="#b98cff", stroke_width="0.05", stroke_linejoin="round"))
-    parts.append(poly(front, fill="#1a0630", stroke="#b98cff", stroke_width="0.05", stroke_linejoin="round"))
-    parts.append(poly(top, fill="#3b1463", stroke="#b98cff", stroke_width="0.05", stroke_linejoin="round"))
-    # Cabin: a low glass canopy set back from the nose.
-    c0, c1, cb0, cb1 = a0 + 0.8, a0 + 2.3, b0 + 0.25, b1 - 0.25
-    canopy_top = [p(c0 + 0.25, cb0 + 0.12, h2), p(c1 - 0.2, cb0 + 0.12, h2), p(c1 - 0.2, cb1 - 0.12, h2), p(c0 + 0.25, cb1 - 0.12, h2)]
-    canopy_side = [p(c0, cb1, h1), p(c1, cb1, h1), p(c1 - 0.2, cb1 - 0.12, h2), p(c0 + 0.25, cb1 - 0.12, h2)]
-    canopy_front = [p(c1, cb0, h1), p(c1, cb1, h1), p(c1 - 0.2, cb1 - 0.12, h2), p(c1 - 0.2, cb0 + 0.12, h2)]
-    parts.append(poly(canopy_side, fill="url(#mws-glass)", stroke="#36f9f6", stroke_width="0.05"))
-    parts.append(poly(canopy_front, fill="url(#mws-glass)", stroke="#36f9f6", stroke_width="0.05"))
-    parts.append(poly(canopy_top, fill="#0d0015", stroke="#36f9f6", stroke_width="0.05"))
-    # Lights: headlights on the nose, the full-width tail bar on the rear edge.
-    for bb in (b0 + 0.2, b1 - 0.2):
-        hx, hy = p(a1, bb, h1 * 0.55)
-        parts.append(f'<circle cx="{fmt(hx)}" cy="{fmt(hy)}" r="0.17" fill="#e9fdff" filter="url(#mws-peak)"/>')
-    t0, t1 = p(a0 + 0.02, b0 + 0.05, h1 * 0.75), p(a0 + 0.02, b1 - 0.05, h1 * 0.75)
-    parts.append(f'<line x1="{fmt(t0[0])}" y1="{fmt(t0[1])}" x2="{fmt(t1[0])}" y2="{fmt(t1[1])}" stroke="#ff2e6e" '
-                 f'stroke-width="0.12" stroke-linecap="round" filter="url(#mws-peak)"/>')
+    def ln(q0, q1, col, w, op=1.0, extra=""):
+        return (f'<line x1="{fmt(q0[0])}" y1="{fmt(q0[1])}" x2="{fmt(q1[0])}" y2="{fmt(q1[1])}" stroke="{col}" '
+                f'stroke-opacity="{op}" stroke-width="{w}" stroke-linecap="round"{extra}/>')
+
+    edge = dict(stroke="#b98cff", stroke_opacity="0.8", stroke_width="0.04", stroke_linejoin="round")
+
+    def deck_z(a):  # the body rises from the nose to the rear deck
+        return hn + (hr - hn) * min(1.0, a / (L * 0.55))
+
+    parts = [
+        # Floor: beams ahead of the nose, streaks behind the tail, shadow.
+        poly([p(a0, b0 + 0.25), p(a0 - 2.6, b0 - 0.3), p(a0 - 2.6, b1 + 0.3), p(a0, b1 - 0.25)], fill="url(#mws-beam)"),
+        ln(p(a1, b0 + 0.22, 0.38), p(a1 + 4, b0 + 0.22, 0.1), "url(#mws-trail)", 0.09),
+        ln(p(a1, b1 - 0.22, 0.38), p(a1 + 4, b1 - 0.22, 0.1), "url(#mws-trail)", 0.09),
+        poly([p(a0 - 0.1, b0 - 0.08), p(a1 + 0.1, b0 - 0.08), p(a1 + 0.1, b1 + 0.08), p(a0 - 0.1, b1 + 0.08)],
+             fill="#000", fill_opacity="0.45"),
+    ]
+    # Visible side (+days): a wedge from the low nose to the high rear deck.
+    mid = L * 0.55
+    side = [p(a0, b1), p(a1, b1), p(a1, b1, hr), p(mid, b1, hr), p(a0, b1, hn)]
+    parts.append(poly(side, fill="url(#mws-carside)", **edge))
+    # Top: hood up to the deck, then the faceted rear deck.
+    hood = [p(a0, b0, hn), p(mid, b0, hr), p(mid, b1, hr), p(a0, b1, hn)]
+    deck = [p(mid, b0, hr), p(a1, b0, hr), p(a1, b1, hr), p(mid, b1, hr)]
+    parts.append(poly(hood, fill="#2d0f52", **edge))
+    parts.append(poly(deck, fill="#3b1463", **edge))
+    # Rear face (towards the viewer): dark panel, full-width light bar, plate.
+    rear = [p(a1, b0), p(a1, b1), p(a1, b1, hr), p(a1, b0, hr)]
+    parts.append(poly(rear, fill="#140528", **edge))
+    lb0, lb1 = p(a1, b0 + 0.03, hr * 0.78), p(a1, b1 - 0.03, hr * 0.78)
+    parts.append(ln(lb0, lb1, "#ff1f4f", 0.13, 1, ' filter="url(#mws-peak)"'))
+    parts.append(ln(lb0, lb1, "#ffd0dc", 0.03))
+    pl = [p(a1, road - 0.15, hr * 0.38), p(a1, road + 0.15, hr * 0.38), p(a1, road + 0.15, hr * 0.58), p(a1, road - 0.15, hr * 0.58)]
+    parts.append(poly(pl, fill="#e8dcff", fill_opacity="0.15", stroke="#36f9f6", stroke_width="0.025"))
+    parts.append(ln(p(a1, b0 + 0.15, 0.08), p(a1, b1 - 0.15, 0.08), "#b01fff", 0.03, 0.8))
+    # Glass panel: a canopy narrowing towards the rear, like the header car.
+    g0, g1 = L * 0.22, L * 0.82
+    canopy = [p(g0, b0 + 0.22, deck_z(g0) + 0.05), p(g1, b0 + 0.38, hc), p(g1, b1 - 0.38, hc),
+              p(g0, b1 - 0.22, deck_z(g0) + 0.05)]
+    canopy_side = [p(g0, b1 - 0.22, deck_z(g0) + 0.05), p(g1, b1 - 0.38, hc), p(g1, b1 - 0.38, hr), p(mid, b1 - 0.3, hr)]
+    canopy_back = [p(g1, b0 + 0.38, hc), p(g1, b1 - 0.38, hc), p(g1, b1 - 0.38, hr), p(g1, b0 + 0.38, hr)]
+    parts.append(poly(canopy_side, fill="url(#mws-glass)", stroke="#36f9f6", stroke_width="0.035"))
+    parts.append(poly(canopy_back, fill="#0d0015", stroke="#36f9f6", stroke_width="0.035"))
+    parts.append(poly(canopy, fill="url(#mws-glass)", stroke="#36f9f6", stroke_width="0.035"))
+    # Vents on the deck either side of the glass.
+    for bb in (b0 + 0.12, b1 - 0.12):
+        parts.append(ln(p(L * 0.6, bb, hr + 0.01), p(L * 0.9, bb, hr + 0.01), "#36f9f6", 0.03, 0.7))
     # Wheels on the visible side.
-    for aa in (a0 + 0.65, a1 - 0.65):
-        wx, wy = p(aa, b1, 0.17)
-        parts.append(f'<ellipse cx="{fmt(wx)}" cy="{fmt(wy)}" rx="0.34" ry="0.24" fill="#0a0414" stroke="#ff6ec7" '
-                     f'stroke-width="0.05"/>')
-    # A light line along the flank, like the header car's light bar.
-    f0, f1 = p(a0 + 0.2, b1, h1 * 0.62), p(a1 - 0.1, b1, h1 * 0.62)
-    parts.append(f'<line x1="{fmt(f0[0])}" y1="{fmt(f0[1])}" x2="{fmt(f1[0])}" y2="{fmt(f1[1])}" stroke="#36f9f6" '
-                 f'stroke-opacity="0.6" stroke-width="0.04"/>')
+    for aa in (a0 + 0.5, a1 - 0.5):
+        wx, wy = p(aa, b1, 0.13)
+        parts.append(f'<ellipse cx="{fmt(wx)}" cy="{fmt(wy)}" rx="0.25" ry="0.18" fill="#0a0414" stroke="#b98cff" '
+                     f'stroke-opacity="0.8" stroke-width="0.035"/>')
 
-    # Drive from before the first week to past the last, then loop.
-    start_a, end_a = -7.0, cols + 5.0
-    sx, sy = p(start_a, 0)[0] - p(0, 0)[0], p(start_a, 0)[1] - p(0, 0)[1]
-    ex, ey = p(end_a, 0)[0] - p(0, 0)[0], p(end_a, 0)[1] - p(0, 0)[1]
-    mx, my = p(cols * 0.62, 0)[0] - p(0, 0)[0], p(cols * 0.62, 0)[1] - p(0, 0)[1]
+    # Drive from past the newest week to before the oldest, then loop.
+    def off(a):
+        return p(a, 0)[0] - p(0, 0)[0], p(a, 0)[1] - p(0, 0)[1]
+    (sx, sy), (ex, ey), (mx, my) = off(cols + 6), off(-8), off(cols * 0.45)
     css = (f"@keyframes mws-drive{{0%{{transform:translate({fmt(sx)}px,{fmt(sy)}px);opacity:0}}"
            f"6%{{opacity:1}}88%{{opacity:1}}"
            f"100%{{transform:translate({fmt(ex)}px,{fmt(ey)}px);opacity:0}}}}"
-           f".mws-car{{animation:mws-drive 13s linear infinite}}"
+           f".mws-car{{animation:mws-drive 14s linear infinite}}"
            f"@media (prefers-reduced-motion: reduce){{.mws-car{{animation:none;transform:translate({fmt(mx)}px,{fmt(my)}px)}}}}")
     return f'<g class="mws-car">{"".join(parts)}</g>', css
 
@@ -383,9 +396,9 @@ def restyle(svg):
         body, car_css = iso_car(corner, cols, rows)
         car_svg = f"""<style>{car_css}</style>
 <defs>
-  <linearGradient id="mws-beam" gradientUnits="userSpaceOnUse" x1="{fmt(corner(0, 0)[0])}" y1="0" x2="{fmt(corner(3.4, 0)[0])}" y2="0">
+  <linearGradient id="mws-beam" gradientUnits="userSpaceOnUse" x1="{fmt(corner(0, 0)[0])}" y1="0" x2="{fmt(corner(-2.6, 0)[0])}" y2="0">
     <stop offset="0" stop-color="#8afcfa" stop-opacity="0.32"/><stop offset="1" stop-color="#36f9f6" stop-opacity="0"/></linearGradient>
-  <linearGradient id="mws-trail" gradientUnits="userSpaceOnUse" x1="{fmt(corner(0, 0)[0])}" y1="0" x2="{fmt(corner(-7, 0)[0])}" y2="0">
+  <linearGradient id="mws-trail" gradientUnits="userSpaceOnUse" x1="{fmt(corner(2.5, 0)[0])}" y1="0" x2="{fmt(corner(6.5, 0)[0])}" y2="0">
     <stop offset="0" stop-color="#ff2e6e" stop-opacity="0.95"/><stop offset="1" stop-color="#f92aad" stop-opacity="0"/></linearGradient>
   <linearGradient id="mws-carside" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#4a1d7a"/><stop offset="1" stop-color="#1a0630"/></linearGradient>
