@@ -327,6 +327,120 @@ def skyline_neon(avoid=(), tallest: float = 150, centre: float = 0.82, spread: f
     return "\n".join(parts)
 
 
+# Downtown Portland, left to right, in design units (Wells Fargo Center = 120
+# tall): (x, width, height, shape, name).
+PORTLAND = [
+    (0, 16, 26, "rect", ""), (17, 14, 38, "rect", ""), (32, 12, 52, "spire", "Union Station"),
+    (46, 18, 44, "rect", ""), (66, 22, 104, "chamfer", "Big Pink"), (90, 16, 62, "rect", ""),
+    (107, 20, 86, "pill", "1000 Broadway"), (129, 24, 96, "pyramid", "KOIN Center"),
+    (155, 18, 72, "rect", "Fox Tower"), (175, 24, 120, "crown", "Wells Fargo Center"),
+    (201, 20, 88, "chamfer", "PacWest Center"), (223, 18, 66, "rect", "Standard Insurance"),
+    (243, 16, 54, "setback", ""), (261, 20, 42, "rect", ""), (283, 16, 30, "rect", ""),
+    (301, 22, 20, "rect", ""),
+]
+HOOD = [(-1, 0), (-0.62, 0.36), (-0.4, 0.55), (-0.2, 0.8), (-0.07, 0.95), (0, 1), (0.06, 0.93),
+        (0.16, 0.84), (0.3, 0.66), (0.5, 0.45), (0.75, 0.22), (1, 0)]  # Mt Hood, unit half-width
+
+
+def portland(x0: float, scale: float, hood_x: float, hood_w: float, hood_h: float) -> str:
+    """Portland's skyline with Mt Hood behind it, in the outrun neon style:
+    dark silhouettes backlit by a pink haze, the rooftops traced in a glowing
+    pink-to-cyan line, and Hood's snowcap and outline in lavender."""
+    span = max(bx + bw for bx, bw, *_ in PORTLAND) * scale
+    width = int(HW) + 2
+    prof = [0.0] * width
+    beacons, strips = [], []
+    for bx, bw, bh, shape, name in PORTLAND:
+        X, W, H = x0 + bx * scale, bw * scale, bh * scale
+        for px in range(max(0, int(X)), min(width, int(X + W) + 1)):
+            t = min(1.0, max(0.0, (px - X) / W))
+            d = min(t, 1 - t) * W
+            hh = H
+            if shape == "chamfer":
+                hh = H - max(0.0, 0.28 * W - d)
+            elif shape == "pill":
+                r = W / 2
+                hh = H - r + math.sqrt(max(0.0, r * r - (px - X - r) ** 2))
+            elif shape == "pyramid":
+                base = H * 0.74
+                hh = base + (H - base) * max(0.0, 1 - abs(t - 0.5) / 0.42)
+            elif shape == "crown":
+                hh = H + (6 * scale if 0.4 < t < 0.6 else 0) - (5 * scale if d < 0.12 * W else 0)
+            elif shape == "setback":
+                hh = H if 0.3 < t < 0.7 else H * 0.8
+            elif shape == "spire":
+                hh = H * 0.68 + H * 0.32 * max(0.0, 1 - abs(t - 0.5) / 0.22) if abs(t - 0.5) < 0.22 else H * 0.68
+            prof[px] = max(prof[px], hh)
+        if shape == "pyramid":
+            beacons.append((X + W / 2, H + 12 * scale, PINK))
+        if shape == "crown":
+            beacons.append((X + W / 2, H + 6 * scale + 10 * scale, CYAN))
+        if name == "Big Pink":
+            strips.append((X + W * 0.5, H * 0.85, PINK))
+        if name in ("Wells Fargo Center", "PacWest Center"):
+            strips.append((X + W * 0.3, H * 0.7, CYAN))
+
+    lit = [px for px in range(width) if prof[px] > 0]
+    c0, c1 = lit[0], lit[-1]
+    raw = [(c0, HORIZON)] + [(px, HORIZON - prof[px]) for px in range(c0, c1 + 1)] + [(c1, HORIZON)]
+    pts = [raw[0]]
+    for px, py in raw[1:]:
+        if abs(py - pts[-1][1]) > 2.5 and px != pts[-1][0]:  # a wall: go straight up or down
+            pts.append((px, pts[-1][1]))
+        pts.append((px, py))
+    simple = [pts[0]]
+    for i in range(1, len(pts) - 1):  # drop points on a straight run
+        (ax, ay), (bx, by), (cx, cy) = simple[-1], pts[i], pts[i + 1]
+        if abs((bx - ax) * (cy - ay) - (by - ay) * (cx - ax)) > 0.6:
+            simple.append(pts[i])
+    simple.append(pts[-1])
+    roof = " ".join(f"{fmt(px)},{fmt(py)}" for px, py in simple[1:-1])
+    city = "M" + " L".join(f"{fmt(px)},{fmt(py)}" for px, py in simple) + " Z"
+
+    hood = [(hood_x + u * hood_w, HORIZON - v * hood_h) for u, v in HOOD]
+    hood_d = "M" + " L".join(f"{fmt(x)},{fmt(y)}" for x, y in hood) + " Z"
+    hood_line = " ".join(f"{fmt(x)},{fmt(y)}" for x, y in hood)
+    # Snowcap: the top of the cone down to a ragged snowline.
+    snow_v = 0.6
+    def edge(v, side):
+        seq = HOOD if side < 0 else HOOD[::-1]
+        for (u1, v1), (u2, v2) in zip(seq, seq[1:]):
+            if min(v1, v2) <= v <= max(v1, v2) and v1 != v2:
+                return u1 + (u2 - u1) * (v - v1) / (v2 - v1)
+        return 0
+    left_u, right_u = edge(snow_v, -1), edge(snow_v, 1)
+    top = [(u, v) for u, v in HOOD if v > snow_v]
+    jag, n = [], 9
+    for i in range(n + 1):
+        u = right_u - (right_u - left_u) * i / n
+        v = snow_v + (0.07 if i % 2 else -0.02) + (0.05 if i in (3, 6) else 0)
+        jag.append((u, v))
+    snow = [(left_u, snow_v)] + top + [(right_u, snow_v)] + jag[1:-1]
+    snow_d = "M" + " L".join(f"{fmt(hood_x + u * hood_w)},{fmt(HORIZON - v * hood_h)}" for u, v in snow) + " Z"
+
+    parts = [
+        f'<linearGradient id="pdxNeon" gradientUnits="userSpaceOnUse" x1="{c0}" y1="0" x2="{c1}" y2="0">'
+        f'<stop offset="0" stop-color="{PINK}" stop-opacity="0.2"/><stop offset="0.25" stop-color="{PINK}"/>'
+        f'<stop offset="0.7" stop-color="#ff6ec7"/><stop offset="1" stop-color="{CYAN}"/></linearGradient>',
+        f'<ellipse cx="{fmt(hood_x)}" cy="{HORIZON}" rx="{fmt(hood_w * 1.5)}" ry="{fmt(hood_h * 1.05)}" fill="url(#cityHaze)" filter="url(#blur28)"/>',
+        f'<path d="{hood_d}" fill="url(#hoodFill)"/>',
+        f'<path d="{snow_d}" fill="url(#hoodSnow)"/>',
+        f'<polyline points="{hood_line}" fill="none" stroke="#b98cff" stroke-width="2.4" stroke-opacity="0.5" filter="url(#lineGlow)"/>',
+        f'<polyline points="{hood_line}" fill="none" stroke="#d9c6ff" stroke-width="1" stroke-opacity="0.85" stroke-linejoin="round"/>',
+        f'<path d="{city}" fill="url(#citySil)"/>',
+    ]
+    for sx, sh, col in strips:
+        parts.append(f'<rect x="{fmt(sx)}" y="{fmt(HORIZON - sh)}" width="1.4" height="{fmt(sh - 4)}" fill="{col}" '
+                     f'fill-opacity="0.55" filter="url(#starGlow)"/>')
+    for bx, bh, col in beacons:
+        parts.append(f'<rect x="{fmt(bx - 0.5)}" y="{fmt(HORIZON - bh)}" width="1" height="{fmt(bh - (bh - 12 * scale) if col == PINK else 10 * scale)}" '
+                     f'fill="{col}" fill-opacity="0.8"/>'
+                     f'<circle class="beacon" cx="{fmt(bx)}" cy="{fmt(HORIZON - bh - 1)}" r="1.7" fill="{col}" filter="url(#starGlow)"/>')
+    parts.append(f'<polyline points="{roof}" fill="none" stroke="url(#pdxNeon)" stroke-width="3" stroke-opacity="0.7" filter="url(#lineGlow)"/>')
+    parts.append(f'<polyline points="{roof}" fill="none" stroke="url(#pdxNeon)" stroke-width="1.3" stroke-linejoin="round"/>')
+    return "\n".join(parts)
+
+
 def tree_layer(count: int, seed: int, max_h: float, min_h: float):
     """Hero.tsx treeLayer(): pines thin out toward the centre."""
     for i in range(count):
@@ -568,6 +682,10 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
   <filter id="blur28" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
   <linearGradient id="citySil" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0a0012"/></linearGradient>
+  <linearGradient id="hoodFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2a1150"/><stop offset="1" stop-color="#140628"/></linearGradient>
+  <linearGradient id="hoodSnow" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f3e9ff" stop-opacity="0.85"/><stop offset="1" stop-color="#b98cff" stop-opacity="0.35"/></linearGradient>
   <radialGradient id="cityHaze" cx="0.5" cy="1" r="0.75">
     <stop offset="0" stop-color="{PINK}" stop-opacity="0.55"/><stop offset="0.45" stop-color="{PURPLE}" stop-opacity="0.25"/>
     <stop offset="1" stop-color="{VIOLET}" stop-opacity="0"/></radialGradient>
@@ -587,7 +705,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 {grid_svg}
 </g>
 <rect y="{HORIZON}" width="{HW}" height="{HH - HORIZON}" fill="url(#floorFade)"/>
-{(skyline_neon(avoid, 120, 0.72, 0.3) if phone else skyline_neon(avoid)) if HEADER_SKYLINE else ""}
+{(portland(52, 0.72, 340, 100, 104) if phone else portland(600, 1.0, 858, 118, 170)) if HEADER_SKYLINE else ""}
 {treeline()}
 <g class="horizon">
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>

@@ -42,6 +42,10 @@
   <filter id="blur28" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
   <linearGradient id="citySil" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0a0012"/></linearGradient>
+  <linearGradient id="hoodFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2a1150"/><stop offset="1" stop-color="#140628"/></linearGradient>
+  <linearGradient id="hoodSnow" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f3e9ff" stop-opacity="0.85"/><stop offset="1" stop-color="#b98cff" stop-opacity="0.35"/></linearGradient>
   <radialGradient id="cityHaze" cx="0.5" cy="1" r="0.75">
     <stop offset="0" stop-color="#f92aad" stop-opacity="0.55"/><stop offset="0.45" stop-color="#b01fff" stop-opacity="0.25"/>
     <stop offset="1" stop-color="#7b2fff" stop-opacity="0"/></radialGradient>
