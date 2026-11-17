@@ -363,7 +363,7 @@ HOOD_AT, HOOD_HALF, HOOD_HIGH = 300, 118, 66      # broad and distant, behind th
 SCENE_W = 336                  # the scene's full width: downtown, with Hood behind it
 
 
-def portland(x0: float, scale: float, hood_opacity: float = 0.6) -> str:
+def portland(x0: float, scale: float, hood_opacity: float = 0.6, hood_to_ground: bool = False) -> str:
     """Portland's skyline with Mt Hood behind it, in the outrun neon style:
     dark silhouettes backlit by a pink haze, the rooftops traced in a glowing
     pink-to-cyan line, and Hood's snowcap and outline in lavender. One scene,
@@ -422,7 +422,10 @@ def portland(x0: float, scale: float, hood_opacity: float = 0.6) -> str:
     city = "M" + " L".join(f"{fmt(px)},{fmt(py)}" for px, py in simple) + " Z"
 
     hood = [(hood_x + u * hood_w, hood_base - v * hood_h) for u, v in HOOD]
-    hood_d = "M" + " L".join(f"{fmt(x)},{fmt(y)}" for x, y in hood) + " Z"
+    # On the site Hood is solid in front of the sun, so its body runs down to
+    # the ground; otherwise the sun shows through between its foot and the hills.
+    body = hood + ([(hood[-1][0], HORIZON), (hood[0][0], HORIZON)] if hood_to_ground else [])
+    hood_d = "M" + " L".join(f"{fmt(x)},{fmt(y)}" for x, y in body) + " Z"
     hood_line = " ".join(f"{fmt(x)},{fmt(y)}" for x, y in hood)
     # Snowcap: the top of the cone down to a ragged snowline.
     snow_v = 0.46
@@ -489,7 +492,8 @@ def portland(x0: float, scale: float, hood_opacity: float = 0.6) -> str:
         return " ".join(f"{fmt(x)},{fmt(y)}" for x, y in pts)
 
     parts = [
-        f'<path d="{shape(far)}" fill="#24104a" opacity="0.75"/>',
+        # Solid on the site, where the hills stand in front of the sun.
+        f'<path d="{shape(far)}" fill="#24104a" opacity="{1 if hood_to_ground else 0.75}"/>',
         f'<polyline points="{line(far)}" fill="none" stroke="#9b7bff" stroke-opacity="0.35" stroke-width="0.8"/>',
         f'<linearGradient id="pdxNeon" gradientUnits="userSpaceOnUse" x1="{c0}" y1="0" x2="{c1}" y2="0">'
         f'<stop offset="0" stop-color="{PINK}" stop-opacity="0"/><stop offset="0.18" stop-color="{PINK}"/>'
@@ -1333,7 +1337,8 @@ def site_horizon(width: float, height: float, hood_x: float, scale: float, low_x
     x0 = hood_x - HOOD_AT * scale
     clear = (x0 - 12, x0 + SCENE_W * scale + 12)
     body = (f"<style>{SCENE_CSS}</style>\n<defs>\n{SCENE_DEFS}</defs>\n"
-            f"{portland(x0, scale, hood_opacity=1)}\n{treeline([(low_x[0], 0, low_x[1], height - 30)], clear)}")
+            f"{portland(x0, scale, hood_opacity=1, hood_to_ground=True)}\n"
+            f"{treeline([(low_x[0], 0, low_x[1], height - 54)], clear)}")
     HW, HORIZON = saved
     return svg(width, height, body)
 
