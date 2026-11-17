@@ -104,6 +104,12 @@ jobs:
           python3 -I .github/scripts/skyline_isocalendar.py "$RUNNER_TEMP/capped.svg" "$RUNNER_TEMP/skyline.svg"
           python3 -I .github/scripts/frame_card.py "$RUNNER_TEMP/skyline.svg" "$RUNNER_TEMP/github-metrics.svg"
 
+      # markusweldon.com shows the contribution city on its own. If it can't be
+      # cut out, yesterday's stays in place and the metrics card still publishes.
+      - name: Cut out the calendar for markusweldon.com
+        continue-on-error: true
+        run: python3 -I .github/scripts/extract_isocalendar.py "$RUNNER_TEMP/github-metrics.svg" "$RUNNER_TEMP/isocalendar.svg"
+
       # The streak card comes from the self-hosted streak service with a transparent
       # background, gets the same frame, and is published next to the metrics card.
       # If the service is down, yesterday's card stays in place.
@@ -132,9 +138,12 @@ jobs:
           if [ -s "$RUNNER_TEMP/streak-stats.svg" ]; then
             cp "$RUNNER_TEMP/streak-stats.svg" "$dir/streak-stats.svg"
           fi
+          if [ -s "$RUNNER_TEMP/isocalendar.svg" ]; then
+            cp "$RUNNER_TEMP/isocalendar.svg" "$dir/isocalendar.svg"
+          fi
           cd "$dir"
           git add -A
           if git diff --cached --quiet; then echo "No change"; exit 0; fi
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-            commit --quiet -m "Update github-metrics.svg and streak-stats.svg"
+            commit --quiet -m "Update github-metrics.svg, streak-stats.svg and isocalendar.svg"
           git push --quiet origin metrics
