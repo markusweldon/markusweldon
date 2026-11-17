@@ -1296,6 +1296,33 @@ SCENE_CSS = """
 @media (prefers-reduced-motion: reduce){.sig,.beacon{animation:none}.sig{display:none}}"""
 
 
+def site_floor(width: float, height: float) -> str:
+    """The header's animated grid floor on its own, top edge at the horizon:
+    the same lines and the same speed. Stretched to fit the site's hero
+    (preserveAspectRatio none), with strokes kept 1px."""
+    global HW, HH, HORIZON
+    saved = HW, HH, HORIZON
+    HW, HH, HORIZON = width, height, 0
+    try:
+        lines, css = grid()
+    finally:
+        HW, HH, HORIZON = saved
+    body = f"""<style>
+{css}
+line{{vector-effect:non-scaling-stroke}}
+.hs{{display:none}}
+@media (prefers-reduced-motion: reduce){{.h{{animation:none;display:none}}.hs{{display:inline}}}}
+</style>
+<defs><linearGradient id="floorFade" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0.5" stop-color="{BG}" stop-opacity="0"/><stop offset="0.8" stop-color="{BG}" stop-opacity="0.8"/>
+  <stop offset="1" stop-color="{BG}"/></linearGradient></defs>
+<g stroke="{CYAN}" stroke-opacity="0.35" stroke-width="1">
+{lines}
+</g>
+<rect width="{width}" height="{height}" fill="url(#floorFade)"/>"""
+    return svg(width, height, body).replace("<svg ", '<svg preserveAspectRatio="none" ', 1)
+
+
 def site_horizon(width: float, height: float, hood_x: float, scale: float, low_x=(0, 0)) -> str:
     """A transparent strip whose bottom edge is the horizon. Hood is solid
     here: on the site it stands in front of the sun."""
@@ -1329,6 +1356,10 @@ def main(font_dir: Path, site_dir: Path | None = None) -> None:
         site_dir.mkdir(parents=True, exist_ok=True)
         for name, spec in SITE_HORIZON.items():
             (site_dir / name).write_text(site_horizon(*spec))
+            print(f"Wrote {site_dir / name}")
+        # The floors: the README header's own proportions, desktop and phone.
+        for name, spec in {"floor.svg": (HW, 106), "floor-phone.svg": (480, 96)}.items():
+            (site_dir / name).write_text(site_floor(*spec))
             print(f"Wrote {site_dir / name}")
 
 

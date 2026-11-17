@@ -140,7 +140,11 @@ def tower(col, h, peak, seed, windows):
         return f'<path fill="{col}" d="M1.7,2 0,1 1.7,0 3.4,1 z" stroke="#36f9f6" stroke-opacity="0.12" stroke-width="0.05"/>'
     top, edge = mix(col, "#ffffff", 0.1), mix(col, "#ffffff", 0.45)
     b2, b1 = fmt(2 + h), fmt(1 + h)
-    parts = [
+    parts = []
+    if peak:  # the glow: a blurred silhouette behind the tower, never the tower itself
+        parts.append(f'<path fill="#36f9f6" opacity="0.55" filter="url(#mws-glow)" '
+                     f'd="M0,1 1.7,0 3.4,1 3.4,{b1} 1.7,{b2} 0,{b1} z"/>')
+    parts += [
         f'<path fill="url(#{side(col, "l")})" d="M0,1 1.7,2 1.7,{b2} 0,{b1} z"/>',
         f'<path fill="url(#{side(col, "r")})" d="M1.7,2 3.4,1 3.4,{b1} 1.7,{b2} z"/>',
         f'<path fill="{top}" d="M1.7,2 0,1 1.7,0 3.4,1 z" stroke="{edge}" stroke-width="0.07" stroke-linejoin="round"/>',
@@ -264,7 +268,7 @@ def restyle(svg):
         col = colour(t)
         peak = t >= PEAK_FROM
         peaks += peak
-        glow = ' filter="url(#mws-peak)"' if peak else ""
+        glow = ""  # peaks glow from a blurred copy under them, so the tower stays sharp
         out.append(block[pos:c.start()])
         d = round(-float(c.group(1)) / 1.7)
         tall = height(t)
@@ -340,6 +344,7 @@ def restyle(svg):
   <linearGradient id="mws-hz" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f92aad" stop-opacity="0"/>
     <stop offset="0.15" stop-color="#f92aad" stop-opacity="0.95"/><stop offset="0.55" stop-color="#36f9f6" stop-opacity="0.75"/>
     <stop offset="1" stop-color="#f92aad" stop-opacity="0"/></linearGradient>
+  <filter id="mws-glow" x="-100%" y="-60%" width="300%" height="220%"><feGaussianBlur stdDeviation="0.9"/></filter>
   <filter id="mws-peak" x="-100%" y="-60%" width="300%" height="220%">
     <feGaussianBlur stdDeviation="0.9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>

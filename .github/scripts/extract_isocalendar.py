@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 
 # Crop, in the calendar's own units (the plugin draws it in a 480 x 270 box).
 VIEW = (24, 0, 432, 272)
-WIDTH = 960  # pixels across
+WIDTH = 1920  # pixels across: twice the shown size, so phones draw it sharp
 
 
 def extract(svg: str) -> str:
