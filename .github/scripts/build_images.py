@@ -17,7 +17,10 @@ Usage:
     pip install fonttools brotli
     npm pack @fontsource/orbitron@5.0.19 geist@1.3.1
     (extract both tarballs into one folder, then)
-    python3 .github/scripts/build_images.py <folder-with-the-extracted-packages>
+    python3 .github/scripts/build_images.py <folder-with-the-extracted-packages> [site-hero-folder]
+
+With a second folder (markusweldon.com's public/hero), also writes the
+site hero's horizon strips: the same skyline, Mt Hood and Silicon Forest.
 """
 
 import math
@@ -360,7 +363,7 @@ HOOD_AT, HOOD_HALF, HOOD_HIGH = 300, 118, 66      # broad and distant, behind th
 SCENE_W = 336                  # the scene's full width: downtown, with Hood behind it
 
 
-def portland(x0: float, scale: float) -> str:
+def portland(x0: float, scale: float, hood_opacity: float = 0.6) -> str:
     """Portland's skyline with Mt Hood behind it, in the outrun neon style:
     dark silhouettes backlit by a pink haze, the rooftops traced in a glowing
     pink-to-cyan line, and Hood's snowcap and outline in lavender. One scene,
@@ -495,7 +498,7 @@ def portland(x0: float, scale: float) -> str:
         # Hood: far behind, so fainter and hazier than the city.
         f'<ellipse cx="{fmt(hood_x)}" cy="{HORIZON}" rx="{fmt(hood_w * 1.3)}" ry="{fmt(hood_h * 1.2)}" fill="url(#cityHaze)" '
         f'filter="url(#blur28)" opacity="0.6"/>',
-        f'<g opacity="0.6">'
+        f'<g opacity="{hood_opacity}">'
         f'<path d="{hood_d}" fill="url(#hoodFill)"/>'
         f'<path d="{snow_d}" fill="url(#hoodSnow)" opacity="0.8"/>'
         f'<polyline points="{hood_line}" fill="none" stroke="#b98cff" stroke-width="2" stroke-opacity="0.35" filter="url(#lineGlow)"/>'
@@ -843,6 +846,44 @@ def header_phone(f: Fonts) -> str:
         HW, HH, HORIZON, LEFT = saved
 
 
+# Gradients and filters the scene (skyline, Hood, Silicon Forest, car) uses.
+SCENE_DEFS = f"""  <filter id="blur28" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
+  <linearGradient id="treeBack" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3f1868"/><stop offset="1" stop-color="#220b40"/></linearGradient>
+  <linearGradient id="treeFront" x1="0" y1="0" x2="1" y2="0.35">
+    <stop offset="0" stop-color="#160628"/><stop offset="0.55" stop-color="#2d0f52"/><stop offset="1" stop-color="#55208a"/></linearGradient>
+  <linearGradient id="carHaunchL" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#4a1d7a"/><stop offset="1" stop-color="#22093f"/></linearGradient>
+  <linearGradient id="carHaunchR" x1="1" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2c0d50"/><stop offset="1" stop-color="#140528"/></linearGradient>
+  <linearGradient id="carBody" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0d0015"/></linearGradient>
+  <linearGradient id="carGlass" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="{CYAN}" stop-opacity="0.45"/><stop offset="0.5" stop-color="{VIOLET}" stop-opacity="0.25"/>
+    <stop offset="1" stop-color="{PINK}" stop-opacity="0.35"/></linearGradient>
+  <linearGradient id="tailLight" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#ff2e6e"/><stop offset="0.5" stop-color="#ff7ab0"/><stop offset="1" stop-color="#ff2e6e"/></linearGradient>
+  <filter id="tailGlow" x="-20%" y="-300%" width="140%" height="700%"><feGaussianBlur stdDeviation="3.5"/></filter>
+  <filter id="carGlow" x="-30%" y="-200%" width="160%" height="500%"><feGaussianBlur stdDeviation="7"/></filter>
+  <linearGradient id="citySil" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0a0012"/></linearGradient>
+  <linearGradient id="hoodFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2a1150"/><stop offset="1" stop-color="#140628"/></linearGradient>
+  <linearGradient id="hoodSnow" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#f3e9ff" stop-opacity="0.85"/><stop offset="1" stop-color="#b98cff" stop-opacity="0.35"/></linearGradient>
+  <radialGradient id="cityHaze" cx="0.5" cy="1" r="0.75">
+    <stop offset="0" stop-color="{PINK}" stop-opacity="0.55"/><stop offset="0.45" stop-color="{PURPLE}" stop-opacity="0.25"/>
+    <stop offset="1" stop-color="{VIOLET}" stop-opacity="0"/></radialGradient>
+  <linearGradient id="cityFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2a0f4d"/><stop offset="1" stop-color="#12041f"/></linearGradient>
+  <filter id="treeGlow" x="-50%" y="-20%" width="200%" height="140%"><feGaussianBlur stdDeviation="1.6"/></filter>
+  <filter id="lineGlow" x="-5%" y="-800%" width="110%" height="1700%"><feGaussianBlur stdDeviation="8"/></filter>
+  <filter id="starGlow" x="-200%" y="-200%" width="500%" height="500%">
+    <feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+"""
+
+
 def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
     """The README hero. With text=False, just the scene (used as a backdrop)."""
     global HH, HORIZON
@@ -950,41 +991,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
   <linearGradient id="border" x1="0" y1="0" x2="1" y2="0">
     <stop offset="0" stop-color="{PINK}"/><stop offset="0.5" stop-color="{PURPLE}"/><stop offset="1" stop-color="{CYAN}"/>
   </linearGradient>
-  <filter id="blur28" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
-  <linearGradient id="treeBack" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#3f1868"/><stop offset="1" stop-color="#220b40"/></linearGradient>
-  <linearGradient id="treeFront" x1="0" y1="0" x2="1" y2="0.35">
-    <stop offset="0" stop-color="#160628"/><stop offset="0.55" stop-color="#2d0f52"/><stop offset="1" stop-color="#55208a"/></linearGradient>
-  <linearGradient id="carHaunchL" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#4a1d7a"/><stop offset="1" stop-color="#22093f"/></linearGradient>
-  <linearGradient id="carHaunchR" x1="1" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#2c0d50"/><stop offset="1" stop-color="#140528"/></linearGradient>
-  <linearGradient id="carBody" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0d0015"/></linearGradient>
-  <linearGradient id="carGlass" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="{CYAN}" stop-opacity="0.45"/><stop offset="0.5" stop-color="{VIOLET}" stop-opacity="0.25"/>
-    <stop offset="1" stop-color="{PINK}" stop-opacity="0.35"/></linearGradient>
-  <linearGradient id="tailLight" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#ff2e6e"/><stop offset="0.5" stop-color="#ff7ab0"/><stop offset="1" stop-color="#ff2e6e"/></linearGradient>
-  <filter id="tailGlow" x="-20%" y="-300%" width="140%" height="700%"><feGaussianBlur stdDeviation="3.5"/></filter>
-  <filter id="carGlow" x="-30%" y="-200%" width="160%" height="500%"><feGaussianBlur stdDeviation="7"/></filter>
-  <linearGradient id="citySil" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#2b0b4a"/><stop offset="1" stop-color="#0a0012"/></linearGradient>
-  <linearGradient id="hoodFill" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#2a1150"/><stop offset="1" stop-color="#140628"/></linearGradient>
-  <linearGradient id="hoodSnow" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#f3e9ff" stop-opacity="0.85"/><stop offset="1" stop-color="#b98cff" stop-opacity="0.35"/></linearGradient>
-  <radialGradient id="cityHaze" cx="0.5" cy="1" r="0.75">
-    <stop offset="0" stop-color="{PINK}" stop-opacity="0.55"/><stop offset="0.45" stop-color="{PURPLE}" stop-opacity="0.25"/>
-    <stop offset="1" stop-color="{VIOLET}" stop-opacity="0"/></radialGradient>
-  <linearGradient id="cityFill" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#2a0f4d"/><stop offset="1" stop-color="#12041f"/></linearGradient>
-  <filter id="treeGlow" x="-50%" y="-20%" width="200%" height="140%"><feGaussianBlur stdDeviation="1.6"/></filter>
-  <filter id="lineGlow" x="-5%" y="-800%" width="110%" height="1700%"><feGaussianBlur stdDeviation="8"/></filter>
-  <filter id="starGlow" x="-200%" y="-200%" width="500%" height="500%">
-    <feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-</defs>
+{SCENE_DEFS}</defs>
 <g clip-path="url(#panel)">
 <rect width="{HW}" height="{HH}" fill="{BG}"/>
 <rect width="{HW}" height="{HH}" fill="url(#skyGlow)"/>
@@ -1272,7 +1279,38 @@ def divider(pink: str, cyan: str, glow: float) -> str:
     return svg(1200, 10, body).replace("<svg ", '<svg preserveAspectRatio="none" ', 1)
 
 
-def main(font_dir: Path) -> None:
+# ══ markusweldon.com hero horizon ══════════════════════════════════════════
+
+# The site's hero draws its own sky, sun, grid and horizon line; it takes just
+# the skyline, Mt Hood and the Silicon Forest from here, so the README and the
+# site show the same Portland. Hood sits under the site's sun, so the sun
+# sets behind it. (width, height, Hood's x, scene scale) for desktop / phone.
+# Trees under the site's text column (low_x, in strip units) stay low.
+SITE_HORIZON = {"horizon.svg": (1200, 170, 816, 0.9, (90, 520)),
+                "horizon-phone.svg": (400, 110, 200, 0.55, (0, 0))}
+SCENE_CSS = """
+@keyframes sig{0%{stroke-dashoffset:22}30%{stroke-dashoffset:-112}100%{stroke-dashoffset:-112}}
+.sig{stroke-dasharray:12 220;stroke-dashoffset:22;animation:sig 5s linear infinite}
+@keyframes beacon{0%,100%{opacity:1}50%{opacity:.25}}
+.beacon{animation:beacon 2.4s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.sig,.beacon{animation:none}.sig{display:none}}"""
+
+
+def site_horizon(width: float, height: float, hood_x: float, scale: float, low_x=(0, 0)) -> str:
+    """A transparent strip whose bottom edge is the horizon. Hood is solid
+    here: on the site it stands in front of the sun."""
+    global HW, HORIZON
+    saved = HW, HORIZON
+    HW, HORIZON = width, height
+    x0 = hood_x - HOOD_AT * scale
+    clear = (x0 - 12, x0 + SCENE_W * scale + 12)
+    body = (f"<style>{SCENE_CSS}</style>\n<defs>\n{SCENE_DEFS}</defs>\n"
+            f"{portland(x0, scale, hood_opacity=1)}\n{treeline([(low_x[0], 0, low_x[1], height - 14)], clear)}")
+    HW, HORIZON = saved
+    return svg(width, height, body)
+
+
+def main(font_dir: Path, site_dir: Path | None = None) -> None:
     f = Fonts(font_dir)
     outputs = {"header.svg": header(f), "header-phone.svg": header_phone(f)}
     for repo, *details in CARDS:
@@ -1287,9 +1325,14 @@ def main(font_dir: Path) -> None:
     for name, content in outputs.items():
         (IMAGES / name).write_text(content)
         print(f"Wrote images/{name} ({len(content) / 1024:.0f} KB)")
+    if site_dir:  # markusweldon.com's public/hero folder
+        site_dir.mkdir(parents=True, exist_ok=True)
+        for name, spec in SITE_HORIZON.items():
+            (site_dir / name).write_text(site_horizon(*spec))
+            print(f"Wrote {site_dir / name}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) not in (2, 3):
         sys.exit(__doc__)
-    main(Path(sys.argv[1]))
+    main(Path(sys.argv[1]), Path(sys.argv[2]) if len(sys.argv) == 3 else None)
