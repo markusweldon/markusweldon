@@ -421,11 +421,19 @@ def portland(x0: float, scale: float, hood_opacity: float = 0.6, hood_to_ground:
     roof = " ".join(f"{fmt(px)},{fmt(py)}" for px, py in simple[1:-1])
     city = "M" + " L".join(f"{fmt(px)},{fmt(py)}" for px, py in simple) + " Z"
 
-    hood = [(hood_x + u * hood_w, hood_base - v * hood_h) for u, v in HOOD]
-    # On the site Hood is solid in front of the sun, so its body runs down to
-    # the ground; otherwise the sun shows through between its foot and the hills.
-    body = hood + ([(hood[-1][0], HORIZON), (hood[0][0], HORIZON)] if hood_to_ground else [])
-    hood_d = "M" + " L".join(f"{fmt(x)},{fmt(y)}" for x, y in body) + " Z"
+    profile = HOOD
+    if hood_to_ground:
+        # On the site Hood is solid in front of the sun, so its flanks carry on
+        # at their own slope down to the horizon, like foothills, instead of
+        # stopping at the base line (where the sun would show through).
+        drop = (HORIZON - hood_base) / hood_h            # the base line to the ground, in v
+        (lu0, lv0), (lu1, lv1) = HOOD[0], HOOD[1]
+        (ru0, rv0), (ru1, rv1) = HOOD[-1], HOOD[-2]
+        left = lu0 - drop * (lu1 - lu0) / (lv1 - lv0)
+        right = ru0 + drop * (ru0 - ru1) / (rv1 - rv0)
+        profile = [(left, -drop)] + HOOD + [(right, -drop)]
+    hood = [(hood_x + u * hood_w, hood_base - v * hood_h) for u, v in profile]
+    hood_d = "M" + " L".join(f"{fmt(x)},{fmt(y)}" for x, y in hood) + " Z"
     hood_line = " ".join(f"{fmt(x)},{fmt(y)}" for x, y in hood)
     # Snowcap: the top of the cone down to a ragged snowline.
     snow_v = 0.46
