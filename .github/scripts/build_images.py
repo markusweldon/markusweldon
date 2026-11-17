@@ -1285,7 +1285,8 @@ def divider(pink: str, cyan: str, glow: float) -> str:
 # the skyline, Mt Hood and the Silicon Forest from here, so the README and the
 # site show the same Portland. Hood sits under the site's sun, so the sun
 # sets behind it. (width, height, Hood's x, scene scale) for desktop / phone.
-# Trees under the site's text column (low_x, in strip units) stay low.
+# Trees under the site's text column (low_x, in strip units) stay mid-height,
+# clear of the buttons above the horizon.
 SITE_HORIZON = {"horizon.svg": (1200, 170, 816, 0.9, (90, 520)),
                 "horizon-phone.svg": (400, 110, 200, 0.55, (0, 0))}
 SCENE_CSS = """
@@ -1332,7 +1333,7 @@ def site_horizon(width: float, height: float, hood_x: float, scale: float, low_x
     x0 = hood_x - HOOD_AT * scale
     clear = (x0 - 12, x0 + SCENE_W * scale + 12)
     body = (f"<style>{SCENE_CSS}</style>\n<defs>\n{SCENE_DEFS}</defs>\n"
-            f"{portland(x0, scale, hood_opacity=1)}\n{treeline([(low_x[0], 0, low_x[1], height - 14)], clear)}")
+            f"{portland(x0, scale, hood_opacity=1)}\n{treeline([(low_x[0], 0, low_x[1], height - 30)], clear)}")
     HW, HORIZON = saved
     return svg(width, height, body)
 
