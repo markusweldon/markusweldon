@@ -569,11 +569,14 @@ def fremont(x0: float, scale: float) -> str:
             f'</g>')
 
 
-def tree_layer(count: int, seed: int, max_h: float, min_h: float):
-    """Hero.tsx treeLayer(): pines thin out toward the centre."""
+def tree_layer(count: int, seed: int, max_h: float, min_h: float, thin: bool = True):
+    """Hero.tsx treeLayer(): pines thin out toward the centre (unless thin is
+    False, for a strip far wider than the screen, where the centre is the
+    city and the edges are off-screen)."""
     for i in range(count):
-        x = (i + 0.5) * (1200 / count) + (((i * seed) % 17) - 8)
-        centre = abs(x - 600) / 600
+        # The jitter is in strip units, so a wide strip's trees don't clump.
+        x = (i + 0.5) * (1200 / count) + (((i * seed) % 17) - 8) * 1200 / max(HW, 1200)
+        centre = abs(x - 600) / 600 if thin else 0.75
         h = (min_h + ((i * seed * 7) % (max_h - min_h))) * (0.45 + 0.55 * centre)
         yield x * HW / 1200, h, h * 0.55
 
@@ -635,7 +638,7 @@ def silicon_fir(x: float, h: float, w: float, base: float) -> tuple[str, str, li
             boughs)
 
 
-def treeline(avoid=(), clear=None) -> str:
+def treeline(avoid=(), clear=None, density: float = 1, thin: bool = True) -> str:
     """The Silicon Forest: circuit-trace firs along the horizon. Trees under
     the text are kept below it, and none stand in front of the city
     (clear = its x range)."""
@@ -666,8 +669,8 @@ def treeline(avoid=(), clear=None) -> str:
                 f'<path d="{d}" fill="none" stroke="{colour}" stroke-width="{width}" stroke-linecap="round" stroke-linejoin="round"/>'
                 f'<g fill="{BG}" stroke="{PINK}" stroke-width="{width * 0.9}">{"".join(pads)}</g></g>')
 
-    back = list(keep(tree_layer(30, 13, 56, 24)))
-    front = list(keep(tree_layer(22, 29, 74, 30)))
+    back = list(keep(tree_layer(round(30 * density), 13, 56, 24, thin)))
+    front = list(keep(tree_layer(round(22 * density), 29, 74, 30, thin)))
     out = [layer(back, PURPLE, 0.8, 0.55, "treeGlow"), layer(front, CYAN, 1.0, 0.9, "treeGlow")]
 
     # A ground bus wiring the front row together, one run each side of the city.
@@ -1296,11 +1299,16 @@ def divider(pink: str, cyan: str, glow: float) -> str:
 # The site's hero draws its own sky, sun, grid and horizon line; it takes just
 # the skyline, Mt Hood and the Silicon Forest from here, so the README and the
 # site show the same Portland. Hood sits under the site's sun, so the sun
-# sets behind it. (width, height, Hood's x, scene scale) for desktop / phone.
-# Trees under the site's text column (low_x, in strip units) stay mid-height,
+# sets behind it.
+#
+# The desktop strip is wider than a 4K screen, with Hood at its centre:
+# the site shows it at a fixed scale, so the city keeps its size beside the
+# text and the sun however wide the window, and the forest runs off both
+# edges. (width, height, Hood's x, scene scale, tree density) per file.
+# Trees left of the city, under the site's text column, stay mid-height,
 # clear of the buttons above the horizon.
-SITE_HORIZON = {"horizon.svg": (1200, 170, 816, 0.9, (90, 520)),
-                "horizon-phone.svg": (400, 110, 200, 0.55, (0, 0))}
+SITE_HORIZON = {"horizon.svg": (5000, 170, 2500, 0.9, 5000 / 1200),
+                "horizon-phone.svg": (400, 110, 200, 0.55, 1)}
 SCENE_CSS = """
 @keyframes sig{0%{stroke-dashoffset:22}30%{stroke-dashoffset:-112}100%{stroke-dashoffset:-112}}
 .sig{stroke-dasharray:12 220;stroke-dashoffset:22;animation:sig 5s linear infinite}
@@ -1311,8 +1319,9 @@ SCENE_CSS = """
 
 def site_floor(width: float, height: float) -> str:
     """The header's animated grid floor on its own, top edge at the horizon:
-    the same lines and the same speed. Stretched to fit the site's hero
-    (preserveAspectRatio none), with strokes kept 1px."""
+    the same lines and the same speed. Scaled evenly to cover the site's
+    floor (sliced at the sides, never stretched), so the perspective matches
+    the README on every screen, with strokes kept 1px."""
     global HW, HH, HORIZON
     saved = HW, HH, HORIZON
     HW, HH, HORIZON = width, height, 0
@@ -1333,10 +1342,10 @@ line{{vector-effect:non-scaling-stroke}}
 {lines}
 </g>
 <rect width="{width}" height="{height}" fill="url(#floorFade)"/>"""
-    return svg(width, height, body).replace("<svg ", '<svg preserveAspectRatio="none" ', 1)
+    return svg(width, height, body).replace("<svg ", '<svg preserveAspectRatio="xMidYMin slice" ', 1)
 
 
-def site_horizon(width: float, height: float, hood_x: float, scale: float, low_x=(0, 0)) -> str:
+def site_horizon(width: float, height: float, hood_x: float, scale: float, density: float = 1) -> str:
     """A transparent strip whose bottom edge is the horizon. Hood is solid
     here: on the site it stands in front of the sun."""
     global HW, HORIZON
@@ -1344,9 +1353,10 @@ def site_horizon(width: float, height: float, hood_x: float, scale: float, low_x
     HW, HORIZON = width, height
     x0 = hood_x - HOOD_AT * scale
     clear = (x0 - 12, x0 + SCENE_W * scale + 12)
+    low = [(0, 0, clear[0], height - 54)] if density > 1 else []   # under the text column
     body = (f"<style>{SCENE_CSS}</style>\n<defs>\n{SCENE_DEFS}</defs>\n"
             f"{portland(x0, scale, hood_opacity=1, hood_to_ground=True)}\n"
-            f"{treeline([(low_x[0], 0, low_x[1], height - 54)], clear)}")
+            f"{treeline(low, clear, density, thin=density == 1)}")
     HW, HORIZON = saved
     return svg(width, height, body)
 
