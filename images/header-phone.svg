@@ -5,7 +5,7 @@
 .star{fill:#fff;transform-box:fill-box;transform-origin:center;animation:twinkle 4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
 .horizon{animation:pulse 5s ease-in-out infinite}
-@keyframes run{0%{transform:translateY(451.7px)}5%{transform:translateY(452.9px)}10%{transform:translateY(454.3px)}15%{transform:translateY(455.8px)}20%{transform:translateY(457.6px)}25%{transform:translateY(459.5px)}30%{transform:translateY(461.6px)}35%{transform:translateY(464.0px)}40%{transform:translateY(466.7px)}45%{transform:translateY(469.7px)}50%{transform:translateY(473.0px)}55%{transform:translateY(476.7px)}60%{transform:translateY(480.9px)}65%{transform:translateY(485.5px)}70%{transform:translateY(490.7px)}75%{transform:translateY(496.4px)}80%{transform:translateY(502.9px)}85%{transform:translateY(510.0px)}90%{transform:translateY(518.1px)}95%{transform:translateY(527.0px)}100%{transform:translateY(537.0px)}}.h{animation:run 1.54s linear infinite}
+@keyframes run{0%{transform:translateY(443.4px)}5%{transform:translateY(443.9px)}10%{transform:translateY(444.5px)}15%{transform:translateY(445.2px)}20%{transform:translateY(446.0px)}25%{transform:translateY(447.0px)}30%{transform:translateY(448.3px)}35%{transform:translateY(449.7px)}40%{transform:translateY(451.5px)}45%{transform:translateY(453.6px)}50%{transform:translateY(456.2px)}55%{transform:translateY(459.3px)}60%{transform:translateY(463.0px)}65%{transform:translateY(467.4px)}70%{transform:translateY(472.7px)}75%{transform:translateY(479.2px)}80%{transform:translateY(486.9px)}85%{transform:translateY(496.2px)}90%{transform:translateY(507.4px)}95%{transform:translateY(520.8px)}100%{transform:translateY(537.0px)}}.h{animation:run 2.64s linear infinite}
 
 .hs{display:none}
 @keyframes sig{0%{stroke-dashoffset:22}30%{stroke-dashoffset:-112}100%{stroke-dashoffset:-112}}
@@ -93,6 +93,12 @@
 <g opacity="0.90"><circle class="star" cx="396.5" cy="6.6" r="2.75" filter="url(#starGlow)" style="animation-duration:5.7s;animation-delay:2.5s"/></g>
 <ellipse cx="326.4" cy="411" rx="158.4" ry="170" fill="url(#aura)" filter="url(#blur28)"/>
 <g clip-path="url(#floor)" stroke="#36f9f6" stroke-opacity="0.35" stroke-width="1">
+<line x1="-40" y1="441" x2="-2760" y2="537"/>
+<line x1="-26" y1="441" x2="-2610" y2="537"/>
+<line x1="-12" y1="441" x2="-2460" y2="537"/>
+<line x1="2" y1="441" x2="-2310" y2="537"/>
+<line x1="16" y1="441" x2="-2160" y2="537"/>
+<line x1="30" y1="441" x2="-2010" y2="537"/>
 <line x1="44" y1="441" x2="-1860" y2="537"/>
 <line x1="58" y1="441" x2="-1710" y2="537"/>
 <line x1="72" y1="441" x2="-1560" y2="537"/>
@@ -122,20 +128,36 @@
 <line x1="408" y1="441" x2="2040" y2="537"/>
 <line x1="422" y1="441" x2="2190" y2="537"/>
 <line x1="436" y1="441" x2="2340" y2="537"/>
+<line x1="450" y1="441" x2="2490" y2="537"/>
+<line x1="464" y1="441" x2="2640" y2="537"/>
+<line x1="478" y1="441" x2="2790" y2="537"/>
+<line x1="492" y1="441" x2="2940" y2="537"/>
+<line x1="506" y1="441" x2="3090" y2="537"/>
+<line x1="520" y1="441" x2="3240" y2="537"/>
 <line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.00s"/>
-<line class="hs" x1="0" y1="453.5" x2="480" y2="453.5"/>
+<line class="hs" x1="0" y1="443.8" x2="480" y2="443.8"/>
 <line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.22s"/>
-<line class="hs" x1="0" y1="458.1" x2="480" y2="458.1"/>
+<line class="hs" x1="0" y1="444.8" x2="480" y2="444.8"/>
 <line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.44s"/>
-<line class="hs" x1="0" y1="464.4" x2="480" y2="464.4"/>
+<line class="hs" x1="0" y1="446.2" x2="480" y2="446.2"/>
 <line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.66s"/>
-<line class="hs" x1="0" y1="473.0" x2="480" y2="473.0"/>
+<line class="hs" x1="0" y1="448.0" x2="480" y2="448.0"/>
 <line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-0.88s"/>
-<line class="hs" x1="0" y1="484.8" x2="480" y2="484.8"/>
+<line class="hs" x1="0" y1="450.6" x2="480" y2="450.6"/>
 <line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-1.10s"/>
-<line class="hs" x1="0" y1="501.0" x2="480" y2="501.0"/>
+<line class="hs" x1="0" y1="454.0" x2="480" y2="454.0"/>
 <line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-1.32s"/>
-<line class="hs" x1="0" y1="523.1" x2="480" y2="523.1"/>
+<line class="hs" x1="0" y1="458.7" x2="480" y2="458.7"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-1.54s"/>
+<line class="hs" x1="0" y1="465.1" x2="480" y2="465.1"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-1.76s"/>
+<line class="hs" x1="0" y1="473.7" x2="480" y2="473.7"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-1.98s"/>
+<line class="hs" x1="0" y1="485.5" x2="480" y2="485.5"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-2.20s"/>
+<line class="hs" x1="0" y1="501.5" x2="480" y2="501.5"/>
+<line class="h" x1="0" y1="0" x2="480" y2="0" style="animation-delay:-2.42s"/>
+<line class="hs" x1="0" y1="523.3" x2="480" y2="523.3"/>
 </g>
 <rect y="441" width="480" height="96" fill="url(#floorFade)"/>
 <path d="M-4,419.2 L0,419.2 L4,419.2 L8,419.2 L12,419.2 L16,419.2 L20,419.2 L24,419.2 L28,419.2 L32,419.2 L36,419.2 L40,419.2 L44,419.2 L48,419.2 L52,419.2 L56,419.2 L60,419.2 L64,419.1 L68,419.1 L72,419.1 L76,419.1 L80,419 L84,419 L88,419 L92,418.9 L96,418.9 L100,418.9 L104,418.8 L108,418.8 L112,418.7 L116,418.7 L120,418.6 L124,418.6 L128,418.5 L132,418.5 L136,418.4 L140,418.4 L144,418.3 L148,418.3 L152,418.2 L156,418.1 L160,418.1 L164,418 L168,418 L172,417.9 L176,417.9 L180,417.8 L184,417.7 L188,417.7 L192,417.6 L196,417.6 L200,417.5 L204,417.4 L208,417.4 L212,417.3 L216,417.3 L220,417.2 L224,417.2 L228,417.1 L232,417.1 L236,417 L240,417 L244,417 L248,416.9 L252,416.9 L256,416.8 L260,416.8 L264,416.8 L268,416.7 L272,416.7 L276,416.7 L280,416.7 L284,416.7 L288,416.6 L292,416.6 L296,416.6 L300,416.6 L304,416.6 L308,416.6 L312,416.6 L316,416.6 L320,416.6 L324,416.6 L328,416.6 L332,416.6 L336,416.6 L340,416.6 L344,416.6 L348,416.6 L352,416.6 L356,416.6 L360,416.7 L364,416.7 L368,416.7 L372,416.7 L376,416.7 L380,416.8 L384,416.8 L388,416.8 L392,416.9 L396,416.9 L400,416.9 L404,416.9 L408,417 L412,417 L416,417 L420,417.1 L424,417.1 L428,417.1 L432,417.1 L436,417.2 L440,417.2 L444,417.2 L448,417.3 L452,417.3 L456,417.3 L460,417.3 L464,417.4 L468,417.4 L472,417.4 L476,417.4 L480,417.4 L484,417.5 L488,441 L-4,441 Z" fill="#24104a" opacity="0.75"/>
