@@ -749,12 +749,18 @@ CAR_CSS = ""
 
 
 def grid() -> tuple[str, str]:
-    """Cyan perspective floor; horizontal lines roll toward the viewer."""
+    """Cyan perspective floor; horizontal lines roll toward the viewer.
+    The receding lines fan out across the whole width at the horizon (none
+    stop short of the sides), and the rolling lines start right at the
+    horizon, so there's no empty band beneath it."""
     parts = []
-    for i in range(-14, 15):
+    reach = math.ceil(HW / 2 / 14) + 2      # enough receding lines to cover the horizon edge to edge
+    for i in range(-reach, reach + 1):
         parts.append(f'<line x1="{fmt(HW / 2 + i * 14)}" y1="{HORIZON}" '
                      f'x2="{fmt(HW / 2 + i * 150)}" y2="{HH}"/>')
-    lines, period, far = 7, 0.22, 9.0  # a line every 0.22 s: the floor races towards the viewer
+    # A line every 0.22 s. They're born at 1/40 of the floor's depth below the
+    # horizon; 12 at a time keeps the same spacing and speed up close.
+    lines, period, far = 12, 0.22, 40.0
     frames = []
     for step in range(21):
         t = step / 20
