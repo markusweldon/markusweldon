@@ -144,6 +144,26 @@ def crop(path, scale=1.0):
     return box, im.size
 
 
+NIGHT = 0.55  # body brightness after shading the car for night (1 = as rendered)
+
+
+def night(im, k=NIGHT):
+    """Shade the body toward deep violet, as if driving at night, so the car
+    sits in the scene instead of outshining it. The tail-light bar (bright,
+    strongly saturated pink-red pixels) stays lit, and the neon outline is
+    added afterwards at full strength."""
+    import numpy as np
+    from PIL import Image
+    px = np.asarray(im.convert("RGBA"), dtype=float) / 255
+    rgb, a = px[..., :3], px[..., 3:]
+    hi, lo = rgb.max(-1), rgb.min(-1)
+    sat = (hi - lo) / np.maximum(hi, 1e-6)
+    lit = ((sat > 0.45) & (hi > 0.75) & (rgb[..., 0] > rgb[..., 2]))[..., None]
+    body = rgb * k + np.array([0.10, 0.03, 0.20]) * (1 - k) * 0.6
+    out = np.where(lit, rgb, body)
+    return Image.fromarray((np.dstack([np.clip(out, 0, 1), a]) * 255).astype(np.uint8), "RGBA")
+
+
 def neon_outline(im, pad=6, rim=3, glow=2.2):
     """A faint neon rim traced round the car's silhouette -- pink on the left
     fading to cyan on the right, with a soft glow, like the scenes' line art.
@@ -180,7 +200,7 @@ def finish_rear(raw, out, width=460):
     im = Image.open(raw).convert("RGBA")
     if im.width != width:
         im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
-    save_webp(neon_outline(im), out)
+    save_webp(neon_outline(night(im)), out)
 
 
 def finish_iso():
@@ -195,7 +215,7 @@ def finish_iso():
     frames = []
     for k in range(raw["frames"]):
         im = Image.open(ASSETS / f"roadster-iso-raw-{k}.png").convert("RGBA")
-        out = neon_outline(im, pad=pad, rim=5, glow=1.6)
+        out = neon_outline(night(im), pad=pad, rim=5, glow=1.6)
         save_webp(out, ASSETS / f"roadster-iso-{k}.webp")
         frames.append(out)
     save_webp(frames[0], ASSETS / "roadster-iso.webp")
