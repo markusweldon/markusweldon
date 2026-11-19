@@ -363,7 +363,8 @@ HOOD_AT, HOOD_HALF, HOOD_HIGH = 300, 118, 66      # broad and distant, behind th
 SCENE_W = 336                  # the scene's full width: downtown, with Hood behind it
 
 
-def portland(x0: float, scale: float, hood_opacity: float = 0.6, hood_to_ground: bool = False) -> str:
+def portland(x0: float, scale: float, hood_opacity: float = 0.6, hood_to_ground: bool = False,
+             layer: str = "all") -> str:
     """Portland's skyline with Mt Hood behind it, in the outrun neon style:
     dark silhouettes backlit by a pink haze, the rooftops traced in a glowing
     pink-to-cyan line, and Hood's snowcap and outline in lavender. One scene,
@@ -532,6 +533,12 @@ def portland(x0: float, scale: float, hood_opacity: float = 0.6, hood_to_ground:
                      f'<circle class="beacon" cx="{fmt(bx)}" cy="{fmt(HORIZON - bh - 1)}" r="1.7" fill="{col}" filter="url(#starGlow)"/>')
     parts.append(f'<polyline points="{roof}" fill="none" stroke="url(#pdxNeon)" stroke-width="3" stroke-opacity="0.7" filter="url(#lineGlow)"/>')
     parts.append(f'<polyline points="{roof}" fill="none" stroke="url(#pdxNeon)" stroke-width="1.3" stroke-linejoin="round"/>')
+    # Depth layers for markusweldon.com, which moves each at its own rate:
+    # "far" is the far hills and Mt Hood, "city" the near hills and downtown.
+    if layer == "far":
+        parts = parts[0:2] + parts[3:5]
+    elif layer == "city":
+        parts = parts[2:3] + parts[5:]
     return "\n".join(parts)
 
 
@@ -1351,18 +1358,25 @@ line{{vector-effect:non-scaling-stroke}}
     return svg(width, height, body).replace("<svg ", '<svg preserveAspectRatio="xMidYMin slice" ', 1)
 
 
-def site_horizon(width: float, height: float, hood_x: float, scale: float, density: float = 1) -> str:
+SITE_LAYERS = ("far", "city", "trees")  # back to front
+
+
+def site_horizon(width: float, height: float, hood_x: float, scale: float, density: float = 1,
+                 layer: str = "all") -> str:
     """A transparent strip whose bottom edge is the horizon. Hood is solid
-    here: on the site it stands in front of the sun."""
+    here: on the site it stands in front of the sun. layer picks one depth
+    layer (see SITE_LAYERS); all layers share the same size, so they line up
+    when stacked."""
     global HW, HORIZON
     saved = HW, HORIZON
     HW, HORIZON = width, height
     x0 = hood_x - HOOD_AT * scale
     clear = (x0 - 12, x0 + SCENE_W * scale + 12)
     low = [(0, 0, clear[0], height - 54)] if density > 1 else []   # under the text column
-    body = (f"<style>{SCENE_CSS}</style>\n<defs>\n{SCENE_DEFS}</defs>\n"
-            f"{portland(x0, scale, hood_opacity=1, hood_to_ground=True)}\n"
-            f"{treeline(low, clear, density, thin=density == 1)}")
+    scene = portland(x0, scale, hood_opacity=1, hood_to_ground=True, layer="all" if layer == "all" else layer) \
+        if layer != "trees" else ""
+    trees = treeline(low, clear, density, thin=density == 1) if layer in ("all", "trees") else ""
+    body = f"<style>{SCENE_CSS}</style>\n<defs>\n{SCENE_DEFS}</defs>\n{scene}\n{trees}"
     HW, HORIZON = saved
     return svg(width, height, body)
 
@@ -1385,8 +1399,10 @@ def main(font_dir: Path, site_dir: Path | None = None) -> None:
     if site_dir:  # markusweldon.com's public/hero folder
         site_dir.mkdir(parents=True, exist_ok=True)
         for name, spec in SITE_HORIZON.items():
-            (site_dir / name).write_text(site_horizon(*spec))
-            print(f"Wrote {site_dir / name}")
+            for layer in SITE_LAYERS:  # horizon.svg -> horizon-far.svg; horizon-phone.svg -> horizon-far-phone.svg
+                out = site_dir / name.replace("horizon", f"horizon-{layer}")
+                out.write_text(site_horizon(*spec, layer=layer))
+                print(f"Wrote {out}")
         # The floors: the README header's own proportions, desktop and phone.
         for name, spec in {"floor.svg": (HW, 106), "floor-phone.svg": (480, 96)}.items():
             (site_dir / name).write_text(site_floor(*spec))
