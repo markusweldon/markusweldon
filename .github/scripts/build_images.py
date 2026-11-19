@@ -735,19 +735,37 @@ def treeline(avoid=(), clear=None, density: float = 1, thin: bool = True) -> str
 HEADER_CAR = True  # a modern electric roadster driving into the grid, seen from behind
 
 
-def car(cx: float, ground: float, width: float) -> str:
+# render_roadster.py renders the car from the grid's eye height: where the car
+# meets the ground, the horizon is EYE car-widths above it. Placing it the
+# same way, on any floor, keeps the two in one perspective.
+EYE = 0.7
+
+
+def car_placement() -> dict:
+    """Where the car meets the ground and how wide its rear is, as shares of
+    the image (written by render_roadster.py)."""
+    import json
+    return json.loads((ROOT / ".github" / "scripts" / "assets" / "roadster.json").read_text())["rear"]
+
+
+def car(cx: float, body: float) -> str:
     """The roadster from behind, rendered by render_roadster.py (the same 3D model
-    the Stats card's calendar uses), embedded as a PNG so it shows inside
-    GitHub's image proxy. A pink glow sits on the grid under it."""
+    the Stats card's calendar uses), embedded as WebP so it shows inside
+    GitHub's image proxy. It carries its own contact shadow and tail-light
+    reflection; body is its rear width in pixels, and it sits on the road at
+    the depth that width implies."""
     import base64
     png = IMAGES / "roadster-rear.webp"
     data = base64.b64encode(png.read_bytes()).decode()
     from PIL import Image as _Image
+    place = car_placement()
+    width = body / place["width"]
     with _Image.open(png) as im:
         h = width * im.height / im.width
+    ground = HORIZON + EYE * body
     return f"""<g transform="translate({fmt(cx)} {fmt(ground)})">
-<ellipse cx="0" cy="-2" rx="{fmt(width * 0.62)}" ry="{fmt(width * 0.07)}" fill="{PINK}" fill-opacity="0.4" filter="url(#carGlow)"/>
-<g class="car"><image href="data:image/webp;base64,{data}" x="{fmt(-width / 2)}" y="{fmt(-h)}" width="{fmt(width)}" height="{fmt(h)}"/></g>
+<ellipse cx="0" cy="0" rx="{fmt(body * 0.6)}" ry="{fmt(body * 0.06)}" fill="{PINK}" fill-opacity="0.3" filter="url(#carGlow)"/>
+<g class="car"><image href="data:image/webp;base64,{data}" x="{fmt(-width / 2)}" y="{fmt(-h * place["contact"])}" width="{fmt(width)}" height="{fmt(h)}"/></g>
 </g>"""
 
 
@@ -759,27 +777,74 @@ def grid() -> tuple[str, str]:
     """Cyan perspective floor; horizontal lines roll toward the viewer.
     The receding lines fan out across the whole width at the horizon (none
     stop short of the sides), and the rolling lines start right at the
-    horizon, so there's no empty band beneath it."""
+    horizon, so there's no empty band beneath it.
+    Down the middle runs a three-lane neon road: a darker surface between
+    two glowing pink edges, with dashed lane lines either side of the car
+    that rush toward the viewer with the rolling lines and grow as they come,
+    so the car is plainly on a road at speed."""
     parts = []
     reach = math.ceil(HW / 2 / 14) + 2      # enough receding lines to cover the horizon edge to edge
     for i in range(-reach, reach + 1):
+        if abs(i) < 2:
+            continue                        # the road's lanes take the middle
         parts.append(f'<line x1="{fmt(HW / 2 + i * 14)}" y1="{HORIZON}" '
                      f'x2="{fmt(HW / 2 + i * 150)}" y2="{HH}"/>')
     # A line every 0.22 s. They're born at 1/40 of the floor's depth below the
     # horizon; 12 at a time keeps the same spacing and speed up close.
     lines, period, far = 12, 0.22, 40.0
+    depth = HH - HORIZON
     frames = []
+    dash_frames = {-1: [], 1: []}
     for step in range(21):
         t = step / 20
-        y = HORIZON + (HH - HORIZON) / far ** (1 - t)
+        y = HORIZON + depth / far ** (1 - t)
+        sc_ = (y - HORIZON) / depth
         frames.append(f"{t * 100:.0f}%{{transform:translateY({y:.1f}px)}}")
+        for i in (-1, 1):                   # a lane line follows receding line i: x = centre + i(14 + 136 s)
+            dash_frames[i].append(f"{t * 100:.0f}%{{transform:translate({HW / 2 + i * (14 + 136 * sc_):.1f}px,"
+                                  f"{y:.1f}px) scale({sc_:.4f})}}")
     for k in range(lines):
         parts.append(f'<line class="h" x1="0" y1="0" x2="{HW}" y2="0" '
                      f'style="animation-delay:-{k * period:.2f}s"/>')
-        y = HORIZON + (HH - HORIZON) / far ** (1 - (k + 0.5) / lines)
+        y = HORIZON + depth / far ** (1 - (k + 0.5) / lines)
         parts.append(f'<line class="hs" x1="0" y1="{y:.1f}" x2="{HW}" y2="{y:.1f}"/>')
+    # The road, three lanes wide: solid glowing edges on receding lines +-2,
+    # dashed lane lines on +-1, and the car in the middle lane.
+    def at(i, y):
+        return HW / 2 + i * (14 + 136 * (y - HORIZON) / depth)
+    l0, l1, r0, r1 = at(-2, HORIZON), at(-2, HH), at(2, HORIZON), at(2, HH)
+    road = (f'<path d="M{fmt(l0)},{HORIZON} L{fmt(r0)},{HORIZON} L{fmt(r1)},{HH} L{fmt(l1)},{HH} Z" '
+            f'fill="url(#roadFill)" stroke="none"/>'
+            f'<path d="M{fmt(l0)},{HORIZON} L{fmt(l1)},{HH} M{fmt(r0)},{HORIZON} L{fmt(r1)},{HH}" '
+            f'stroke="{PINK}" stroke-width="5" stroke-opacity="0.3" filter="url(#roadGlow)" fill="none"/>'
+            f'<path d="M{fmt(l0)},{HORIZON} L{fmt(l1)},{HH} M{fmt(r0)},{HORIZON} L{fmt(r1)},{HH}" '
+            f'stroke="{PINK}" stroke-width="1.4" stroke-opacity="0.85" fill="none"/>')
+    # Lane dashes, drawn at full size for the floor's near edge, slanted along
+    # their lane line and scaled with distance; each rides with a rolling line.
+    dash_len, dash_w = 0.45 * math.log(far) / lines * depth, 3.2   # nearly half the gap between rolling lines
+    dashes = []
+    for i in (-1, 1):
+        lean = 136 * i / depth * dash_len
+        dashes += [f'<path class="rd rd{"l" if i < 0 else "r"}" d="M0,0 l{fmt(lean)},{fmt(dash_len)}" '
+                   f'style="animation-delay:-{k * period:.2f}s"/>' for k in range(lines)]
+        for k in range(lines):
+            y = HORIZON + depth / far ** (1 - (k + 0.5) / lines)
+            sc_ = (y - HORIZON) / depth
+            dashes.append(f'<path class="rds" d="M{fmt(at(i, y))},{fmt(y)} l{fmt(lean * sc_)},{fmt(dash_len * sc_)}" '
+                          f'stroke-width="{fmt(dash_w * sc_)}"/>')
+    parts.append(f'<defs><linearGradient id="roadFill" x1="0" y1="0" x2="0" y2="1">'
+                 f'<stop offset="0" stop-color="{BG}" stop-opacity="0.35"/>'
+                 f'<stop offset="1" stop-color="{BG}" stop-opacity="0.75"/></linearGradient>'
+                 f'<filter id="roadGlow" x="-50%" y="-5%" width="200%" height="110%"><feGaussianBlur stdDeviation="3"/></filter></defs>')
+    parts.append(road)
+    parts.append(f'<g stroke="#ffd6f5" stroke-opacity="0.9" stroke-width="{dash_w}" stroke-linecap="butt" fill="none">'
+                 f'{"".join(dashes)}</g>')
+    cycle = f"{lines * period:.2f}s linear infinite"
     css = (f"@keyframes run{{{''.join(frames)}}}"
-           f".h{{animation:run {lines * period:.2f}s linear infinite}}")
+           f".h{{animation:run {cycle}}}"
+           f"@keyframes dashl{{{''.join(dash_frames[-1])}}}@keyframes dashr{{{''.join(dash_frames[1])}}}"
+           f".rdl{{animation:dashl {cycle}}}.rdr{{animation:dashr {cycle}}}.rds{{display:none}}"
+           f"@media (prefers-reduced-motion: reduce){{.rd{{animation:none;display:none}}.rds{{display:inline}}}}")
     return "\n".join(parts), css
 
 
@@ -1036,7 +1101,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)"/>
 </g>
-{f'<g class="carwrap">{car(HW / 2, HH - 4, 104 if phone else 128)}</g>' if HEADER_CAR else ""}
+{f'<g class="carwrap">{car(HW / 2, 100 if phone else 124)}</g>' if HEADER_CAR else ""}
 {words}
 </g>
 <rect x="0.5" y="0.5" width="{HW - 1}" height="{HH - 1}" rx="15.5" fill="none" stroke="url(#border)" stroke-opacity="0.45"/>"""
