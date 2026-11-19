@@ -145,7 +145,7 @@ def crop(path, scale=1.0):
     return box, im.size
 
 
-def neon_outline(im, pad=6, rim=3, glow=2.2):
+def neon_outline(im, pad=6, rim=3, glow=2.2, ground=None, fade=0):
     """A faint neon rim traced round the car's silhouette -- pink on the left
     fading to cyan on the right, with a soft glow, like the scenes' line art.
     rim is the grow filter size (3 = a 1 px rim). Returns the padded image."""
@@ -163,6 +163,13 @@ def neon_outline(im, pad=6, rim=3, glow=2.2):
     blur = np.asarray(Image.fromarray((edge * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(glow)),
                       dtype=float) / 255
     line_a = np.clip(edge * 0.85 + blur * 0.9, 0, 1)[..., None]
+    if ground is not None:
+        # No glowing rim where the car meets the road: it fades out over the
+        # last `fade` pixels above the ground line (ground, in the source
+        # image's rows), so the tyres touch the floor instead of sitting on a
+        # neon edge.
+        rows = np.arange(h)[:, None, None] - pad
+        line_a = line_a * np.clip((ground - rows) / max(fade, 1), 0, 1)
     base = np.asarray(canvas, dtype=float) / 255
     ba = base[..., 3:4]
     out_a = line_a + ba * (1 - line_a)
@@ -176,10 +183,10 @@ def save_webp(im, out):
 
 
 def finish_rear(raw, out, width=460):
-    """The header car: outlined (from the car alone), on its contact shadow,
-    with the tail-light bar reflected in the glossy floor below it. Saves
-    WebP and records in roadster.json where the car meets the ground and how
-    wide its rear is, as shares of the finished image."""
+    """The header car: outlined (from the car alone, and not along its
+    bottom, where it meets the road) on its own contact shadow. Saves WebP and
+    records in roadster.json where the car meets the ground and how wide its
+    rear is, as shares of the finished image."""
     import numpy as np
     from PIL import Image, ImageFilter
     pad = 6
@@ -189,43 +196,11 @@ def finish_rear(raw, out, width=460):
     meta_file = ASSETS / "roadster.json"
     meta = json.loads(meta_file.read_text())
     rr = meta["rear_raw"]
-    outlined = neon_outline(car, pad=pad)            # the outline traces the car, never its shadow
-    # Room below for the reflection.
-    contact = rr["contact_y"] + pad
-    extra = 0
-    canvas = Image.new("RGBA", (outlined.width, outlined.height + extra))
+    contact = rr["contact_y"]
+    outlined = neon_outline(car, pad=pad, ground=contact, fade=car.height * 0.16)   # never along the tyres' bottoms
+    canvas = Image.new("RGBA", outlined.size)
     canvas.alpha_composite(shadow, (pad, pad))
-    # The tail-light bar mirrored in the floor: its bright red-pink pixels,
-    # flipped about the ground line, stretched and blurred like a reflection
-    # in wet asphalt.
-    px = np.asarray(car, dtype=float) / 255
-    rgb, a = px[..., :3], px[..., 3]
-    hi, lo = rgb.max(-1), rgb.min(-1)
-    r_, g_, b_ = rgb[..., 0], rgb[..., 1], rgb[..., 2]
-    lit = (a > 0.5) & (r_ > 0.55) & (b_ < 0.7 * r_) & (g_ < 0.45 * r_)   # the red light bar, not the pink-lit body
-    rows = lit.sum(axis=1)
-    if rows.max() > 0:                                       # keep the bar itself: a few rows round its fullest
-        peak = int(rows.argmax())
-        keep = np.zeros_like(lit)
-        keep[max(0, peak - 4):peak + 5] = True
-        lit &= keep
-    # The bar's glow smeared down the wet floor from where the tyres meet
-    # it: each column takes the bar's colour there and fades with distance.
-    cols = lit.any(axis=0)
-    if cols.any():
-        colour = np.zeros((car.width, 3))
-        colour[cols] = (rgb * lit[..., None]).sum(axis=0)[cols] / lit.sum(axis=0)[cols][:, None]
-        length = max(8, round(car.height * 0.24))
-        fall = np.exp(-np.linspace(0, 3.2, length))[:, None] * 0.62     # bright at the car, fading out
-        streak = np.zeros((length, car.width, 4))
-        streak[..., :3] = colour[None]
-        streak[..., 3] = fall * cols[None]
-        refl = Image.fromarray((streak * 255).astype(np.uint8), "RGBA").filter(ImageFilter.GaussianBlur(1.6))
-        if canvas.height < int(contact) + length:
-            grown = Image.new("RGBA", (canvas.width, int(contact) + length))
-            grown.alpha_composite(canvas, (0, 0))
-            canvas = grown
-        canvas.alpha_composite(refl, (pad, int(contact) - 2))
+    contact += pad
     canvas.alpha_composite(outlined, (0, 0))
     save_webp(canvas, out)
     meta["rear"] = {"contact": contact / canvas.height, "width": rr["width"] / canvas.width}

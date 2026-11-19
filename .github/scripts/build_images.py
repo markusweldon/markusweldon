@@ -751,9 +751,8 @@ def car_placement() -> dict:
 def car(cx: float, body: float) -> str:
     """The roadster from behind, rendered by render_roadster.py (the same 3D model
     the Stats card's calendar uses), embedded as WebP so it shows inside
-    GitHub's image proxy. It carries its own contact shadow and tail-light
-    reflection; body is its rear width in pixels, and it sits on the road at
-    the depth that width implies."""
+    GitHub's image proxy. It carries its own contact shadow; body is its rear
+    width in pixels, and it sits on the road at the depth that width implies."""
     import base64
     png = IMAGES / "roadster-rear.webp"
     data = base64.b64encode(png.read_bytes()).decode()
@@ -764,7 +763,6 @@ def car(cx: float, body: float) -> str:
         h = width * im.height / im.width
     ground = HORIZON + EYE * body
     return f"""<g transform="translate({fmt(cx)} {fmt(ground)})">
-<ellipse cx="0" cy="0" rx="{fmt(body * 0.6)}" ry="{fmt(body * 0.06)}" fill="{PINK}" fill-opacity="0.3" filter="url(#carGlow)"/>
 <g class="car"><image href="data:image/webp;base64,{data}" x="{fmt(-width / 2)}" y="{fmt(-h * place["contact"])}" width="{fmt(width)}" height="{fmt(h)}"/></g>
 </g>"""
 
@@ -778,15 +776,13 @@ def grid() -> tuple[str, str]:
     The receding lines fan out across the whole width at the horizon (none
     stop short of the sides), and the rolling lines start right at the
     horizon, so there's no empty band beneath it.
-    Down the middle runs a three-lane neon road: a darker surface between
-    two glowing pink edges, with dashed lane lines either side of the car
-    that rush toward the viewer with the rolling lines and grow as they come,
-    so the car is plainly on a road at speed."""
+    Down the middle runs a neon road about two car-widths wide: a darker
+    surface between two glowing pink edges, crossed by the rolling lines."""
     parts = []
     reach = math.ceil(HW / 2 / 14) + 2      # enough receding lines to cover the horizon edge to edge
     for i in range(-reach, reach + 1):
         if abs(i) < 2:
-            continue                        # the road's lanes take the middle
+            continue                        # the road takes the middle
         parts.append(f'<line x1="{fmt(HW / 2 + i * 14)}" y1="{HORIZON}" '
                      f'x2="{fmt(HW / 2 + i * 150)}" y2="{HH}"/>')
     # A line every 0.22 s. They're born at 1/40 of the floor's depth below the
@@ -794,57 +790,30 @@ def grid() -> tuple[str, str]:
     lines, period, far = 12, 0.22, 40.0
     depth = HH - HORIZON
     frames = []
-    dash_frames = {-1: [], 1: []}
     for step in range(21):
         t = step / 20
         y = HORIZON + depth / far ** (1 - t)
-        sc_ = (y - HORIZON) / depth
         frames.append(f"{t * 100:.0f}%{{transform:translateY({y:.1f}px)}}")
-        for i in (-1, 1):                   # a lane line follows receding line i: x = centre + i(14 + 136 s)
-            dash_frames[i].append(f"{t * 100:.0f}%{{transform:translate({HW / 2 + i * (14 + 136 * sc_):.1f}px,"
-                                  f"{y:.1f}px) scale({sc_:.4f})}}")
     for k in range(lines):
         parts.append(f'<line class="h" x1="0" y1="0" x2="{HW}" y2="0" '
                      f'style="animation-delay:-{k * period:.2f}s"/>')
         y = HORIZON + depth / far ** (1 - (k + 0.5) / lines)
         parts.append(f'<line class="hs" x1="0" y1="{y:.1f}" x2="{HW}" y2="{y:.1f}"/>')
-    # The road, three lanes wide: solid glowing edges on receding lines +-2,
-    # dashed lane lines on +-1, and the car in the middle lane.
-    def at(i, y):
-        return HW / 2 + i * (14 + 136 * (y - HORIZON) / depth)
-    l0, l1, r0, r1 = at(-2, HORIZON), at(-2, HH), at(2, HORIZON), at(2, HH)
-    road = (f'<path d="M{fmt(l0)},{HORIZON} L{fmt(r0)},{HORIZON} L{fmt(r1)},{HH} L{fmt(l1)},{HH} Z" '
-            f'fill="url(#roadFill)" stroke="none"/>'
-            f'<path d="M{fmt(l0)},{HORIZON} L{fmt(l1)},{HH} M{fmt(r0)},{HORIZON} L{fmt(r1)},{HH}" '
-            f'stroke="{PINK}" stroke-width="5" stroke-opacity="0.3" filter="url(#roadGlow)" fill="none"/>'
-            f'<path d="M{fmt(l0)},{HORIZON} L{fmt(l1)},{HH} M{fmt(r0)},{HORIZON} L{fmt(r1)},{HH}" '
-            f'stroke="{PINK}" stroke-width="1.4" stroke-opacity="0.85" fill="none"/>')
-    # Lane dashes, drawn at full size for the floor's near edge, slanted along
-    # their lane line and scaled with distance; each rides with a rolling line.
-    dash_len, dash_w = 0.45 * math.log(far) / lines * depth, 3.2   # nearly half the gap between rolling lines
-    dashes = []
-    for i in (-1, 1):
-        lean = 136 * i / depth * dash_len
-        dashes += [f'<path class="rd rd{"l" if i < 0 else "r"}" d="M0,0 l{fmt(lean)},{fmt(dash_len)}" '
-                   f'style="animation-delay:-{k * period:.2f}s"/>' for k in range(lines)]
-        for k in range(lines):
-            y = HORIZON + depth / far ** (1 - (k + 0.5) / lines)
-            sc_ = (y - HORIZON) / depth
-            dashes.append(f'<path class="rds" d="M{fmt(at(i, y))},{fmt(y)} l{fmt(lean * sc_)},{fmt(dash_len * sc_)}" '
-                          f'stroke-width="{fmt(dash_w * sc_)}"/>')
+    # The road's edges follow receding lines +-1, so where the car sits it is
+    # about twice the car's width.
+    l0, l1, r0, r1 = HW / 2 - 14, HW / 2 - 150, HW / 2 + 14, HW / 2 + 150
     parts.append(f'<defs><linearGradient id="roadFill" x1="0" y1="0" x2="0" y2="1">'
                  f'<stop offset="0" stop-color="{BG}" stop-opacity="0.35"/>'
                  f'<stop offset="1" stop-color="{BG}" stop-opacity="0.75"/></linearGradient>'
                  f'<filter id="roadGlow" x="-50%" y="-5%" width="200%" height="110%"><feGaussianBlur stdDeviation="3"/></filter></defs>')
-    parts.append(road)
-    parts.append(f'<g stroke="#ffd6f5" stroke-opacity="0.9" stroke-width="{dash_w}" stroke-linecap="butt" fill="none">'
-                 f'{"".join(dashes)}</g>')
-    cycle = f"{lines * period:.2f}s linear infinite"
+    parts.append(f'<path d="M{fmt(l0)},{HORIZON} L{fmt(r0)},{HORIZON} L{fmt(r1)},{HH} L{fmt(l1)},{HH} Z" '
+                 f'fill="url(#roadFill)" stroke="none"/>'
+                 f'<path d="M{fmt(l0)},{HORIZON} L{fmt(l1)},{HH} M{fmt(r0)},{HORIZON} L{fmt(r1)},{HH}" '
+                 f'stroke="{PINK}" stroke-width="5" stroke-opacity="0.3" filter="url(#roadGlow)" fill="none"/>'
+                 f'<path d="M{fmt(l0)},{HORIZON} L{fmt(l1)},{HH} M{fmt(r0)},{HORIZON} L{fmt(r1)},{HH}" '
+                 f'stroke="{PINK}" stroke-width="1.4" stroke-opacity="0.85" fill="none"/>')
     css = (f"@keyframes run{{{''.join(frames)}}}"
-           f".h{{animation:run {cycle}}}"
-           f"@keyframes dashl{{{''.join(dash_frames[-1])}}}@keyframes dashr{{{''.join(dash_frames[1])}}}"
-           f".rdl{{animation:dashl {cycle}}}.rdr{{animation:dashr {cycle}}}.rds{{display:none}}"
-           f"@media (prefers-reduced-motion: reduce){{.rd{{animation:none;display:none}}.rds{{display:inline}}}}")
+           f".h{{animation:run {lines * period:.2f}s linear infinite}}")
     return "\n".join(parts), css
 
 
