@@ -105,6 +105,4 @@
 
 <img src="images/workspace-warp.png" width="100%" alt="Warp terminal running neofetch on an M2 Pro MacBook Pro, over a synthwave starfield, treeline and neon grid">
 
-<sub>Car model: "Tesla roadster" by Delta Xeon on Sketchfab, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></sub>
-
 </div>
