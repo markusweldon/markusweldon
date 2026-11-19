@@ -735,19 +735,35 @@ def treeline(avoid=(), clear=None, density: float = 1, thin: bool = True) -> str
 HEADER_CAR = True  # a modern electric roadster driving into the grid, seen from behind
 
 
-def car(cx: float, ground: float, width: float) -> str:
+# render_roadster.py renders the car from the grid's eye height: where the car
+# meets the ground, the horizon is EYE car-widths above it. Placing it the
+# same way, on any floor, keeps the two in one perspective.
+EYE = 0.7
+
+
+def car_placement() -> dict:
+    """Where the car meets the ground and how wide its rear is, as shares of
+    the image (written by render_roadster.py)."""
+    import json
+    return json.loads((ROOT / ".github" / "scripts" / "assets" / "roadster.json").read_text())["rear"]
+
+
+def car(cx: float, body: float) -> str:
     """The roadster from behind, rendered by render_roadster.py (the same 3D model
-    the Stats card's calendar uses), embedded as a PNG so it shows inside
-    GitHub's image proxy. A pink glow sits on the grid under it."""
+    the Stats card's calendar uses), embedded as WebP so it shows inside
+    GitHub's image proxy. It carries its own contact shadow; body is its rear
+    width in pixels, and it sits on the road at the depth that width implies."""
     import base64
     png = IMAGES / "roadster-rear.webp"
     data = base64.b64encode(png.read_bytes()).decode()
     from PIL import Image as _Image
+    place = car_placement()
+    width = body / place["width"]
     with _Image.open(png) as im:
         h = width * im.height / im.width
+    ground = HORIZON + EYE * body
     return f"""<g transform="translate({fmt(cx)} {fmt(ground)})">
-<ellipse cx="0" cy="-2" rx="{fmt(width * 0.62)}" ry="{fmt(width * 0.07)}" fill="{PINK}" fill-opacity="0.4" filter="url(#carGlow)"/>
-<g class="car"><image href="data:image/webp;base64,{data}" x="{fmt(-width / 2)}" y="{fmt(-h)}" width="{fmt(width)}" height="{fmt(h)}"/></g>
+<g class="car"><image href="data:image/webp;base64,{data}" x="{fmt(-width / 2)}" y="{fmt(-h * place["contact"])}" width="{fmt(width)}" height="{fmt(h)}"/></g>
 </g>"""
 
 
@@ -759,25 +775,43 @@ def grid() -> tuple[str, str]:
     """Cyan perspective floor; horizontal lines roll toward the viewer.
     The receding lines fan out across the whole width at the horizon (none
     stop short of the sides), and the rolling lines start right at the
-    horizon, so there's no empty band beneath it."""
+    horizon, so there's no empty band beneath it.
+    Down the middle runs a neon road about two car-widths wide: a darker
+    surface between two glowing pink edges, crossed by the rolling lines."""
     parts = []
     reach = math.ceil(HW / 2 / 14) + 2      # enough receding lines to cover the horizon edge to edge
     for i in range(-reach, reach + 1):
+        if abs(i) < 2:
+            continue                        # the road takes the middle
         parts.append(f'<line x1="{fmt(HW / 2 + i * 14)}" y1="{HORIZON}" '
                      f'x2="{fmt(HW / 2 + i * 150)}" y2="{HH}"/>')
     # A line every 0.22 s. They're born at 1/40 of the floor's depth below the
     # horizon; 12 at a time keeps the same spacing and speed up close.
     lines, period, far = 12, 0.22, 40.0
+    depth = HH - HORIZON
     frames = []
     for step in range(21):
         t = step / 20
-        y = HORIZON + (HH - HORIZON) / far ** (1 - t)
+        y = HORIZON + depth / far ** (1 - t)
         frames.append(f"{t * 100:.0f}%{{transform:translateY({y:.1f}px)}}")
     for k in range(lines):
         parts.append(f'<line class="h" x1="0" y1="0" x2="{HW}" y2="0" '
                      f'style="animation-delay:-{k * period:.2f}s"/>')
-        y = HORIZON + (HH - HORIZON) / far ** (1 - (k + 0.5) / lines)
+        y = HORIZON + depth / far ** (1 - (k + 0.5) / lines)
         parts.append(f'<line class="hs" x1="0" y1="{y:.1f}" x2="{HW}" y2="{y:.1f}"/>')
+    # The road's edges follow receding lines +-1, so where the car sits it is
+    # about twice the car's width.
+    l0, l1, r0, r1 = HW / 2 - 14, HW / 2 - 150, HW / 2 + 14, HW / 2 + 150
+    parts.append(f'<defs><linearGradient id="roadFill" x1="0" y1="0" x2="0" y2="1">'
+                 f'<stop offset="0" stop-color="{BG}" stop-opacity="0.35"/>'
+                 f'<stop offset="1" stop-color="{BG}" stop-opacity="0.75"/></linearGradient>'
+                 f'<filter id="roadGlow" x="-50%" y="-5%" width="200%" height="110%"><feGaussianBlur stdDeviation="3"/></filter></defs>')
+    parts.append(f'<path d="M{fmt(l0)},{HORIZON} L{fmt(r0)},{HORIZON} L{fmt(r1)},{HH} L{fmt(l1)},{HH} Z" '
+                 f'fill="url(#roadFill)" stroke="none"/>'
+                 f'<path d="M{fmt(l0)},{HORIZON} L{fmt(l1)},{HH} M{fmt(r0)},{HORIZON} L{fmt(r1)},{HH}" '
+                 f'stroke="{PINK}" stroke-width="5" stroke-opacity="0.3" filter="url(#roadGlow)" fill="none"/>'
+                 f'<path d="M{fmt(l0)},{HORIZON} L{fmt(l1)},{HH} M{fmt(r0)},{HORIZON} L{fmt(r1)},{HH}" '
+                 f'stroke="{PINK}" stroke-width="1.4" stroke-opacity="0.85" fill="none"/>')
     css = (f"@keyframes run{{{''.join(frames)}}}"
            f".h{{animation:run {lines * period:.2f}s linear infinite}}")
     return "\n".join(parts), css
@@ -1036,7 +1070,7 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)" filter="url(#lineGlow)"/>
 <rect y="{HORIZON - 1}" width="{HW}" height="3" fill="url(#horizonLine)"/>
 </g>
-{f'<g class="carwrap">{car(HW / 2, HH - 4, 104 if phone else 128)}</g>' if HEADER_CAR else ""}
+{f'<g class="carwrap">{car(HW / 2, 100 if phone else 124)}</g>' if HEADER_CAR else ""}
 {words}
 </g>
 <rect x="0.5" y="0.5" width="{HW - 1}" height="{HH - 1}" rx="15.5" fill="none" stroke="url(#border)" stroke-opacity="0.45"/>"""
