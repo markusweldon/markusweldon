@@ -262,6 +262,11 @@ def render_rear(sc):
     ims = [Image.open(f).convert("RGBA") for f in (car, shadow)]
     box = ims[1].getchannel("A").point(lambda v: 255 if v > 40 else 0).getbbox()   # the shadow's body, not its faint tails
     contact = project(sc, cam, (1.80, 0.0, 0.0))     # the ground under the rear axle, where the tyres touch
+    # Centre the crop on the car's centreline: its shadow spreads further to
+    # one side (the lights are off-centre), and a crop fitted to the shadow
+    # would put the car off-centre in its image, and so off-centre on the road.
+    half = max(contact[0] - box[0], box[2] - contact[0])
+    box = (round(contact[0] - half), box[1], round(contact[0] + half), box[3])
     left, right = (project(sc, cam, (2.68, y, 0.0)) for y in (-CAR_W / 2, CAR_W / 2))
     scale = 460 / (box[2] - box[0])
     for f, im in zip((car, shadow), ims):

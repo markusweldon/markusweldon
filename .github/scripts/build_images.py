@@ -645,7 +645,7 @@ def silicon_fir(x: float, h: float, w: float, base: float) -> tuple[str, str, li
             boughs)
 
 
-def treeline(avoid=(), clear=None, density: float = 1, thin: bool = True) -> str:
+def treeline(avoid=(), clear=None, density: float = 1, thin: bool = True, cpu_near: float | None = None) -> str:
     """The Silicon Forest: circuit-trace firs along the horizon. Trees under
     the text are kept below it, and none stand in front of the city
     (clear = its x range)."""
@@ -711,7 +711,11 @@ def treeline(avoid=(), clear=None, density: float = 1, thin: bool = True) -> str
     left_side = [t for t in front if t[1] > 22 and (not clear or t[0] < clear[0] - 10) and t[0] > 40]
     pick = left_side or [t for t in front if t[1] > 22 and t[0] > 40]
     if pick:
-        x, _, _ = pick[len(pick) // 2]
+        # By default the middle of the trees left of the city; cpu_near picks
+        # the one nearest that x instead (the site's wide strip is mostly
+        # off-screen, so it asks for one close to the city).
+        x, _, _ = (min(pick, key=lambda t: abs(t[0] - cpu_near)) if cpu_near is not None
+                   else pick[len(pick) // 2])
         size = 13
         cx, cy = x - 9 - size, HORIZON - size - 3
         pins = []
@@ -776,7 +780,7 @@ def grid() -> tuple[str, str]:
     The receding lines fan out across the whole width at the horizon (none
     stop short of the sides), and the rolling lines start right at the
     horizon, so there's no empty band beneath it.
-    Down the middle runs a neon road about two car-widths wide: a darker
+    Down the middle runs a neon road under three car-widths wide: a darker
     surface between two glowing pink edges, crossed by the rolling lines."""
     parts = []
     reach = math.ceil(HW / 2 / 14) + 2      # enough receding lines to cover the horizon edge to edge
@@ -799,9 +803,10 @@ def grid() -> tuple[str, str]:
                      f'style="animation-delay:-{k * period:.2f}s"/>')
         y = HORIZON + depth / far ** (1 - (k + 0.5) / lines)
         parts.append(f'<line class="hs" x1="0" y1="{y:.1f}" x2="{HW}" y2="{y:.1f}"/>')
-    # The road's edges follow receding lines +-1, so where the car sits it is
-    # about twice the car's width.
-    l0, l1, r0, r1 = HW / 2 - 14, HW / 2 - 150, HW / 2 + 14, HW / 2 + 150
+    # The road's edges sit ROAD receding-line spacings either side of the
+    # centre, so where the car sits it is about 2.7 car widths wide.
+    ROAD = 1.35
+    l0, l1, r0, r1 = HW / 2 - 14 * ROAD, HW / 2 - 150 * ROAD, HW / 2 + 14 * ROAD, HW / 2 + 150 * ROAD
     parts.append(f'<defs><linearGradient id="roadFill" x1="0" y1="0" x2="0" y2="1">'
                  f'<stop offset="0" stop-color="{BG}" stop-opacity="0.35"/>'
                  f'<stop offset="1" stop-color="{BG}" stop-opacity="0.75"/></linearGradient>'
@@ -1409,7 +1414,10 @@ def site_horizon(width: float, height: float, hood_x: float, scale: float, densi
     low = [(0, 0, clear[0], height - 54)] if density > 1 else []   # under the text column
     scene = portland(x0, scale, hood_opacity=1, hood_to_ground=True, layer="all" if layer == "all" else layer) \
         if layer != "trees" else ""
-    trees = treeline(low, clear, density, thin=density == 1) if layer in ("all", "trees") else ""
+    # On the wide desktop strip, the chip goes on a tree just left of the city,
+    # inside what a 1024px-and-up screen shows.
+    cpu = clear[0] - 130 if density > 1 else None
+    trees = treeline(low, clear, density, thin=density == 1, cpu_near=cpu) if layer in ("all", "trees") else ""
     body = f"<style>{SCENE_CSS}</style>\n<defs>\n{SCENE_DEFS}</defs>\n{scene}\n{trees}"
     HW, HORIZON = saved
     return svg(width, height, body)
