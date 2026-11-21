@@ -17,6 +17,7 @@ Usage:
     pip install bpy        (Blender as a Python module)
     python3 .github/scripts/render_roadster.py <model.glb>
     python3 .github/scripts/render_roadster.py --rear <model.glb>   (the header car only)
+    python3 .github/scripts/render_roadster.py --roll <model.glb>   (the calendar car's barrel roll only)
     python3 .github/scripts/render_roadster.py --finish   (outline + compress only)
 """
 import json
@@ -229,6 +230,84 @@ def finish_iso():
     meta_file.write_text(json.dumps(meta, indent=1))
 
 
+ROLL_FRAMES = 16          # the calendar car's barrel roll, 22.5 degrees apart
+ROLL_AXIS = (0.12, 0.0, 0.67)   # the car's long axis, through the middle of its body
+
+
+def iso_camera(sc):
+    """The calendar's orthographic camera (see main)."""
+    horiz = Vector((1, -1, 0)).normalized()
+    d = 30.0
+    loc = horiz * (d * math.cos(ISO_ELEV)) + Vector((0, 0, d * math.sin(ISO_ELEV)))
+    return camera(sc, tuple(loc), (0.0, 0.0, 0.0), ortho=7.5)
+
+
+def render_roll(sc):
+    """The calendar car's barrel roll: ROLL_FRAMES renders of the car turned
+    about its own long axis (it rolls to its right), from the calendar's
+    camera, at the same scale as the driving frames. The lights stay put, so
+    its underside goes dark as it turns over, like the real thing. All frames
+    share one crop and are placed, like the driving frames, from the nose of
+    the car at rest on the ground, so they swap in seamlessly."""
+    from PIL import Image
+    meta_file = ASSETS / "roadster.json"
+    meta = json.loads(meta_file.read_text())
+    final_w = Image.open(ASSETS / "roadster-iso-raw-0.png").width
+    upp_final = meta["iso_raw"]["w"] / final_w           # calendar units per pixel of the driving frames
+    cam = iso_camera(sc)
+    W, H = 900, 900
+    sc.render.resolution_x, sc.render.resolution_y = W, H
+    pa, p0 = project(sc, cam, (1, 0, 0)), project(sc, cam, (0, 0, 0))
+    upp = ISO_M * math.hypot(1.7, 1.0) / math.hypot(pa[0] - p0[0], pa[1] - p0[1])
+    nose = project(sc, cam, (-2.44, 0.0, 0.0))
+    pivot = bpy.data.objects.new("roll", None)
+    sc.collection.objects.link(pivot)
+    pivot.location = ROLL_AXIS
+    bpy.context.view_layer.update()
+    for o in [o for o in sc.objects if o.parent is None and o.type in ("MESH", "EMPTY") and o is not pivot]:
+        world = o.matrix_world.copy()
+        o.parent = pivot
+        o.matrix_world = world
+    files = []
+    for k in range(ROLL_FRAMES):
+        pivot.rotation_euler = (2 * math.pi * k / ROLL_FRAMES, 0.0, 0.0)   # about the long (X) axis
+        bpy.context.view_layer.update()
+        f = ASSETS / f"roadster-roll-raw-{k}.png"
+        render(sc, f, W, H)
+        files.append(f)
+    ims = [Image.open(f).convert("RGBA") for f in files]
+    box = None
+    for im in ims:
+        b = im.getchannel("A").point(lambda v: 255 if v > 4 else 0).getbbox()
+        box = b if box is None else (min(box[0], b[0]), min(box[1], b[1]), max(box[2], b[2]), max(box[3], b[3]))
+    scale = upp / upp_final
+    size = (box[2] - box[0], box[3] - box[1])
+    for f, im in zip(files, ims):
+        im = im.crop(box)
+        im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS).save(f, optimize=True)
+    meta["roll_raw"] = {"x": (box[0] - nose[0]) * upp, "y": (box[1] - nose[1]) * upp,
+                        "w": size[0] * upp, "h": size[1] * upp, "frames": ROLL_FRAMES}
+    meta_file.write_text(json.dumps(meta, indent=1))
+    finish_roll()
+
+
+def finish_roll():
+    """Outline the roll frames like the driving frames and save them as WebP,
+    with their placement grown to cover the padding."""
+    from PIL import Image
+    meta_file = ASSETS / "roadster.json"
+    meta = json.loads(meta_file.read_text())
+    raw = meta["roll_raw"]
+    pad = 5
+    for k in range(raw["frames"]):
+        im = Image.open(ASSETS / f"roadster-roll-raw-{k}.png").convert("RGBA")
+        save_webp(neon_outline(im, pad=pad, rim=5, glow=1.6), ASSETS / f"roadster-roll-{k}.webp")
+    upp = raw["w"] / im.width
+    meta["roll"] = {"x": raw["x"] - pad * upp, "y": raw["y"] - pad * upp,
+                    "w": raw["w"] + 2 * pad * upp, "h": raw["h"] + 2 * pad * upp, "frames": raw["frames"]}
+    meta_file.write_text(json.dumps(meta, indent=1))
+
+
 # The header's grid puts the eye at this height, as a share of the car's width:
 # where the car touches the ground, the horizon is EYE car-widths above it.
 # Rendering from the same height is what makes the car sit on the grid.
@@ -339,6 +418,10 @@ if __name__ == "__main__":
     if sys.argv[1:] == ["--finish"]:                  # redo both cars' outline and compression only
         finish_rear(ASSETS / "roadster-rear-raw.png", ROOT / "images" / "roadster-rear.webp")
         finish_iso()
+        if (ASSETS / "roadster-roll-raw-0.png").exists():
+            finish_roll()
+    elif len(sys.argv) == 3 and sys.argv[1] == "--roll":   # re-render the calendar car's barrel roll only
+        render_roll(setup(Path(sys.argv[2]).resolve()))
     elif len(sys.argv) == 3 and sys.argv[1] == "--rear":   # re-render the header car only
         render_rear(setup(Path(sys.argv[2]).resolve()))
     elif len(sys.argv) == 2:
