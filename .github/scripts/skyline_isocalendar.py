@@ -244,7 +244,7 @@ HOP_LIFT, HOP_LAND = 0.30, 0.62   # where along the road (0 start .. 1 end) it l
 HOP_HIGH = MAX_HEIGHT + 5         # apex above the ground, clear of the tallest towers
 HOP_ROLL = (0.30, 0.70)           # the barrel roll, as shares of the flight
 BACK_ROAD = 1.9                   # the far road, this many days behind the oldest row
-A_EXIT = 8.0                      # week where the hop pass leaves the far road, short of the card's heading
+A_EXIT = -2.0                      # week where the hop pass leaves the far road, short of the card's heading
 FADE_IN, FADE_OUT = 0.5, 0.7      # seconds the car takes to fade in as it enters and out as it leaves
 
 
