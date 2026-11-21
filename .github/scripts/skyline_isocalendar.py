@@ -172,15 +172,16 @@ def tower(col, h, peak, seed, windows):
 ASSETS = Path(__file__).resolve().parent / "assets"
 
 
-def iso_car(corner, cols, rows) -> tuple[str, str]:
+def iso_car(corner, cols, rows) -> tuple[str, str, str]:
     """The header's roadster, rendered by render_roadster.py from the same 3D model in
     this calendar's isometric projection and embedded as a PNG. It drives
     along a road in front of the city towards the oldest weeks, tail to the
     viewer, with headlight beams ahead and pink streaks behind.
-    Returns (svg, css); an empty svg if the render isn't there."""
+    Returns (svg, css, back svg); the back svg goes before the city, for a
+    car that drives behind it. Empty svgs if the render isn't there."""
     png, meta_file = ASSETS / "roadster-iso.webp", ASSETS / "roadster.json"
     if not png.exists() or not meta_file.exists():
-        return "", ""
+        return "", "", ""
     meta = json.loads(meta_file.read_text())["iso"]
     data = base64.b64encode(png.read_bytes()).decode()
     road = rows + 1.9            # day-axis centre of the road
@@ -231,27 +232,31 @@ def iso_car(corner, cols, rows) -> tuple[str, str]:
            f"100%{{transform:translate({fmt(ex)}px,{fmt(ey)}px);opacity:0}}}}"
            f".mws-car{{animation:mws-drive 6s linear infinite}}"
            f"@media (prefers-reduced-motion: reduce){{.mws-car{{animation:none;transform:translate({fmt(mx)}px,{fmt(my)}px)}}}}")
-    return f'<g class="mws-car">{floor}{image}</g>', css
+    return f'<g class="mws-car">{floor}{image}</g>', css, ""
 
 
 # The rocket hop: the 2026 Roadster's party trick. Distances are in
-# calendar units (weeks along the road, a cell's height up).
+# calendar units (weeks along the road, days across, a cell's height up).
 HOP_SPEED = 15.0         # weeks a second on the road: the same pace as before the hop
-HOP_AIR = 2.4            # seconds in the air: the road pace slows to hang-time over the city
+HOP_AIR = 2.6            # seconds in the air: the road pace slows to hang-time over the city
 HOP_GAP = 1.4            # seconds off screen before the next pass
-HOP_LIFT, HOP_LAND = 0.36, 0.64   # where along the road (0 start .. 1 end) it lifts off and lands
-HOP_HIGH = MAX_HEIGHT + 5         # apex above the road
-HOP_SIDE = 5.0                    # how far over the city (days, towards the older side of the week) it swings
-HOP_ROLL = (0.28, 0.74)           # the barrel roll, as shares of the flight
+HOP_LIFT, HOP_LAND = 0.30, 0.62   # where along the road (0 start .. 1 end) it lifts off and lands
+HOP_HIGH = MAX_HEIGHT + 5         # apex above the ground, clear of the tallest towers
+HOP_ROLL = (0.30, 0.70)           # the barrel roll, as shares of the flight
+BACK_ROAD = 1.9                   # the far road, this many days behind the oldest row
 
 
 def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
-    """The car drives in, lights its rocket thrusters (smoke billowing off the
-    road), lifts off and swings up over the city, barrel-rolls over the
-    towers trailing smoke, then drops back onto the road on its jets and
-    drives on, all while carrying on forwards. The roll is 16 real renders of
-    the car turning about its long axis (render_roadster.py --roll).
-    Returns (svg, css), or None if the roll frames aren't there."""
+    """The car drives in on the near road, lights its rocket thrusters (smoke
+    billowing off the road), lifts off and arcs right over the city,
+    barrel-rolling above the towers and trailing smoke, then drops onto the
+    far road behind the city on its jets and drives on there, glimpsed
+    between the towers. It keeps moving forwards throughout. The roll is 16
+    real renders of the car turning about its long axis
+    (render_roadster.py --roll).
+    Returns (front svg, css, back svg): the back svg is drawn before the
+    city, so the towers hide the car once it is behind them. None if the
+    roll frames aren't there."""
     meta = json.loads((ASSETS / "roadster.json").read_text())
     roll = meta.get("roll")
     if not roll:
@@ -261,23 +266,25 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
         return None
     n = roll["frames"]
     ox, oy = nose
-    a0, a1 = cols + 6, -8.0                       # the run: in from the newest weeks, out past the oldest
+    cross = road + BACK_ROAD                       # days from the near road to the far road
+    a0, a1 = cols + 6, -8.0                        # the run: in from the newest weeks, out past the oldest
     ground = (1 - (HOP_LAND - HOP_LIFT)) * (a0 - a1) / HOP_SPEED   # seconds on the road, both sides
     run = ground + HOP_AIR
     cycle = round(run + HOP_GAP, 2)
     t_lift = HOP_LIFT * (a0 - a1) / HOP_SPEED / run                 # as shares of the run
     t_land = t_lift + HOP_AIR / run
+    on = run / cycle                                                # share of the cycle on screen
 
-    HOP_PASS = run / cycle                        # share of the cycle the car is on screen
-
-    def ease(u):                                  # 0..1, gentle at both ends
-        return math.sin(math.pi * u / 2) ** 2
+    def smooth(u):                                 # 0..1, gentle at both ends
+        u = min(1.0, max(0.0, u))
+        return u * u * (3 - 2 * u)
 
     def state(t):
-        """Car position at cycle time t (0..1): along-road a, sideways db
-        (negative = over the city), height z, roll angle, thrust on."""
-        rt = min(1.0, max(0.0, t / HOP_PASS))      # time through the run
-        if rt < t_lift:                            # distance through the run: road pace, then hang-time, then road
+        """At cycle time t (0..1): along-road a, days off the near road db
+        (negative = towards the far road), height z, roll angle, thrust on,
+        flight share f, and whether the car is behind the city."""
+        rt = min(1.0, max(0.0, t / on))
+        if rt < t_lift:                            # road pace, then hang-time, then road pace
             r = HOP_LIFT * rt / t_lift
         elif rt < t_land:
             r = HOP_LIFT + (HOP_LAND - HOP_LIFT) * (rt - t_lift) / (t_land - t_lift)
@@ -285,81 +292,81 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
             r = HOP_LAND + (1 - HOP_LAND) * (rt - t_land) / (1 - t_land)
         a = a0 + (a1 - a0) * r
         f = (r - HOP_LIFT) / (HOP_LAND - HOP_LIFT)
-        if 0 <= f <= 1:
-            hump = math.sin(math.pi * f) ** 2
-            z, db = HOP_HIGH * hump, -HOP_SIDE * hump
-            q = (f - HOP_ROLL[0]) / (HOP_ROLL[1] - HOP_ROLL[0])
-            angle = 360 * ease(min(1, max(0, q))) if 0 < q < 1 else 0.0
-            thrust = f < HOP_ROLL[0] or f > HOP_ROLL[1]
+        if f <= 0:
+            db, z = 0.0, 0.0
+        elif f >= 1:
+            db, z = -cross, 0.0
         else:
-            z = db = angle = 0.0
-            thrust = -0.06 < f < 0 or 1 < f < 1.04     # lit on the road just before lift-off and just after landing
-        return a, db, z, angle, thrust, f
+            db, z = -cross * smooth(f), HOP_HIGH * math.sin(math.pi * f)
+        q = (f - HOP_ROLL[0]) / (HOP_ROLL[1] - HOP_ROLL[0])
+        angle = 360 * smooth(q) if 0 < q < 1 else 0.0
+        thrust = (-0.05 < f < HOP_ROLL[0]) or (HOP_ROLL[1] < f < 1.05)
+        behind = road + db < -0.6                  # past the oldest row: every tower is in front of it
+        return a, db, z, angle, thrust, f, behind
 
-    def screen(a, db, z):                         # offset from the car's start-of-road position
-        x = 1.7 * (a - db)
-        y = a + db - z
-        return x, y
+    def screen(a, db, z):                          # offset from the car's start position
+        return 1.7 * (a - db), a + db - z
 
     def pct(t):
         return f"{t * 100:.2f}%"
 
-    # The car: moves along the whole path.
-    steps = [i / 400 for i in range(401)]
-    car_kf, road_kf, lv_kf = [], [], []
-    for t in steps:
-        a, db, z, angle, thrust, f = state(t)
+    def fade(t):                                   # in at the start of the pass, out at the end
+        if t < 0.005 or t > on + 0.005:
+            return 0.0
+        if t < 0.035:
+            return t / 0.035
+        if t > on - 0.04:
+            return max(0.0, (on + 0.005 - t) / 0.045)
+        return 1.0
+
+    car_kf, ground_kf = [], []
+    for i in range(401):
+        t = i / 400
+        a, db, z, angle, thrust, f, behind = state(t)
         x, y = screen(a, db, z)
-        op = 0 if t < 0.005 or t > HOP_PASS + 0.005 else (min(1, t / 0.035) if t < 0.035 else 1)
-        if HOP_PASS - 0.04 < t <= HOP_PASS + 0.005:
-            op = max(0, (HOP_PASS + 0.005 - t) / 0.045)
-        car_kf.append(f"{pct(t)}{{transform:translate({fmt(x)}px,{fmt(y)}px);opacity:{op:.2f}}}")
-        rx, ry = screen(a, 0, 0)
-        road_kf.append(f"{pct(t)}{{transform:translate({fmt(rx)}px,{fmt(ry)}px);opacity:{op * max(0, 1 - z / 3):.2f}}}")
+        car_kf.append(f"{pct(t)}{{transform:translate({fmt(x)}px,{fmt(y)}px)}}")
+        gx, gy = screen(a, db, 0)
+        ground_kf.append(f"{pct(t)}{{transform:translate({fmt(gx)}px,{fmt(gy)}px);"
+                         f"opacity:{fade(t) * max(0.0, 1 - z / 3):.2f}}}")
 
-    # Which frame shows when: the driving frames except during the roll.
-    roll_slots = {k: [] for k in range(n)}
-    in_roll = []
-    prev = None
-    for t in [i / 2000 for i in range(2001)]:
-        a, db, z, angle, thrust, f = state(t)
-        k = None if angle == 0 else round(angle / (360 / n)) % n
-        if k != prev:
-            if prev is not None:
-                roll_slots[prev][-1][1] = t
-                in_roll[-1][1] = t
-            if k is not None:
-                roll_slots[k].append([t, None])
-                if prev is None:
-                    in_roll.append([t, None])
-            prev = k
-    def window_kf(name, slots, on, off):
-        stops = [f"0%{{opacity:{off}}}"]
-        for s0, s1 in slots:
-            stops += [f"{pct(s0)}{{opacity:{off}}}", f"{pct(s0 + 0.0001)}{{opacity:{on}}}",
-                      f"{pct(s1)}{{opacity:{on}}}", f"{pct(s1 + 0.0001)}{{opacity:{off}}}"]
-        stops.append(f"100%{{opacity:{off}}}")
-        return f"@keyframes {name}{{{''.join(stops)}}}"
-    roll_css = "".join(window_kf(f"mws-r{k}", slots, 1, 0) + f".mws-r{k}{{animation:mws-r{k} {cycle}s linear infinite}}"
-                       for k, slots in roll_slots.items() if slots)
-    level_css = window_kf("mws-lv", in_roll, 0, 1) + f".mws-lv{{animation:mws-lv {cycle}s linear infinite}}"
+    def windows(pred):
+        """Spans of cycle time where pred(t) holds."""
+        spans, was = [], False
+        for i in range(4001):
+            t = i / 4000
+            now = pred(t)
+            if now and not was:
+                spans.append([t, 1.0])
+            if was and not now:
+                spans[-1][1] = t
+            was = now
+        return spans
 
-    # Thrust windows, for the jets.
-    thrust_slots, on = [], False
-    for t in [i / 2000 for i in range(2001)]:
-        th = state(t)[4]
-        if th and not on:
-            thrust_slots.append([t, None])
-        if not th and on:
-            thrust_slots[-1][1] = t
-        on = th
-    jet_css = window_kf("mws-jet", [s for s in thrust_slots if s[1]], 1, 0) + \
-        f".mws-jets{{animation:mws-jet {cycle}s linear infinite}}" \
-        "@keyframes mws-flame{0%{transform:scaleY(1)}50%{transform:scaleY(0.72)}100%{transform:scaleY(1)}}" \
-        ".mws-flame{transform-box:fill-box;transform-origin:50% 0;animation:mws-flame .09s linear infinite}"
+    def window_kf(name, spans, show, hide):
+        stops = [f"0%{{opacity:{hide}}}"]
+        for s0, s1 in spans:
+            stops += [f"{pct(s0)}{{opacity:{hide}}}", f"{pct(s0 + 0.0001)}{{opacity:{show}}}",
+                      f"{pct(s1)}{{opacity:{show}}}", f"{pct(min(1, s1 + 0.0001))}{{opacity:{hide}}}"]
+        stops.append(f"100%{{opacity:{hide}}}")
+        return f"@keyframes {name}{{{''.join(stops)}}}.{name}{{animation:{name} {cycle}s linear infinite}}"
+
+    def frame_at(t):
+        angle = state(t)[3]
+        return None if angle == 0 else round(angle / (360 / n)) % n
+
+    css = [f"@keyframes mws-hop{{{''.join(car_kf)}}}@keyframes mws-gnd{{{''.join(ground_kf)}}}",
+           f".mws-hopcar{{animation:mws-hop {cycle}s linear infinite}}.mws-gnd{{animation:mws-gnd {cycle}s linear infinite}}",
+           # The front copy shows until the car is behind the city, the back copy after.
+           window_kf("mws-fr", windows(lambda t: fade(t) > 0 and not state(t)[6]), 1, 0),
+           window_kf("mws-bk", windows(lambda t: fade(t) > 0 and state(t)[6]), 1, 0),
+           window_kf("mws-lv", windows(lambda t: frame_at(t) is None), 1, 0),
+           window_kf("mws-jet", windows(lambda t: state(t)[4]), 1, 0)]
+    css += [window_kf(f"mws-r{k}", windows(lambda t, k=k: frame_at(t) == k), 1, 0) for k in range(n)]
+    css.append("@keyframes mws-flame{0%{transform:scaleY(1)}50%{transform:scaleY(0.72)}100%{transform:scaleY(1)}}"
+               ".mws-flame{transform-box:fill-box;transform-origin:50% 0;animation:mws-flame .09s linear infinite}")
 
     # Four downward thrusters under the car, front and rear, each side.
-    def under(da, dbo, dz):                       # a point on the car, from its nose on the road
+    def under(da, dbo, dz):                        # a point on the car, from its nose on the road
         return ox + 1.7 * (da - dbo), oy + da + dbo - dz
     jets = []
     for da in (0.5, 1.9):
@@ -370,58 +377,58 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
                         f'fill="url(#mws-jetglow)" filter="url(#mws-jetblur)"/>'
                         f'<polygon class="mws-flame" points="{fmt(jx - w)},{fmt(jy)} {fmt(jx + w)},{fmt(jy)} {fmt(jx)},{fmt(jy + h)}" fill="url(#mws-jetglow)"/>'
                         f'<polygon class="mws-flame" points="{fmt(jx - w * 0.4)},{fmt(jy)} {fmt(jx + w * 0.4)},{fmt(jy)} {fmt(jx)},{fmt(jy + h * 0.65)}" fill="#ffffff"/>')
-    jets_svg = f'<g class="mws-jets" opacity="0">{"".join(jets)}</g>'
-
-    # Smoke: puffs left behind in the world. A burst off the road at lift-off
-    # and landing, and a trail from the tail through the flight.
-    puffs, puff_css = [], []
-    def puff(t, a, db, z, size, grow):
-        x, y = screen(a, db, z)
-        i = len(puffs)
-        puffs.append(f'<circle class="mws-puff" cx="{fmt(ox + x)}" cy="{fmt(oy + y)}" r="{fmt(size)}" '
-                     f'fill="url(#mws-smoke)" style="--g:{grow};animation-delay:{t * cycle:.2f}s"/>')
-    for t0 in (HOP_PASS * t_lift, HOP_PASS * t_land):
-        for j in range(12):
-            t = t0 + (j - 4) * 0.035 / cycle
-            a, db, z, *_ = state(t)
-            for side in (-0.7, 0, 0.7):
-                puff(t, a + 1.2 + side * 1.1, db + side, 0, 1.15, 4.0)
-    t = HOP_PASS * t_lift
-    while t < HOP_PASS * t_land:
-        a, db, z, *_ = state(t)
-        puff(t, a + L, db, z + 0.5, 0.75, 3.0)
-        t += 0.04 / cycle                         # a puff every 40 ms, so the trail reads as one plume
-    puff_css = ("@keyframes mws-puff{0%{opacity:0;scale:.7}2%{opacity:.95}16%{opacity:0;scale:var(--g)}100%{opacity:0;scale:var(--g)}}"
-                f".mws-puff{{opacity:0;transform-box:fill-box;transform-origin:center;animation:mws-puff {cycle}s linear infinite}}")
+    jets_svg = f'<g class="mws-jet">{"".join(jets)}</g>'
 
     roll_imgs = "".join(
-        f'<image class="mws-r mws-r{k}" opacity="0" href="data:image/webp;base64,{base64.b64encode(f.read_bytes()).decode()}" '
+        f'<image class="mws-r{k}" href="data:image/webp;base64,{base64.b64encode(f.read_bytes()).decode()}" '
         f'x="{fmt(ox + roll["x"])}" y="{fmt(oy + roll["y"])}" width="{fmt(roll["w"])}" height="{fmt(roll["h"])}"/>'
         for k, f in enumerate(files))
+    car = f'{jets_svg}<g class="mws-lv">{level}</g>{roll_imgs}'
 
-    # The road things under the car: its shadow, headlight beams and the
-    # pink tail-light streaks stay on the road and fade as it climbs.
+    # Smoke: puffs left behind in the world, each in front of or behind the
+    # city by where it is. A burst off the road at lift-off and at landing,
+    # and a plume from the tail through the flight.
+    front_puffs, back_puffs = [], []
+    def puff(t, a, db, z, size, grow):
+        x, y = screen(a, db, z)
+        (back_puffs if road + db < -0.6 else front_puffs).append(
+            f'<circle class="mws-puff" cx="{fmt(ox + x)}" cy="{fmt(oy + y)}" r="{fmt(size)}" '
+            f'fill="url(#mws-smoke)" style="--g:{grow};animation-delay:{t * cycle:.2f}s"/>')
+    for t0 in (on * t_lift, on * t_land):
+        for j in range(12):
+            t = t0 + (j - 4) * 0.035 / cycle
+            a, db, *_ = state(t)
+            for side in (-0.7, 0, 0.7):
+                puff(t, a + 1.2 + side * 1.1, db + side, 0, 1.15, 4.0)
+    t = on * t_lift
+    while t < on * t_land:
+        a, db, z, *_ = state(t)
+        puff(t, a + L, db, z + 0.5, 0.75, 3.0)
+        t += 0.04 / cycle                          # a puff every 40 ms, so the trail reads as one plume
+    css.append("@keyframes mws-puff{0%{opacity:0;scale:.7}2%{opacity:.95}16%{opacity:0;scale:var(--g)}100%{opacity:0;scale:var(--g)}}"
+               f".mws-puff{{opacity:0;transform-box:fill-box;transform-origin:center;animation:mws-puff {cycle}s linear infinite}}")
+
+    # The car's shadow on whichever road it's over, fading as it climbs.
     def p(da, dbo):
         x, y = corner(da, road + dbo)
         return f"{fmt(x)},{fmt(y)}"
-    floor = (f'<polygon points="{p(0, -0.45)} {p(-2.4, -0.85)} {p(-2.4, 0.85)} {p(0, 0.45)}" fill="url(#mws-beam)"/>'
-             f'<polygon points="{p(-0.1, -0.62)} {p(L + 0.1, -0.62)} {p(L + 0.1, 0.62)} {p(-0.1, 0.62)}" fill="#000" fill-opacity="0.45"/>')
-    a_mid = a0 + (a1 - a0) * 0.2
-    mx, my = screen(a_mid, 0, 0)
-    css = (f"@keyframes mws-hop{{{''.join(car_kf)}}}@keyframes mws-road{{{''.join(road_kf)}}}"
-           f".mws-car{{animation:mws-hop {cycle}s linear infinite}}.mws-road{{animation:mws-road {cycle}s linear infinite}}"
-           + level_css + roll_css + jet_css + puff_css +
-           f"@media (prefers-reduced-motion: reduce){{.mws-car,.mws-road{{animation:none;transform:translate({fmt(mx)}px,{fmt(my)}px)}}"
-           f".mws-lv{{animation:none;opacity:1}}.mws-r,.mws-jets,.mws-puff{{animation:none;display:none}}}}")
+    shadow = f'<polygon points="{p(-0.1, -0.62)} {p(L + 0.1, -0.62)} {p(L + 0.1, 0.62)} {p(-0.1, 0.62)}" fill="#000" fill-opacity="0.45"/>'
+
+    mx, my = screen(a0 + (a1 - a0) * 0.2, 0, 0)
+    css.append(f"@media (prefers-reduced-motion: reduce){{.mws-hopcar,.mws-gnd{{animation:none;transform:translate({fmt(mx)}px,{fmt(my)}px)}}"
+               ".mws-fr,.mws-lv{animation:none;opacity:1}.mws-bk,.mws-jet,.mws-puff,"
+               + ",".join(f".mws-r{k}" for k in range(n)) + "{animation:none;opacity:0}}")
     defs = ('<defs><linearGradient id="mws-jetglow" x1="0" y1="0" x2="0" y2="1">'
             '<stop offset="0" stop-color="#e9fdff"/><stop offset="0.35" stop-color="#36f9f6" stop-opacity="0.85"/>'
             '<stop offset="1" stop-color="#f92aad" stop-opacity="0"/></linearGradient>'
             '<filter id="mws-jetblur" x="-100%" y="-30%" width="300%" height="160%"><feGaussianBlur stdDeviation="0.45"/></filter>'
             '<radialGradient id="mws-smoke"><stop offset="0" stop-color="#ffffff" stop-opacity="1"/>'
             '<stop offset="0.45" stop-color="#f1e8ff" stop-opacity="0.8"/><stop offset="1" stop-color="#d9c8f0" stop-opacity="0"/></radialGradient></defs>')
-    svg = (f'{defs}<g class="mws-road">{floor}</g><g class="mws-smokes">{"".join(puffs)}</g>'
-           f'<g class="mws-car">{jets_svg}<g class="mws-lv">{level}</g>{roll_imgs}</g>')
-    return svg, css
+    front = (f'{defs}<g>{"".join(front_puffs)}</g>'
+             f'<g class="mws-fr"><g class="mws-hopcar">{car}</g></g>')
+    back = (f'<g class="mws-gnd">{shadow}</g><g>{"".join(back_puffs)}</g>'
+            f'<g class="mws-bk"><g class="mws-hopcar">{car}</g></g>')
+    return front, "".join(css), back
 
 
 def restyle(svg):
@@ -569,9 +576,12 @@ def restyle(svg):
         svg = head + svg[start:]
         start = len(head)
         end = svg.find("</svg>", start)
-    car_svg = ""
+    car_svg = back_svg = ""
     if CAR:
-        body, car_css = iso_car(corner, cols, rows)
+        body, car_css, back = iso_car(corner, cols, rows)
+        if back:
+            back_svg = f'<g transform="scale(4) translate({fmt(tx)}, 0)">{back}</g>'
+
         car_svg = f"""<style>{car_css}</style>
 <defs>
   <linearGradient id="mws-beam" gradientUnits="userSpaceOnUse" x1="{fmt(corner(0, rows + 1.9)[0])}" y1="0" x2="{fmt(corner(-2.4, rows + 1.9)[0])}" y2="0">
@@ -585,7 +595,7 @@ def restyle(svg):
 </defs>
 <g transform="scale(4) translate({fmt(tx)}, 0)">{body}</g>
 """
-    return svg[:start] + floor + block + car_svg + svg[end:], (
+    return svg[:start] + floor + back_svg + block + car_svg + svg[end:], (
         f"restyled {len(cells)} days over {weeks} weeks, {peaks} peaks in cyan")
 
 
