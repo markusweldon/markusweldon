@@ -239,11 +239,13 @@ def iso_car(corner, cols, rows) -> tuple[str, str, str]:
 # calendar units (weeks along the road, days across, a cell's height up).
 HOP_SPEED = 15.0         # weeks a second on the road: the same pace as before the hop
 HOP_AIR = 2.6            # seconds in the air: the road pace slows to hang-time over the city
-HOP_GAP = 1.4            # seconds off screen before the next pass
+HOP_GAP = 1.2            # seconds off screen between passes
 HOP_LIFT, HOP_LAND = 0.30, 0.62   # where along the road (0 start .. 1 end) it lifts off and lands
 HOP_HIGH = MAX_HEIGHT + 5         # apex above the ground, clear of the tallest towers
 HOP_ROLL = (0.30, 0.70)           # the barrel roll, as shares of the flight
 BACK_ROAD = 1.9                   # the far road, this many days behind the oldest row
+A_EXIT = 8.0                      # week where the hop pass leaves the far road, short of the card's heading
+FADE_IN, FADE_OUT = 0.5, 0.7      # seconds the car takes to fade in as it enters and out as it leaves
 
 
 def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
@@ -268,12 +270,16 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
     ox, oy = nose
     cross = road + BACK_ROAD                       # days from the near road to the far road
     a0, a1 = cols + 6, -8.0                        # the run: in from the newest weeks, out past the oldest
-    ground = (1 - (HOP_LAND - HOP_LIFT)) * (a0 - a1) / HOP_SPEED   # seconds on the road, both sides
-    run = ground + HOP_AIR
-    cycle = round(run + HOP_GAP, 2)
-    t_lift = HOP_LIFT * (a0 - a1) / HOP_SPEED / run                 # as shares of the run
-    t_land = t_lift + HOP_AIR / run
-    on = run / cycle                                                # share of the cycle on screen
+    span = a0 - a1
+    # Two passes per cycle: a plain drive along the near road, then the hop.
+    # The hop's drive on the far road ends at A_EXIT, well short of the end
+    # of the city, so it never runs into the card's heading above it.
+    plain = span / HOP_SPEED                                        # seconds
+    lift_s = HOP_LIFT * span / HOP_SPEED
+    r_exit = (a0 - A_EXIT) / span
+    hop = lift_s + HOP_AIR + (r_exit - HOP_LAND) * span / HOP_SPEED
+    hop_at = plain + HOP_GAP                                        # when the hop pass starts
+    cycle = round(hop_at + hop + HOP_GAP, 2)
 
     def smooth(u):                                 # 0..1, gentle at both ends
         u = min(1.0, max(0.0, u))
@@ -282,15 +288,25 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
     def state(t):
         """At cycle time t (0..1): along-road a, days off the near road db
         (negative = towards the far road), height z, roll angle, thrust on,
-        flight share f, and whether the car is behind the city."""
-        rt = min(1.0, max(0.0, t / on))
-        if rt < t_lift:                            # road pace, then hang-time, then road pace
-            r = HOP_LIFT * rt / t_lift
-        elif rt < t_land:
-            r = HOP_LIFT + (HOP_LAND - HOP_LIFT) * (rt - t_lift) / (t_land - t_lift)
+        flight share f, whether the car is behind the city, and its opacity
+        (fading in as it enters and out as it leaves)."""
+        T = t * cycle
+        if T < hop_at:                             # the plain pass
+            u = T / plain
+            if u >= 1:
+                return a1, 0.0, 0.0, 0.0, False, -1.0, False, 0.0
+            op = min(1.0, T / FADE_IN, (plain - T) / FADE_OUT)
+            return a0 - span * u, 0.0, 0.0, 0.0, False, -1.0, False, op
+        T -= hop_at
+        if T >= hop:
+            return A_EXIT, -cross, 0.0, 0.0, False, 2.0, True, 0.0
+        if T < lift_s:                             # road pace, then hang-time, then road pace
+            r = HOP_LIFT * T / lift_s
+        elif T < lift_s + HOP_AIR:
+            r = HOP_LIFT + (HOP_LAND - HOP_LIFT) * (T - lift_s) / HOP_AIR
         else:
-            r = HOP_LAND + (1 - HOP_LAND) * (rt - t_land) / (1 - t_land)
-        a = a0 + (a1 - a0) * r
+            r = HOP_LAND + (T - lift_s - HOP_AIR) * HOP_SPEED / span
+        a = a0 - span * r
         f = (r - HOP_LIFT) / (HOP_LAND - HOP_LIFT)
         if f <= 0:
             db, z = 0.0, 0.0
@@ -302,7 +318,8 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
         angle = 360 * smooth(q) if 0 < q < 1 else 0.0
         thrust = (-0.05 < f < HOP_ROLL[0]) or (HOP_ROLL[1] < f < 1.05)
         behind = road + db < -0.6                  # past the oldest row: every tower is in front of it
-        return a, db, z, angle, thrust, f, behind
+        op = min(1.0, T / FADE_IN, (hop - T) / FADE_OUT)
+        return a, db, z, angle, thrust, f, behind, max(0.0, op)
 
     def screen(a, db, z):                          # offset from the car's start position
         return 1.7 * (a - db), a + db - z
@@ -312,24 +329,18 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
         # browser merges keyframes at the same offset into a slow cross-fade.
         return f"{t * 100:.3f}%"
 
-    def fade(t):                                   # in at the start of the pass, out at the end
-        if t < 0.005 or t > on + 0.005:
-            return 0.0
-        if t < 0.035:
-            return t / 0.035
-        if t > on - 0.04:
-            return max(0.0, (on + 0.005 - t) / 0.045)
-        return 1.0
+    def fade(t):
+        return state(t)[7]
 
     car_kf, ground_kf = [], []
-    for i in range(401):
-        t = i / 400
-        a, db, z, angle, thrust, f, behind = state(t)
+    for i in range(801):
+        t = i / 800
+        a, db, z, angle, thrust, f, behind, op = state(t)
         x, y = screen(a, db, z)
-        car_kf.append(f"{pct(t)}{{transform:translate({fmt(x)}px,{fmt(y)}px)}}")
+        car_kf.append(f"{pct(t)}{{transform:translate({fmt(x)}px,{fmt(y)}px);opacity:{op:.2f}}}")
         gx, gy = screen(a, db, 0)
         ground_kf.append(f"{pct(t)}{{transform:translate({fmt(gx)}px,{fmt(gy)}px);"
-                         f"opacity:{fade(t) * max(0.0, 1 - z / 3):.2f}}}")
+                         f"opacity:{op * max(0.0, 1 - z / 3):.2f}}}")
 
     def windows(pred):
         """Spans of cycle time where pred(t) holds."""
@@ -412,14 +423,15 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
         (back_puffs if road + db < -0.6 else front_puffs).append(
             f'<circle class="mws-puff" cx="{fmt(ox + x)}" cy="{fmt(oy + y)}" r="{fmt(size)}" '
             f'fill="url(#mws-smoke)" style="--g:{grow};animation-delay:{t * cycle:.2f}s"/>')
-    for t0 in (on * t_lift, on * t_land):
+    t_lift, t_land = (hop_at + lift_s) / cycle, (hop_at + lift_s + HOP_AIR) / cycle
+    for t0 in (t_lift, t_land):
         for j in range(12):
             t = t0 + (j - 4) * 0.035 / cycle
             a, db, *_ = state(t)
             for side in (-0.7, 0, 0.7):
                 puff(t, a + 1.2 + side * 1.1, db + side, 0, 1.15, 4.0)
-    t = on * t_lift
-    while t < on * t_land:
+    t = t_lift
+    while t < t_land:
         a, db, z, *_ = state(t)
         puff(t, a + L, db, z + 0.5, 0.75, 3.0)
         t += 0.04 / cycle                          # a puff every 40 ms, so the trail reads as one plume
