@@ -308,7 +308,9 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
         return 1.7 * (a - db), a + db - z
 
     def pct(t):
-        return f"{t * 100:.2f}%"
+        # Three decimals: two would round a window's edges together, and the
+        # browser merges keyframes at the same offset into a slow cross-fade.
+        return f"{t * 100:.3f}%"
 
     def fade(t):                                   # in at the start of the pass, out at the end
         if t < 0.005 or t > on + 0.005:
@@ -343,16 +345,32 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
         return spans
 
     def window_kf(name, spans, show, hide):
-        stops = [f"0%{{opacity:{hide}}}"]
+        # Instant switches at each edge. Every offset must be distinct: the
+        # browser merges keyframes at the same offset, which turns a switch
+        # into a slow fade across the whole gap to the next one.
+        stops, last = [], None
+        def stop(t, value):
+            nonlocal last
+            key = pct(min(1.0, max(0.0, t)))
+            if key != last:
+                stops.append(f"{key}{{opacity:{value}}}")
+                last = key
+        stop(0, show if spans and spans[0][0] <= 0 else hide)
         for s0, s1 in spans:
-            stops += [f"{pct(s0)}{{opacity:{hide}}}", f"{pct(s0 + 0.0001)}{{opacity:{show}}}",
-                      f"{pct(s1)}{{opacity:{show}}}", f"{pct(min(1, s1 + 0.0001))}{{opacity:{hide}}}"]
-        stops.append(f"100%{{opacity:{hide}}}")
+            if s0 > 0:
+                stop(s0, hide)
+                stop(s0 + 0.0001, show)
+            if s1 < 1:
+                stop(s1, show)
+                stop(s1 + 0.0001, hide)
+        stop(1, show if spans and spans[-1][1] >= 1 else hide)
         return f"@keyframes {name}{{{''.join(stops)}}}.{name}{{animation:{name} {cycle}s linear infinite}}"
 
     def frame_at(t):
+        # The renders turn the car the other way, so play them backwards: it
+        # rolls towards the far side, the way it's flying.
         angle = state(t)[3]
-        return None if angle == 0 else round(angle / (360 / n)) % n
+        return None if angle == 0 else -round(angle / (360 / n)) % n
 
     css = [f"@keyframes mws-hop{{{''.join(car_kf)}}}@keyframes mws-gnd{{{''.join(ground_kf)}}}",
            f".mws-hopcar{{animation:mws-hop {cycle}s linear infinite}}.mws-gnd{{animation:mws-gnd {cycle}s linear infinite}}",
