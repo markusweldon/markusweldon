@@ -245,7 +245,9 @@ HOP_HIGH = MAX_HEIGHT + 5         # apex above the ground, clear of the tallest 
 HOP_ROLL = (0.30, 0.70)           # the barrel roll, as shares of the flight
 BACK_ROAD = 1.9                   # the far road, this many days behind the oldest row
 A_EXIT = -2.0                      # week where the hop pass leaves the far road, short of the card's heading
-FADE_IN, FADE_OUT = 0.5, 0.7      # seconds the car takes to fade in as it enters and out as it leaves
+ENTRY = 2.0                       # weeks short of the newest week where both passes start, so the car is on screen as it fades in
+EXIT_NEAR = 2.0                   # week where the plain pass ends, before the car reaches the card's left edge
+FADE = 0.6                        # seconds to fade in on entering and out on leaving, the same every time
 
 
 def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
@@ -269,12 +271,12 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
     n = roll["frames"]
     ox, oy = nose
     cross = road + BACK_ROAD                       # days from the near road to the far road
-    a0, a1 = cols + 6, -8.0                        # the run: in from the newest weeks, out past the oldest
+    a0, a1 = cols - ENTRY, -8.0                    # the run: in from the newest weeks, out past the oldest
     span = a0 - a1
     # Two passes per cycle: a plain drive along the near road, then the hop.
     # The hop's drive on the far road ends at A_EXIT, well short of the end
     # of the city, so it never runs into the card's heading above it.
-    plain = span / HOP_SPEED                                        # seconds
+    plain = (a0 - EXIT_NEAR) / HOP_SPEED                            # seconds
     lift_s = HOP_LIFT * span / HOP_SPEED
     r_exit = (a0 - A_EXIT) / span
     hop = lift_s + HOP_AIR + (r_exit - HOP_LAND) * span / HOP_SPEED
@@ -294,9 +296,9 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
         if T < hop_at:                             # the plain pass
             u = T / plain
             if u >= 1:
-                return a1, 0.0, 0.0, 0.0, False, -1.0, False, 0.0
-            op = min(1.0, T / FADE_IN, (plain - T) / FADE_OUT)
-            return a0 - span * u, 0.0, 0.0, 0.0, False, -1.0, False, op
+                return EXIT_NEAR, 0.0, 0.0, 0.0, False, -1.0, False, 0.0
+            op = min(1.0, T / FADE, (plain - T) / FADE)
+            return a0 - (a0 - EXIT_NEAR) * u, 0.0, 0.0, 0.0, False, -1.0, False, op
         T -= hop_at
         if T >= hop:
             return A_EXIT, -cross, 0.0, 0.0, False, 2.0, True, 0.0
@@ -318,7 +320,7 @@ def rocket_hop(corner, cols, rows, road, L, nose, geom, level):
         angle = 360 * smooth(q) if 0 < q < 1 else 0.0
         thrust = (-0.05 < f < HOP_ROLL[0]) or (HOP_ROLL[1] < f < 1.05)
         behind = road + db < -0.6                  # past the oldest row: every tower is in front of it
-        op = min(1.0, T / FADE_IN, (hop - T) / FADE_OUT)
+        op = min(1.0, T / FADE, (hop - T) / FADE)
         return a, db, z, angle, thrust, f, behind, max(0.0, op)
 
     def screen(a, db, z):                          # offset from the car's start position
