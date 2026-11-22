@@ -139,7 +139,7 @@ jobs:
             cp "$RUNNER_TEMP/streak-stats.svg" "$dir/streak-stats.svg"
           fi
           if [ -s "$RUNNER_TEMP/isocalendar.svg" ]; then
-            cp "$RUNNER_TEMP/isocalendar.svg" "$dir/isocalendar.svg"
+            cp "$RUNNER_TEMP"/isocalendar*.svg "$dir/"   # the calendar, and its layers for the site
           fi
           cd "$dir"
           git add -A
