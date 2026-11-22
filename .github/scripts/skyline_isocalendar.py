@@ -627,7 +627,10 @@ def restyle(svg):
 </defs>
 <g transform="scale(4) translate({fmt(tx)}, 0)">{body}</g>
 """
-    return svg[:start] + floor + back_svg + block + car_svg + svg[end:], (
+    # Markers between the layers, so extract_isocalendar.py can cut the
+    # calendar into still layers (floor, towers) and moving ones (the car).
+    return (svg[:start] + floor + "<!--mws:back-->" + back_svg + "<!--mws:city-->" + block
+            + "<!--mws:front-->" + car_svg + "<!--mws:end-->" + svg[end:]), (
         f"restyled {len(cells)} days over {weeks} weeks, {peaks} peaks in cyan")
 
 
