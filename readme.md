@@ -42,6 +42,7 @@
 <a href="https://github.com/markusweldon/snyk-ai-secure-pipeline"><img src="images/card-snyk-ai-secure-pipeline.svg" width="400" alt="snyk-ai-secure-pipeline: end-to-end DevSecOps demo with Snyk Code, OSS, Container, IaC and an MCP server for Claude Code"></a>
 <a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="images/card-claude-snyk-security-expert.svg" width="400" alt="claude-snyk-security-expert: Snyk-powered security subagent for Claude Code"></a>
 
+<a href="https://cverdict.dev"><img src="images/btn-cverdict-live.svg" alt="CVErdict live site"></a>
 <a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/btn-owasp-skills.svg" alt="Try the OWASP Skills for Claude Code"></a>
 
 <picture>

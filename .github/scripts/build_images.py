@@ -55,6 +55,7 @@ ICONS = {
     "linkedin": '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>',
     "globe": '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
     "arrow-right": '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+    "arrow-up-right": '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
     "map-pin": '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
     "play": '<polygon points="6 3 20 12 6 21 6 3"/>',
     "shield": '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
@@ -1095,7 +1096,7 @@ CARDS = [
      "Python", "#3572A5", "Verified Fixes"),
     ("agentinel", "agentinel",
      "Red-teams and statically audits MCP servers and AI agents against the OWASP Agentic "
-     "Top 10 (2026).", "Python", "#3572A5", "MCP & Agent Security"),
+     "Top 10 (2026).", "Python", "#3572A5", "MCP & Agents"),
     ("claude-owasp-security-skills", "claude-owasp-security-skills",
      "OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, shipped as Claude "
      "Code skills.", "Shell", "#89e051", "Claude Code Skills"),
@@ -1104,7 +1105,7 @@ CARDS = [
      "Claude Code.", "JavaScript", "#f1e05a", "DevSecOps"),
     ("claude-snyk-security-expert", "claude-snyk-security-expert",
      "Snyk-powered security subagent for Claude Code: enterprise vulnerability assessment "
-     "and remediation.", "Claude Code", CYAN, "Security Subagent"),
+     "and remediation.", "Claude Code", CYAN, "Subagent"),
 ]
 
 CW, CH, PAD = 400, 182, 24
@@ -1169,9 +1170,31 @@ def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: st
     x, y = PAD, CH - PAD - 22
     p, w = pill(f, x, y, lang, lang_colour)
     out.append(p)
-    p, _ = pill(f, x + w + 6, y, topic)
+    p, w2 = pill(f, x + w + 6, y, topic)
     out.append(p)
+    out.append(repo_button(f, CW - PAD, y, x + w + 6 + w2 + 16))   # at least 16px clear of the tags
     return svg(CW, CH, "\n".join(out), title, margin=CARD_GAP)
+
+
+def repo_button(f: Fonts, right: float, y: float, room_from: float, h: float = 22) -> str:
+    """The site's "View on GitHub" button (globals.css .btn-repo) at tag
+    size, right-aligned on the card's tag row: a dark pill with a cyan
+    border, the GitHub mark and the label in cyan. The whole card links to
+    the repo, so it tells the truth about where a click goes. Where the tags
+    leave too little room, just the GitHub mark in a round button."""
+    size, isz, gap, side = 12, 12, 6, 9
+    d, tw = f.sans_medium.path("View on GitHub", size, 0, 0)
+    full = side + isz + gap + tw + side
+    width = full if right - full >= room_from else h          # icon-only when crowded
+    x0 = right - width
+    out = (f'<rect x="{fmt(x0 + .5)}" y="{fmt(y + .5)}" width="{fmt(width - 1)}" height="{h - 1}" rx="{h / 2 - .5}" '
+           f'fill="{SURFACE}" stroke="{CYAN}" stroke-opacity="0.45"/>')
+    ix = x0 + (side if width == full else (h - isz) / 2)
+    out += icon("github", ix, y + (h - isz) / 2, isz, CYAN)
+    if width == full:
+        d, _ = f.sans_medium.path("View on GitHub", size, ix + isz + gap, y + h / 2 + size * 0.36)
+        out += f'<path d="{d}" fill="{CYAN}"/>'
+    return out
 
 
 # ══ Focus Areas cards ══════════════════════════════════════════════════════
@@ -1288,6 +1311,7 @@ BUTTONS = [
     ("btn-linkedin", "LinkedIn", "linkedin", "left", "pink", ROW_W),
     ("btn-contact", "Get in Touch", "arrow-right", "right", "primary", ROW_W),
     ("btn-owasp-skills", "Try the OWASP Skills for Claude Code", "play", "left", "primary", None),
+    ("btn-cverdict-live", "CVErdict Live Site", "arrow-up-right", "right", "primary", None),
 ]
 
 BTN_STYLES = {  # globals.css .btn-ghost-* / .btn-primary
