@@ -1310,7 +1310,7 @@ BUTTONS = [
     ("btn-github", "GitHub", "github", "left", "cyan", ROW_W),
     ("btn-linkedin", "LinkedIn", "linkedin", "left", "pink", ROW_W),
     ("btn-contact", "Get in Touch", "arrow-right", "right", "primary", ROW_W),
-    ("btn-cverdict-live", "View CVErdict Live Site", "arrow-up-right", "right", "primary", None),
+    ("btn-cverdict-live", "View CVErdict live site", "arrow-up-right", "right", "primary", None),
 ]
 
 BTN_STYLES = {  # globals.css .btn-ghost-* / .btn-primary
