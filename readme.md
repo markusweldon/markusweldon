@@ -35,7 +35,7 @@
 
 **Security tooling for the agentic-AI era**
 
-<a href="https://cverdict.dev"><img src="images/btn-cverdict-live.svg" alt="Try CVErdict Live"></a>
+<a href="https://cverdict.dev"><img src="images/btn-cverdict-live.svg" alt="View CVErdict Live"></a>
 
 <a href="https://github.com/markusweldon/cverdict"><img src="images/card-cverdict.svg" width="400" alt="CVErdict: CVE Verdict - cuts through the noise of the CVE program surge to show which new vulnerabilities need attention and why."></a>
 <a href="https://github.com/markusweldon/openfix"><img src="images/card-openfix.svg" width="400" alt="OpenFix: turns scanner findings into verified fixes with any model. Each patch is proven by a rescan, your tests and a regression test, then lands as a draft PR."></a>
