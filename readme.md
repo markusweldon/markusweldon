@@ -35,14 +35,14 @@
 
 **Security tooling for the agentic-AI era**
 
+<a href="https://cverdict.dev"><img src="images/btn-cverdict-live.svg" alt="View CVErdict Live"></a>
+
 <a href="https://github.com/markusweldon/cverdict"><img src="images/card-cverdict.svg" width="400" alt="CVErdict: CVE Verdict - cuts through the noise of the CVE program surge to show which new vulnerabilities need attention and why."></a>
 <a href="https://github.com/markusweldon/openfix"><img src="images/card-openfix.svg" width="400" alt="OpenFix: turns scanner findings into verified fixes with any model. Each patch is proven by a rescan, your tests and a regression test, then lands as a draft PR."></a>
 <a href="https://github.com/markusweldon/agentinel"><img src="images/card-agentinel.svg" width="400" alt="agentinel: red-teams and statically audits MCP servers and AI agents against the OWASP Agentic Top 10 (2026)"></a>
 <a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/card-claude-owasp-security-skills.svg" width="400" alt="claude-owasp-security-skills: OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, shipped as Claude Code skills"></a>
 <a href="https://github.com/markusweldon/snyk-ai-secure-pipeline"><img src="images/card-snyk-ai-secure-pipeline.svg" width="400" alt="snyk-ai-secure-pipeline: end-to-end DevSecOps demo with Snyk Code, OSS, Container, IaC and an MCP server for Claude Code"></a>
 <a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="images/card-claude-snyk-security-expert.svg" width="400" alt="claude-snyk-security-expert: Snyk-powered security subagent for Claude Code"></a>
-
-<a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/btn-owasp-skills.svg" alt="Try the OWASP Skills for Claude Code"></a>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">
