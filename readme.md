@@ -1,6 +1,6 @@
 <div align="center">
 
-<picture><source media="(max-width: 640px)" srcset="images/header-phone.svg?v=18"><img src="images/header.svg?v=18" width="100%" alt="Markus Weldon. A terminal types: Principal Solutions Engineer · Securing Agentic AI Development · AppSec · Cloud · Cybersecurity · Enterprise GTM · Technical Pre-Sales · Ship Faster With AI, Securely. Helping enterprises adopt AI-assisted development securely. Brit builder, Lake Oswego, Oregon."></picture>
+<picture><source media="(max-width: 640px)" srcset="images/header-phone.svg?v=19"><img src="images/header.svg?v=19" width="100%" alt="Markus Weldon. A terminal types: Principal Solutions Engineer · Securing agentic AI development · AppSec · Cloud · Cybersecurity · Enterprise GTM · Technical pre-sales · Ship faster with AI, securely. Helping enterprises adopt AI-assisted development securely. Brit builder, Lake Oswego, Oregon."></picture>
 
 <a href="https://markusweldon.com"><img src="images/btn-website.svg" alt="Website: markusweldon.com"></a>
 <a href="https://github.com/markusweldon"><img src="images/btn-github.svg" alt="Follow @markusweldon on GitHub"></a>
@@ -31,11 +31,11 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### Featured Work
+### Featured work
 
 **Security tooling for the agentic-AI era**
 
-<a href="https://cverdict.dev"><img src="images/btn-cverdict-live.svg" alt="View CVErdict Live"></a>
+<a href="https://cverdict.dev"><img src="images/btn-cverdict-live.svg" alt="View CVErdict live site"></a>
 
 <a href="https://github.com/markusweldon/cverdict"><img src="images/card-cverdict.svg" width="400" alt="CVErdict: CVE Verdict - cuts through the noise of the CVE program surge to show which new vulnerabilities need attention and why."></a>
 <a href="https://github.com/markusweldon/openfix"><img src="images/card-openfix.svg" width="400" alt="OpenFix: turns scanner findings into verified fixes with any model. Each patch is proven by a rescan, your tests and a regression test, then lands as a draft PR."></a>
@@ -76,7 +76,7 @@
   <img src="images/synthwave-divider-light.svg" width="100%" alt="">
 </picture>
 
-### Focus Areas
+### Focus areas
 
 <picture><source media="(max-width: 640px)" srcset="images/focus-agentic-ai-security-wide.svg"><img src="images/focus-agentic-ai-security.svg" alt="Agentic AI Security: security for AI agents, MCP servers and AI-native apps, from runtime orchestration to evaluation loops."></picture>
 <picture><source media="(max-width: 640px)" srcset="images/focus-secure-ai-development-wide.svg"><img src="images/focus-secure-ai-development.svg" alt="Securing AI-Driven Development: secure-at-inception guardrails in AI coding assistants, IDEs and CI/CD, so AI-written code ships secure."></picture>
@@ -89,10 +89,10 @@
 
 ### Stack
 
-<img src="images/stack-ai-security.svg" width="400" alt="AI and Security: Claude Code, MCP, Snyk, OWASP">
+<img src="images/stack-ai-security.svg" width="400" alt="AI and security: Claude Code, MCP, Snyk, OWASP">
 <img src="images/stack-languages.svg" width="400" alt="Languages: Python, TypeScript, JavaScript">
-<img src="images/stack-web-runtime.svg" width="400" alt="Web and Runtime: React, Next.js, Svelte, Astro, Node.js, GraphQL">
-<img src="images/stack-cloud-infra.svg" width="400" alt="Cloud and Infra: AWS, GCP, Vercel, Cloudflare, Docker, Kubernetes">
+<img src="images/stack-web-runtime.svg" width="400" alt="Web and runtime: React, Next.js, Svelte, Astro, Node.js, GraphQL">
+<img src="images/stack-cloud-infra.svg" width="400" alt="Cloud and infra: AWS, GCP, Vercel, Cloudflare, Docker, Kubernetes">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/synthwave-divider.svg">

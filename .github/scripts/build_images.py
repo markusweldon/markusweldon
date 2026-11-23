@@ -151,10 +151,10 @@ LOCATION = ("Brit builder", "Lake Oswego, Oregon")
 PROMPT = "~/markusweldon "
 LINES = [
     "Principal Solutions Engineer",
-    "Securing Agentic AI Development",
+    "Securing agentic AI development",
     "AppSec · Cloud · Cybersecurity",
-    "Enterprise GTM · Technical Pre-Sales",
-    "Ship Faster With AI, Securely",
+    "Enterprise GTM · Technical pre-sales",
+    "Ship faster with AI, securely",
 ]
 
 HW, HH = 1000, 549
@@ -1089,17 +1089,17 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 CARDS = [
     ("cverdict", "CVErdict",
      "CVE Verdict: cuts through the noise of the CVE program surge to show which new "
-     "vulnerabilities need attention and why.", "TypeScript", "#3178c6", "CVE Triage"),
+     "vulnerabilities need attention and why.", "TypeScript", "#3178c6", "CVE triage"),
     ("openfix", "OpenFix",
      "Turns scanner findings into verified fixes with any model. Each patch is proven by a "
      "rescan, your tests and a regression test, then lands as a draft PR.",
-     "Python", "#3572A5", "Verified Fixes"),
+     "Python", "#3572A5", "Verified fixes"),
     ("agentinel", "agentinel",
      "Red-teams and statically audits MCP servers and AI agents against the OWASP Agentic "
-     "Top 10 (2026).", "Python", "#3572A5", "MCP & Agents"),
+     "Top 10 (2026).", "Python", "#3572A5", "MCP & agents"),
     ("claude-owasp-security-skills", "claude-owasp-security-skills",
      "OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, shipped as Claude "
-     "Code skills.", "Shell", "#89e051", "Claude Code Skills"),
+     "Code skills.", "Shell", "#89e051", "Claude Code skills"),
     ("snyk-ai-secure-pipeline", "snyk-ai-secure-pipeline",
      "End-to-end DevSecOps demo: Snyk Code, OSS, Container and IaC, plus an MCP server for "
      "Claude Code.", "JavaScript", "#f1e05a", "DevSecOps"),
@@ -1258,10 +1258,10 @@ def focus_cards(f: Fonts, wide: bool = False) -> dict[str, str]:
 # ══ Stack cards ════════════════════════════════════════════════════════════
 
 STACK = [
-    ("ai-security", "AI & Security", ["Claude Code", "MCP", "Snyk", "OWASP"]),
+    ("ai-security", "AI & security", ["Claude Code", "MCP", "Snyk", "OWASP"]),
     ("languages", "Languages", ["Python", "TypeScript", "JavaScript"]),
-    ("web-runtime", "Web & Runtime", ["React", "Next.js", "Svelte", "Astro", "Node.js", "GraphQL"]),
-    ("cloud-infra", "Cloud & Infra", ["AWS", "GCP", "Vercel", "Cloudflare", "Docker", "Kubernetes"]),
+    ("web-runtime", "Web & runtime", ["React", "Next.js", "Svelte", "Astro", "Node.js", "GraphQL"]),
+    ("cloud-infra", "Cloud & infra", ["AWS", "GCP", "Vercel", "Cloudflare", "Docker", "Kubernetes"]),
 ]
 
 
@@ -1309,8 +1309,8 @@ BUTTONS = [
     ("btn-website", "Website", "globe", "left", "purple", ROW_W),
     ("btn-github", "GitHub", "github", "left", "cyan", ROW_W),
     ("btn-linkedin", "LinkedIn", "linkedin", "left", "pink", ROW_W),
-    ("btn-contact", "Get in Touch", "arrow-right", "right", "primary", ROW_W),
-    ("btn-cverdict-live", "View CVErdict Live", "arrow-up-right", "right", "primary", None),
+    ("btn-contact", "Get in touch", "arrow-right", "right", "primary", ROW_W),
+    ("btn-cverdict-live", "View CVErdict live site", "arrow-up-right", "right", "primary", None),
 ]
 
 BTN_STYLES = {  # globals.css .btn-ghost-* / .btn-primary
