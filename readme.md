@@ -20,7 +20,7 @@
 
 - **Building AI for both sides of the fight:** red-teaming MCP servers and AI agents ([Agentinel](https://github.com/markusweldon/agentinel)), CVE triage ([CVErdict](https://cverdict.dev)), and fixes proven by a rescan, your tests and a regression test ([OpenFix](https://github.com/markusweldon/openfix)).
 - **Securing agentic AI in production:** agent and MCP workflows, plus the guardrails and safety directives that let teams ship *faster* with AI, not slower.
-- **Enterprise solutions engineering:** discovery that finds the real business problem, value proven in the customer's own context, and architecture that survives production.
+- **Two decades of B2B solutions engineering:** discovery that finds the real business problem, value proven in the customer's own context, and architecture that survives production.
 
 > *AI writes the code, security checks every line.*
 
