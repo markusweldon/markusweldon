@@ -1,6 +1,6 @@
 <div align="center">
 
-<picture><source media="(max-width: 640px)" srcset="images/header-phone.svg?v=19"><img src="images/header.svg?v=19" width="100%" alt="Markus Weldon. A terminal types: Principal Solutions Engineer · Securing agentic AI development · AppSec · Cloud · Cybersecurity · Enterprise GTM · Technical pre-sales · Ship faster with AI, securely. Helping enterprises adopt AI-assisted development securely. Brit builder, Lake Oswego, Oregon."></picture>
+<picture><source media="(max-width: 640px)" srcset="images/header-phone.svg?v=20"><img src="images/header.svg?v=20" width="100%" alt="Markus Weldon. A terminal types: Principal Solutions Engineer · Forward Deployed Engineer · Applied AI for cyber defense · Red-team the agents · Verify the fix · From CVE triage to verified patch. Building AI that finds, proves and fixes vulnerabilities. Brit builder, Lake Oswego, Oregon."></picture>
 
 <a href="https://markusweldon.com"><img src="images/btn-website.svg" alt="Website: markusweldon.com"></a>
 <a href="https://github.com/markusweldon"><img src="images/btn-github.svg" alt="Follow @markusweldon on GitHub"></a>
@@ -16,10 +16,10 @@
 
 <div align="left">
 
-**Principal Solutions Engineer** working where AI meets security. I help enterprises adopt agentic AI-assisted development without losing control of their risk posture.
+**Principal Solutions Engineer** and hands-on builder, forward-deployed with enterprise security and engineering teams where AI meets security.
 
+- **Building AI for both sides of the fight:** red-teaming MCP servers and AI agents ([Agentinel](https://github.com/markusweldon/agentinel)), CVE triage ([CVErdict](https://cverdict.dev)), and fixes proven by a rescan, your tests and a regression test ([OpenFix](https://github.com/markusweldon/openfix)).
 - **Securing agentic AI in production:** agent and MCP workflows, plus the guardrails and safety directives that let teams ship *faster* with AI, not slower.
-- **Building the tooling that makes it real:** security scanners for MCP servers and AI agents, OWASP standards shipped as Claude Code skills, and end-to-end secure CI/CD pipelines.
 - **Two decades of B2B solutions engineering:** discovery that finds the real business problem, value proven in the customer's own context, and architecture that survives production.
 
 > *AI writes the code, security checks every line.*
@@ -39,7 +39,7 @@
 
 <a href="https://github.com/markusweldon/cverdict"><img src="images/card-cverdict.svg" width="400" alt="CVErdict: CVE Verdict - cuts through the noise of the CVE program surge to show which new vulnerabilities need attention and why."></a>
 <a href="https://github.com/markusweldon/openfix"><img src="images/card-openfix.svg" width="400" alt="OpenFix: turns scanner findings into verified fixes with any model. Each patch is proven by a rescan, your tests and a regression test, then lands as a draft PR."></a>
-<a href="https://github.com/markusweldon/agentinel"><img src="images/card-agentinel.svg" width="400" alt="agentinel: red-teams and statically audits MCP servers and AI agents against the OWASP Agentic Top 10 (2026)"></a>
+<a href="https://github.com/markusweldon/agentinel"><img src="images/card-agentinel.svg" width="400" alt="Agentinel (red team): red-teams and statically audits MCP servers and AI agents against the OWASP Agentic Top 10 (2026)"></a>
 <a href="https://github.com/markusweldon/claude-owasp-security-skills"><img src="images/card-claude-owasp-security-skills.svg" width="400" alt="claude-owasp-security-skills: OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, shipped as Claude Code skills"></a>
 <a href="https://github.com/markusweldon/snyk-ai-secure-pipeline"><img src="images/card-snyk-ai-secure-pipeline.svg" width="400" alt="snyk-ai-secure-pipeline: end-to-end DevSecOps demo with Snyk Code, OSS, Container, IaC and an MCP server for Claude Code"></a>
 <a href="https://github.com/markusweldon/claude-snyk-security-expert"><img src="images/card-claude-snyk-security-expert.svg" width="400" alt="claude-snyk-security-expert: Snyk-powered security subagent for Claude Code"></a>

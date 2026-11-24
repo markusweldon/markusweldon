@@ -146,15 +146,15 @@ CARD_GAP = 6  # clear space around each project and Stack card
 # ══ Header ═════════════════════════════════════════════════════════════════
 
 NAME = ("MARKUS", "WELDON")
-TAGLINE = "Helping enterprises adopt AI-assisted development securely."
+TAGLINE = "Building AI that finds, proves and fixes vulnerabilities."
 LOCATION = ("Brit builder", "Lake Oswego, Oregon")
 PROMPT = "~/markusweldon "
 LINES = [
     "Principal Solutions Engineer",
-    "Securing agentic AI development",
-    "AppSec · Cloud · Cybersecurity",
-    "Enterprise GTM · Technical pre-sales",
-    "Ship faster with AI, securely",
+    "Forward Deployed Engineer",
+    "Applied AI for cyber defense",
+    "Red-team the agents · Verify the fix",
+    "From CVE triage to verified patch",
 ]
 
 HW, HH = 1000, 549
@@ -1085,7 +1085,10 @@ def header(f: Fonts, text: bool = True, phone: bool = False) -> str:
 
 # ══ Project cards ══════════════════════════════════════════════════════════
 
-# (repo, title, description, language, language colour, topic)
+# (repo, title, description, language, language colour, topic). The topic
+# pill is tinted by side, as on the site: pink for red team (offense), cyan
+# for blue team (defense).
+RED_TEAM = {"agentinel"}
 CARDS = [
     ("cverdict", "CVErdict",
      "CVE Verdict: cuts through the noise of the CVE program surge to show which new "
@@ -1094,9 +1097,9 @@ CARDS = [
      "Turns scanner findings into verified fixes with any model. Each patch is proven by a "
      "rescan, your tests and a regression test, then lands as a draft PR.",
      "Python", "#3572A5", "Verified fixes"),
-    ("agentinel", "agentinel",
+    ("agentinel", "Agentinel",
      "Red-teams and statically audits MCP servers and AI agents against the OWASP Agentic "
-     "Top 10 (2026).", "Python", "#3572A5", "MCP & agents"),
+     "Top 10 (2026).", "Python", "#3572A5", "MCP red team"),
     ("claude-owasp-security-skills", "claude-owasp-security-skills",
      "OWASP Top 10:2025, API, Mobile, LLM/Agentic and CI/CD standards, shipped as Claude "
      "Code skills.", "Shell", "#89e051", "Claude Code skills"),
@@ -1112,16 +1115,21 @@ CW, CH, PAD = 400, 182, 24
 
 
 def pill(f: Fonts, x: float, y: float, text: str, dot: str | None = None,
-         size: float = 12, h: float = 22) -> tuple[str, float]:
-    """The site's tag pill: text-xs, purple tint, rounded-full."""
+         size: float = 12, h: float = 22, side: str | None = None) -> tuple[str, float]:
+    """The site's tag pill: text-xs, purple tint, rounded-full. `side` "red"
+    or "blue" gives the site's .tag-red (pink) or .tag-blue (cyan) tint."""
     tx = x + 9 + (12 if dot else 0)
     d, w = f.sans.path(text, size, tx, y + h / 2 + size * 0.36)
     width = (tx - x) + w + 9
+    tint, fill_o, stroke_o, ink = {
+        "red": (PINK, 0.14, 0.55, "#ff8fd3"),
+        "blue": (CYAN, 0.1, 0.45, "#8ffcfb"),
+    }.get(side, (PURPLE, 0.08, 0.2, LAVENDER))
     out = (f'<rect x="{fmt(x + .5)}" y="{fmt(y + .5)}" width="{fmt(width - 1)}" height="{h - 1}" rx="{h / 2 - .5}" '
-           f'fill="{PURPLE}" fill-opacity="0.08" stroke="{PURPLE}" stroke-opacity="0.2"/>')
+           f'fill="{tint}" fill-opacity="{fill_o}" stroke="{tint}" stroke-opacity="{stroke_o}"/>')
     if dot:
         out += f'<circle cx="{fmt(x + 13)}" cy="{fmt(y + h / 2)}" r="3.5" fill="{dot}"/>'
-    out += f'<path d="{d}" fill="{LAVENDER}"/>'
+    out += f'<path d="{d}" fill="{ink}"/>'
     return out, width
 
 
@@ -1152,7 +1160,8 @@ def panel(w: float, h: float, wash: bool = False, top_line: bool = False) -> lis
     return out
 
 
-def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: str) -> str:
+def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: str,
+         side: str = "blue") -> str:
     out = panel(CW, CH) + [f'<path transform="translate({PAD} {PAD})" d="{OCTOCAT}" fill="{PINK}"/>']
     d, _ = f.mono_semibold.path(title, 16, PAD + 26, PAD + 13)
     # The header name's pink-to-cyan gradient, fitted to each title's own
@@ -1170,7 +1179,7 @@ def card(f: Fonts, title: str, desc: str, lang: str, lang_colour: str, topic: st
     x, y = PAD, CH - PAD - 22
     p, w = pill(f, x, y, lang, lang_colour)
     out.append(p)
-    p, w2 = pill(f, x + w + 6, y, topic)
+    p, w2 = pill(f, x + w + 6, y, topic, side=side)
     out.append(p)
     out.append(repo_button(f, CW - PAD, y, x + w + 6 + w2 + 16))   # at least 16px clear of the tags
     return svg(CW, CH, "\n".join(out), title, margin=CARD_GAP)
@@ -1450,7 +1459,7 @@ def main(font_dir: Path, site_dir: Path | None = None) -> None:
     f = Fonts(font_dir)
     outputs = {"header.svg": header(f), "header-phone.svg": header_phone(f)}
     for repo, *details in CARDS:
-        outputs[f"card-{repo}.svg"] = card(f, *details)
+        outputs[f"card-{repo}.svg"] = card(f, *details, side="red" if repo in RED_TEAM else "blue")
     outputs.update(focus_cards(f))
     outputs.update(focus_cards(f, wide=True))
     outputs.update(stack_cards(f))
