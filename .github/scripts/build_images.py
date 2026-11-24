@@ -1097,7 +1097,7 @@ CARDS = [
      "Turns scanner findings into verified fixes with any model. Each patch is proven by a "
      "rescan, your tests and a regression test, then lands as a draft PR.",
      "Python", "#3572A5", "Verified fixes"),
-    ("agentinel", "agentinel",
+    ("agentinel", "Agentinel",
      "Red-teams and statically audits MCP servers and AI agents against the OWASP Agentic "
      "Top 10 (2026).", "Python", "#3572A5", "MCP red team"),
     ("claude-owasp-security-skills", "claude-owasp-security-skills",
